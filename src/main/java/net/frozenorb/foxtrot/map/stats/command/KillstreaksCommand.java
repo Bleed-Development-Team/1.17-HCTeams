@@ -1,8 +1,10 @@
 package net.frozenorb.foxtrot.map.stats.command;
 
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Subcommand;
 import com.google.common.collect.Lists;
-import me.vaperion.blade.annotation.Command;
-import me.vaperion.blade.annotation.Sender;
 import mkremins.fanciful.FancyMessage;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.map.killstreaks.Killstreak;
@@ -17,10 +19,11 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
-public class KillstreaksCommand {
+@CommandAlias("killstreaks|ks|killstreak")
+public class KillstreaksCommand extends BaseCommand {
 
-	@Command(value = { "killstreaks", "ks", "killstreak" })
-	public static void killstreaks(@Sender CommandSender sender) {
+	@Default
+	public static void killstreaks(Player sender) {
 		if (!Foxtrot.getInstance().getServerHandler().isVeltKitMap()) {
 			sender.sendMessage(ChatColor.RED + "You cannot perform this command on this server.");
 			return;
@@ -54,8 +57,8 @@ public class KillstreaksCommand {
 		sender.sendMessage(ChatColor.RED.toString() + ChatColor.STRIKETHROUGH + StringUtils.repeat('-', 53));
 	}
 
-	@Command(value = { "killstreaks active", "ks active", "killstreak active" })
-	public static void killstreaksActive(CommandSender sender) {
+	@Subcommand("active")
+	public static void killstreaksActive(Player sender) {
 		if (!Foxtrot.getInstance().getServerHandler().isVeltKitMap()) {
 			sender.sendMessage(ChatColor.RED + "You cannot perform this command on this server.");
 			return;

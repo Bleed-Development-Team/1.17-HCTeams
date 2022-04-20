@@ -41,9 +41,12 @@ public class FullInvis implements Listener {
             armor_list.add(Pair.of(EnumItemSlot.d, null));
             Bukkit.getOnlinePlayers().stream().filter(p -> Foxtrot.getInstance().getTeamHandler().getTeam(p) != Foxtrot.getInstance().getTeamHandler().getTeam(player)).forEach(p -> {
                 PacketPlayOutEntityEquipment armor = new PacketPlayOutEntityEquipment(p.getEntityId(), armor_list);
-                (CraftPlayer)p.getHandle()).playerConnection.sendPacket((Packet)armor);
+                ((CraftPlayer) p).getHandle().b.sendPacket(armor);
             });
             Bukkit.getScheduler().runTaskLater(Foxtrot.getInstance(), () -> {
+                if (!player.isOnline()) {
+                    return;
+                }
                 PlayerInventory i = player.getInventory();
                 armor_list.clear();
                 armor_list.add(Pair.of(EnumItemSlot.a, CraftItemStack.asNMSCopy(i.getHelmet())));
@@ -52,6 +55,7 @@ public class FullInvis implements Listener {
                 armor_list.add(Pair.of(EnumItemSlot.d, CraftItemStack.asNMSCopy(i.getBoots())));
                 for (Player p : Bukkit.getOnlinePlayers()){
                     PacketPlayOutEntityEquipment armor = new PacketPlayOutEntityEquipment(p.getEntityId(), armor_list);
+                    ((CraftPlayer) p).getHandle().b.sendPacket(armor);
                 }
             }, 5 * 60 * 20);
         }

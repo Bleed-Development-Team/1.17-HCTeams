@@ -1,19 +1,20 @@
 package net.frozenorb.foxtrot.commands;
 
-import me.vaperion.blade.annotation.Command;
-import me.vaperion.blade.annotation.Optional;
-import me.vaperion.blade.annotation.Sender;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Optional;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.persist.maps.PlaytimeMap;
 import net.frozenorb.foxtrot.util.TimeUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+@CommandAlias("Playtime|PTime")
+public class PlaytimeCommand extends BaseCommand {
 
-public class PlaytimeCommand {
-
-    @Command(value ={ "Playtime", "PTime" })
-    public static void playtime(@Sender Player sender, @Optional("self") OfflinePlayer player) {
+    @Default
+    public static void playtime(Player sender, @Optional OfflinePlayer player) {
         OfflinePlayer target = null;
         if (player == null){
             target = sender;

@@ -1,6 +1,9 @@
 package net.frozenorb.foxtrot.map.stats.command;
 
-import me.vaperion.blade.annotation.*;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Optional;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.economy.FrozenEconomyHandler;
 import net.frozenorb.foxtrot.team.Team;
@@ -16,10 +19,11 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.UUID;
 
-public class StatsCommand {
+@CommandAlias("stats")
+public class StatsCommand extends BaseCommand {
 
-    @Command(value = {"stats"})
-    public static void stats(@Sender CommandSender sender, @Optional(value = "self") OfflinePlayer player) {
+    @Default
+    public static void stats(Player sender, @Optional OfflinePlayer player) {
         UUID uuid = player.getUniqueId();
 
         if (!player.hasPlayedBefore()){
@@ -43,36 +47,5 @@ public class StatsCommand {
         sender.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + StringUtils.repeat('-', 36));
     }
 
-    @Command(value = {"clearallstats"})
-    @Permission(value = "op")
-    public static void clearallstats(@Sender Player sender) {
-        ConversationFactory factory = new ConversationFactory(Foxtrot.getInstance()).withModality(true).withPrefix(new NullConversationPrefix()).withFirstPrompt(new StringPrompt() {
-
-            public String getPromptText(ConversationContext context) {
-                return "§aAre you sure you want to clear all stats? Type §byes§a to confirm or §cno§a to quit.";
-            }
-
-            @Override
-            public Prompt acceptInput(ConversationContext cc, String s) {
-                if (s.equalsIgnoreCase("yes")) {
-                    Foxtrot.getInstance().getMapHandler().getStatsHandler().clearAll();
-                    cc.getForWhom().sendRawMessage(ChatColor.GREEN + "All stats cleared!");
-                    return Prompt.END_OF_CONVERSATION;
-                }
-
-                if (s.equalsIgnoreCase("no")) {
-                    cc.getForWhom().sendRawMessage(ChatColor.GREEN + "Cancelled.");
-                    return Prompt.END_OF_CONVERSATION;
-                }
-
-                cc.getForWhom().sendRawMessage(ChatColor.GREEN + "Unrecognized response. Type §b/yes§a to confirm or §c/no§a to quit.");
-                return Prompt.END_OF_CONVERSATION;
-            }
-
-        }).withLocalEcho(false).withEscapeSequence("/no").withTimeout(10).thatExcludesNonPlayersWithMessage("Go away evil console!");
-
-        Conversation con = factory.buildConversation(sender);
-        sender.beginConversation(con);
-    }
 
 }

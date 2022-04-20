@@ -11,7 +11,6 @@ import net.frozenorb.foxtrot.events.koth.events.KOTHControlLostEvent;
 import net.frozenorb.foxtrot.serialization.LocationSerializer;
 import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.util.InventoryUtils;
-import net.frozenorb.foxtrot.util.discord.Webhook;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -218,7 +217,6 @@ public class EventListener implements Listener {
                 playerTeam.setKothCaptures(playerTeam.getKothCaptures() + 1);
             }
         }
-        Webhook.sendKothCapture(event.getEvent(), Foxtrot.getInstance().getTeamHandler().getTeam(event.getPlayer()), event.getPlayer());
         final String[] messagesFinal = messages;
 
         new BukkitRunnable() {

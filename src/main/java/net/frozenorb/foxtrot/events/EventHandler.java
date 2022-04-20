@@ -6,8 +6,6 @@ import com.mongodb.util.JSON;
 import lombok.Getter;
 import lombok.Setter;
 import net.frozenorb.foxtrot.Foxtrot;
-import net.frozenorb.foxtrot.events.dtc.DTC;
-import net.frozenorb.foxtrot.events.dtc.DTCListener;
 import net.frozenorb.foxtrot.events.koth.KOTH;
 import net.frozenorb.foxtrot.events.koth.listeners.KOTHListener;
 import org.bukkit.Bukkit;
@@ -33,7 +31,6 @@ public class EventHandler {
 		loadSchedules();
 
 		Foxtrot.getInstance().getServer().getPluginManager().registerEvents(new KOTHListener(), Foxtrot.getInstance());
-		Foxtrot.getInstance().getServer().getPluginManager().registerEvents(new DTCListener(), Foxtrot.getInstance());
 		Foxtrot.getInstance().getServer().getPluginManager().registerEvents(new EventListener(), Foxtrot.getInstance());
 
 		new BukkitRunnable() {
@@ -70,7 +67,7 @@ public class EventHandler {
 
 				for (File eventFile : subEventsBase.listFiles()) {
 					if (eventFile.getName().endsWith(".json")) {
-						events.add(Foxtrot.GSON.fromJson(FileUtils.readFileToString(eventFile), eventType == EventType.KOTH ? KOTH.class : DTC.class));
+						events.add(Foxtrot.GSON.fromJson(FileUtils.readFileToString(eventFile), KOTH.class));
 					}
 				}
 			}

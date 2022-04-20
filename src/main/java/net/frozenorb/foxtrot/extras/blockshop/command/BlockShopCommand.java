@@ -1,14 +1,16 @@
 package net.frozenorb.foxtrot.extras.blockshop.command;
 
-import me.vaperion.blade.annotation.Command;
-import me.vaperion.blade.annotation.Sender;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Default;
 import net.frozenorb.foxtrot.extras.blockshop.BlockShop;
 import org.bukkit.entity.Player;
 
-public class BlockShopCommand {
+@CommandAlias("blockshop|shop")
+public class BlockShopCommand extends BaseCommand {
 
-    @Command(value = {"blockshop", "shop"})
-    public static void blockShop(@Sender Player player){
+    @Default
+    public static void blockShop(Player player){
         new BlockShop(player).updateMenu();
     }
 }

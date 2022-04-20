@@ -1,26 +1,27 @@
 package net.frozenorb.foxtrot.map.stats.command;
 
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.BukkitCommandExecutionContext;
+import co.aikar.commands.InvalidCommandArgument;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Optional;
+import co.aikar.commands.contexts.ContextResolver;
 import lombok.Getter;
-import me.vaperion.blade.annotation.*;
-import me.vaperion.blade.argument.BladeArgument;
-import me.vaperion.blade.argument.BladeProvider;
-import me.vaperion.blade.context.BladeContext;
-import me.vaperion.blade.exception.BladeExitMessage;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.map.stats.StatsEntry;
 import net.frozenorb.foxtrot.util.UUIDUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.bukkit.entity.Player;
 
 import java.util.Map;
+@CommandAlias("statstop|leaderboards")
+public class StatsTopCommand extends BaseCommand {
 
-public class StatsTopCommand {
-
-    @Command(value = {"statstop", "leaderboards"})
-    public static void statstop(@Sender CommandSender sender, @Optional(value = "kills") StatsObjective objective) {
+    @Default
+    public static void statstop(Player sender, @Optional StatsObjective objective) {
         sender.sendMessage(ChatColor.RED.toString() + ChatColor.STRIKETHROUGH + StringUtils.repeat('-', 53));
         sender.sendMessage(ChatColor.YELLOW + "Leaderboards for: " + ChatColor.RED + objective.getName());
         sender.sendMessage(ChatColor.RED.toString() + ChatColor.STRIKETHROUGH + StringUtils.repeat('-', 53));
@@ -52,12 +53,12 @@ public class StatsTopCommand {
         }
     }
 
-    public static class StatsObjectiveProvider implements BladeProvider<StatsObjective>{
+    public static class StatsObjectiveProvider implements ContextResolver<StatsObjective, BukkitCommandExecutionContext> {
+
 
         @Override
-        public @Nullable StatsObjective provide(@NotNull BladeContext context, @NotNull BladeArgument argument) throws BladeExitMessage {
-
-            return switch (argument.getString()) {
+        public StatsObjective getContext(BukkitCommandExecutionContext arg) throws InvalidCommandArgument {
+            return switch (arg.getFirstArg()) {
                 case "d", "deaths" -> StatsObjective.DEATHS;
                 case "kdr", "kd" -> StatsObjective.KD;
                 default -> StatsObjective.KILLS;

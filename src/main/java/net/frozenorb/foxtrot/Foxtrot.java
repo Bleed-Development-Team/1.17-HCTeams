@@ -12,9 +12,6 @@ import io.github.thatkawaiisam.assemble.Assemble;
 import io.github.thatkawaiisam.assemble.AssembleStyle;
 import lombok.Getter;
 import lombok.Setter;
-import me.vaperion.blade.Blade;
-import me.vaperion.blade.bindings.impl.BukkitBindings;
-import me.vaperion.blade.container.impl.BukkitCommandContainer;
 import net.frozenorb.foxtrot.chat.ChatHandler;
 import net.frozenorb.foxtrot.chat.chatgames.ChatGamesHandler;
 import net.frozenorb.foxtrot.commands.*;
@@ -29,31 +26,18 @@ import net.frozenorb.foxtrot.events.citadel.CitadelHandler;
 import net.frozenorb.foxtrot.events.citadel.commands.CitadelCommand;
 import net.frozenorb.foxtrot.events.conquest.ConquestHandler;
 import net.frozenorb.foxtrot.events.conquest.commands.conquest.ConquestCommand;
-import net.frozenorb.foxtrot.events.dtc.commands.DTCCreateCommand;
+import net.frozenorb.foxtrot.events.conquest.commands.conquestadmin.ConquestAdminCommands;
 import net.frozenorb.foxtrot.events.koth.commands.koth.KOTHCommand;
+import net.frozenorb.foxtrot.events.koth.commands.kothschedule.KothScheduleCommands;
 import net.frozenorb.foxtrot.events.region.carepackage.CarePackageHandler;
 import net.frozenorb.foxtrot.events.region.cavern.CavernHandler;
-import net.frozenorb.foxtrot.events.region.cavern.commands.CavernCommand;
 import net.frozenorb.foxtrot.events.region.glowmtn.GlowHandler;
-import net.frozenorb.foxtrot.events.region.glowmtn.commands.GlowCommand;
-import net.frozenorb.foxtrot.extras.abusing.cheats.commands.ReachCommand;
-import net.frozenorb.foxtrot.extras.abusing.cheats.impl.ReachCheat;
 import net.frozenorb.foxtrot.extras.blockshop.command.BlockShopCommand;
-import net.frozenorb.foxtrot.extras.discord.Discord;
 import net.frozenorb.foxtrot.extras.enchants.CustomEnchant;
-import net.frozenorb.foxtrot.extras.gems.GemsHandler;
-import net.frozenorb.foxtrot.extras.gems.commands.GemShopCommand;
-import net.frozenorb.foxtrot.extras.gems.commands.admincommands.AddToCheckOutCommand;
-import net.frozenorb.foxtrot.extras.gems.commands.admincommands.ClearCartCommand;
-import net.frozenorb.foxtrot.extras.gems.commands.admincommands.GemAddCommand;
-import net.frozenorb.foxtrot.extras.gems.map.GemMap;
 import net.frozenorb.foxtrot.extras.lunar.LunarClientHandler;
 import net.frozenorb.foxtrot.extras.lunar.nametag.ClientNametagProvider;
-import net.frozenorb.foxtrot.extras.redeem.RedeemCreatorCommand;
-import net.frozenorb.foxtrot.extras.redeem.RedeemCreatorHandler;
 import net.frozenorb.foxtrot.extras.resoucepack.ResourcePack;
 import net.frozenorb.foxtrot.extras.sell.command.SellShopCommand;
-import net.frozenorb.foxtrot.extras.settings.commands.SettingsCommand;
 import net.frozenorb.foxtrot.listener.*;
 import net.frozenorb.foxtrot.map.MapHandler;
 import net.frozenorb.foxtrot.map.stats.command.*;
@@ -68,7 +52,6 @@ import net.frozenorb.foxtrot.redis.RedisCommand;
 import net.frozenorb.foxtrot.scoreboard.FoxtrotScoreboardProvider;
 import net.frozenorb.foxtrot.server.EnderpearlCooldownHandler;
 import net.frozenorb.foxtrot.server.ServerHandler;
-import net.frozenorb.foxtrot.server.commands.betrayer.*;
 import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.TeamHandler;
 import net.frozenorb.foxtrot.team.TeamType;
@@ -76,14 +59,16 @@ import net.frozenorb.foxtrot.team.claims.LandBoard;
 import net.frozenorb.foxtrot.team.commands.*;
 import net.frozenorb.foxtrot.team.commands.pvp.PvPCommand;
 import net.frozenorb.foxtrot.team.commands.team.TeamChatCommand;
-import net.frozenorb.foxtrot.team.commands.team.subclaim.*;
+import net.frozenorb.foxtrot.team.commands.team.TeamChatThree;
+import net.frozenorb.foxtrot.team.commands.team.TeamChatTwo;
+import net.frozenorb.foxtrot.team.commands.team.TeamCommands;
+import net.frozenorb.foxtrot.team.commands.team.chatspy.TeamChatSpyCommand;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmaskType;
 import net.frozenorb.foxtrot.team.dtr.DTRHandler;
 import net.frozenorb.foxtrot.util.Cooldown;
 import net.frozenorb.foxtrot.util.HourEvent;
 import net.frozenorb.foxtrot.util.RegenUtils;
-import net.frozenorb.foxtrot.util.help.HelpGenerator;
 import net.frozenorb.foxtrot.util.provider.FloatProvider;
 import net.frozenorb.foxtrot.util.provider.IntegerProvider;
 import org.bukkit.Bukkit;
@@ -97,8 +82,6 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
-import javax.security.auth.login.LoginException;
-import java.io.File;
 import java.util.Calendar;
 import java.util.Random;
 import java.util.concurrent.Executors;
@@ -261,15 +244,95 @@ public class Foxtrot extends JavaPlugin {
 		}
 		Cooldown.createCooldown("lff");
 		BukkitCommandManager m = new BukkitCommandManager(this);
+		m.getCommandContexts().registerContext(Team.class, new TeamType());
+		m.getCommandContexts().registerContext(DTRBitmask.class, new DTRBitmaskType());
+		m.getCommandContexts().registerContext(Event.class, new EventParameterType());
 
-		m.getCommandContexts().registerContext(Team.class, c -> getTeamHandler().getTeams().stream().filter(team -> team.getName().equalsIgnoreCase(c.popFirstArg())).findFirst().orElse(null));
+		m.registerCommand(new AddBalanceCommand());
+		m.registerCommand(new AssociateAccountsCommand());
+		m.registerCommand(new AssociateViewCommand());
+		m.registerCommand(new BalanceCommand());
+		m.registerCommand(new BitmaskCommand());
+		m.registerCommand(new BottleCommand());
+		m.registerCommand(new CobbleCommand());
+		m.registerCommand(new CrowbarCommand());
+		m.registerCommand(new CSVExportCommand());
+		m.registerCommand(new CustomTimerCreateCommand());
+		m.registerCommand(new EcoCheckCommand());
+		m.registerCommand(new EnderpearlCommands());
+		m.registerCommand(new EOTWCommand());
+		m.registerCommand(new FDToggleCommand());
+		m.registerCommand(new GoppleCommand());
+		m.registerCommand(new HelpCommand());
+		m.registerCommand(new KOTHRewardKeyCommand());
+		m.registerCommand(new LastInvCommand());
+		m.registerCommand(new LFFCommand());
+		m.registerCommand(new LivesCommand());
+		m.registerCommand(new LocationCommand());
+		m.registerCommand(new LogoutCommand());
+		m.registerCommand(new OresCommand());
+		m.registerCommand(new PayCommand());
+		m.registerCommand(new PlaytimeCommand());
+		m.registerCommand(new PreEOTWCommand());
+		m.registerCommand(new RecachePlayerTeamsCommand());
+		m.registerCommand(new RegenCommand());
+		m.registerCommand(new ReviveCommand());
+		m.registerCommand(new SetBalCommand());
+		m.registerCommand(new SetEndExitCommand());
+		m.registerCommand(new SetNetherBufferCommand());
+		m.registerCommand(new SetWorldBorderCommand());
+		m.registerCommand(new SetWorldBufferCommand());
+		m.registerCommand(new SOTWCommand());
+		m.registerCommand(new SpawnCommand());
+		m.registerCommand(new SpawnDragonCommand());
+		m.registerCommand(new TeamManageCommand());
+		m.registerCommand(new TellLocationCommand());
+		m.registerCommand(new ToggleChatCommand());
+		m.registerCommand(new ToggleDeathMessagesCommand());
+		m.registerCommand(new WipeDeathbansCommand());
+		m.registerCommand(new CrateCommand());
+		m.registerCommand(new CitadelCommand());
+		m.registerCommand(new ConquestCommand());
+		m.registerCommand(new ConquestAdminCommands());
+		m.registerCommand(new KOTHCommand());
+		m.registerCommand(new KothScheduleCommands());
+		m.registerCommand(new BlockShopCommand());
+		m.registerCommand(new SellShopCommand());
+		m.registerCommand(new ChestCommand());
+		m.registerCommand(new ClearAllStatsCommand());
+		m.registerCommand(new ClearLeaderboardsCommand());
+		m.registerCommand(new KillstreaksCommand());
+		m.registerCommand(new LeaderboardAddCommand());
+		m.registerCommand(new StatModifyCommands());
+		m.registerCommand(new StatsCommand());
+		m.registerCommand(new StatsTopCommand());
+		m.registerCommand(new FocusCommand());
+		m.registerCommand(new ForceDisbandAllCommand());
+		m.registerCommand(new ForceDisbandCommand());
+		m.registerCommand(new ForceJoinCommand());
+		m.registerCommand(new ForceLeaveCommand());
+		m.registerCommand(new ForceKickCommand());
+		m.registerCommand(new ForceLeaderCommand());
+		m.registerCommand(new FreezeRostersCommand());
+		m.registerCommand(new ImportTeamDataCommand());
+		m.registerCommand(new PowerFactionCommand());
+		m.registerCommand(new RecalculatePointsCommand());
+		m.registerCommand(new ResetForceInvitesCommand());
+		m.registerCommand(new SetTeamBalanceCommand());
+		m.registerCommand(new StartDTRRegenCommand());
+		m.registerCommand(new TeamDataCommands());
+		m.registerCommand(new TeamPointBreakDownCommand());
+		m.registerCommand(new PvPCommand());
+		m.registerCommand(new TeamChatCommand());
+		m.registerCommand(new TeamChatThree());
+		m.registerCommand(new TeamChatTwo());
+		m.registerCommand(new TeamCommands());
+		m.registerCommand(new TeamChatSpyCommand());
+
 
 		CustomEnchant.init();
 
-		Blade.of()
-				.fallbackPrefix("hcteams")
-				.containerCreator(BukkitCommandContainer.CREATOR)
-				.bind(Team.class, new TeamType()).bind(Integer.class, new IntegerProvider()).bind(Float.class, new FloatProvider()).bind(DTRBitmask.class, new DTRBitmaskType()).bind(Event.class, new EventParameterType()).bind(StatsTopCommand.StatsObjective.class, new StatsTopCommand.StatsObjectiveProvider())
+				//.bind(Team.class, new TeamType()).bind(Integer.class, new IntegerProvider()).bind(Float.class, new FloatProvider()).bind(DTRBitmask.class, new DTRBitmaskType()).bind(Event.class, new EventParameterType()).bind(StatsTopCommand.StatsObjective.class, new StatsTopCommand.StatsObjectiveProvider())
 
 
 
@@ -477,7 +540,6 @@ public class Foxtrot extends JavaPlugin {
 		(whitelistedIPMap = new WhitelistedIPMap()).loadFromRedis();
 		(cobblePickupMap = new CobblePickupMap()).loadFromRedis();
 		(kdrMap = new KDRMap()).loadFromRedis();
-		(gemsMap = new GemMap()).loadFromRedis();
 		(raidableTeamsMap = new RaidableTeamsMap()).loadFromRedis();
 
 

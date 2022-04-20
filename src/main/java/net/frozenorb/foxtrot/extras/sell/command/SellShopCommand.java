@@ -1,14 +1,16 @@
 package net.frozenorb.foxtrot.extras.sell.command;
 
-import me.vaperion.blade.annotation.Command;
-import me.vaperion.blade.annotation.Sender;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Default;
 import net.frozenorb.foxtrot.extras.sell.SellMenu;
 import org.bukkit.entity.Player;
 
-public class SellShopCommand {
+@CommandAlias("sell|sellshop")
+public class SellShopCommand extends BaseCommand {
 
-    @Command(value = {"sell", "sellshop"})
-    public static void sell(@Sender Player player){
+    @Default
+    public static void sell(Player player){
         new SellMenu(player).updateMenu();
     }
 }

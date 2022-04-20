@@ -1,8 +1,9 @@
 package net.frozenorb.foxtrot.map.stats.command;
 
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Default;
 import lombok.Getter;
-import me.vaperion.blade.annotation.Command;
-import me.vaperion.blade.annotation.Sender;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import org.bukkit.ChatColor;
@@ -12,12 +13,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class ChestCommand {
+@CommandAlias("chest")
+public class ChestCommand extends BaseCommand {
 
     @Getter private static final Set<UUID> BYPASS = new HashSet<>();
 
-    @Command(value = {"chest"})
-    public static void chest(@Sender Player sender) {
+    @Default
+    public static void chest(Player sender) {
         if (!Foxtrot.getInstance().getServerHandler().isVeltKitMap() && !Foxtrot.getInstance().getMapHandler().isKitMap()) {
             sender.sendMessage(ChatColor.RED + "This is a KitMap only command.");
             return;

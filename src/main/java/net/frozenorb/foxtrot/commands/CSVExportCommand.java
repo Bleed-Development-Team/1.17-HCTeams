@@ -1,5 +1,6 @@
 package net.frozenorb.foxtrot.commands;
 
+import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
@@ -15,7 +16,7 @@ import java.util.UUID;
 
 @CommandAlias("csvexport")
 @CommandPermission("op")
-public class CSVExportCommand {
+public class CSVExportCommand extends BaseCommand {
 
 
     @Default

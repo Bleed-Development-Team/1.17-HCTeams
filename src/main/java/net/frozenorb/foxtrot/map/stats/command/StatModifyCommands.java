@@ -1,20 +1,23 @@
 package net.frozenorb.foxtrot.map.stats.command;
 
-import me.vaperion.blade.annotation.Command;
-import me.vaperion.blade.annotation.Name;
-import me.vaperion.blade.annotation.Permission;
-import me.vaperion.blade.annotation.Sender;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Subcommand;
+
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.map.stats.StatsEntry;
 import net.frozenorb.foxtrot.team.Team;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class StatModifyCommands {
+@CommandAlias("sm")
+@CommandPermission("op")
+public class StatModifyCommands extends BaseCommand {
 
-	@Command(value = "sm setkills")
-	@Permission(value = "op")
-	public static void setKills(@Sender Player player, @Name("kills") int kills) {
+
+	@Subcommand("setkills")
+	public static void setKills(Player player, int kills) {
 		StatsEntry stats = Foxtrot.getInstance().getMapHandler().getStatsHandler().getStats(player);
 		stats.setKills(kills);
 
@@ -23,9 +26,8 @@ public class StatModifyCommands {
 		player.sendMessage(ChatColor.GREEN + "You've set your own kills to: " + kills);
 	}
 
-	@Command(value = "sm setdeaths")
-	@Permission(value = "op")
-	public static void setDeaths(@Sender Player player, @Name("deaths") int deaths) {
+	@Subcommand("setdeaths")
+	public static void setDeaths(Player player, int deaths) {
 		StatsEntry stats = Foxtrot.getInstance().getMapHandler().getStatsHandler().getStats(player);
 		stats.setDeaths(deaths);
 
@@ -34,9 +36,8 @@ public class StatModifyCommands {
 		player.sendMessage(ChatColor.GREEN + "You've set your own deaths to: " + deaths);
 	}
 
-	@Command(value = "sm setteamkills")
-	@Permission(value = "op")
-	public static void setTeamKills(@Sender Player player, @Name("kills") int kills) {
+	@Subcommand("setteamkills")
+	public static void setTeamKills(Player player, int kills) {
 		Team team = Foxtrot.getInstance().getTeamHandler().getTeam(player);
 
 		if (team != null) {
@@ -45,9 +46,8 @@ public class StatModifyCommands {
 		}
 	}
 
-	@Command(value = "sm setteamdeaths")
-	@Permission(value = "op")
-	public static void setTeamDeaths(@Sender Player player, @Name("deaths") int deaths) {
+	@Subcommand("setteamdeaths")
+	public static void setTeamDeaths(Player player, int deaths) {
 		Team team = Foxtrot.getInstance().getTeamHandler().getTeam(player);
 
 		if (team != null) {
