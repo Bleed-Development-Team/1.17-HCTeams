@@ -13,6 +13,7 @@ public class InvisiblityEnchant implements Listener {
     public void onArmorEquip(PlayerArmorEquipEvent event) {
         refreshInvisibility(event.getPlayer());
     }
+
     public static void refreshInvisibility(Player player) {
         ItemStack helmet = player.getInventory().getHelmet();
         if (helmet == null) return;

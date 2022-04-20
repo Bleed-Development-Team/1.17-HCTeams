@@ -1,6 +1,7 @@
 package net.frozenorb.foxtrot;
 
 import net.frozenorb.foxtrot.team.Team;
+import net.frozenorb.foxtrot.team.commands.team.TeamCommands;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -45,7 +46,7 @@ public final class FoxConstants {
 
         if (team != null) {
 
-            if (TeamTopCommand.getSortedTeams().entrySet().iterator().next().getKey().equals(team)) {
+            if (TeamCommands.getSortedTeams().entrySet().iterator().next().getKey().equals(team)) {
                 starting = ChatColor.GOLD + "[" + Foxtrot.getInstance().getServerHandler().getDefaultRelationColor() + team.getName() + ChatColor.GOLD  + "] ";
                 return starting + customPrefixString + rankPrefix + "%s" + ChatColor.WHITE + ": %s";
             }

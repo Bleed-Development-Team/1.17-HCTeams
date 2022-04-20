@@ -22,6 +22,6 @@ public class ResourcePack implements Listener {
         if (event.getStatus().equals(PlayerResourcePackStatusEvent.Status.ACCEPTED)) {
             return;
         }
-        player.kickPlayer(CC.translate("&e&lFoxtrot &7>> &cResource pack rejected."));
+        player.kickPlayer(CC.translate("&6&lFoxtrot &7>> &cResource pack rejected."));
     }
 }

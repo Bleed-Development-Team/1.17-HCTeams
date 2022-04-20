@@ -40,6 +40,7 @@ import net.frozenorb.foxtrot.extras.abusing.cheats.commands.ReachCommand;
 import net.frozenorb.foxtrot.extras.abusing.cheats.impl.ReachCheat;
 import net.frozenorb.foxtrot.extras.blockshop.command.BlockShopCommand;
 import net.frozenorb.foxtrot.extras.discord.Discord;
+import net.frozenorb.foxtrot.extras.enchants.CustomEnchant;
 import net.frozenorb.foxtrot.extras.gems.GemsHandler;
 import net.frozenorb.foxtrot.extras.gems.commands.GemShopCommand;
 import net.frozenorb.foxtrot.extras.gems.commands.admincommands.AddToCheckOutCommand;
@@ -97,6 +98,7 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 import javax.security.auth.login.LoginException;
+import java.io.File;
 import java.util.Calendar;
 import java.util.Random;
 import java.util.concurrent.Executors;
@@ -262,6 +264,7 @@ public class Foxtrot extends JavaPlugin {
 
 		m.getCommandContexts().registerContext(Team.class, c -> getTeamHandler().getTeams().stream().filter(team -> team.getName().equalsIgnoreCase(c.popFirstArg())).findFirst().orElse(null));
 
+		CustomEnchant.init();
 
 		Blade.of()
 				.fallbackPrefix("hcteams")
@@ -274,6 +277,8 @@ public class Foxtrot extends JavaPlugin {
 
 
 	}
+
+
 
 	@Override
 	public void onDisable() {
