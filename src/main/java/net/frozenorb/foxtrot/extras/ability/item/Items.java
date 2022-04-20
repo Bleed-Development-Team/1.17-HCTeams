@@ -22,5 +22,8 @@ public class Items {
         return ItemBuilder.of(Material.NETHER_STAR).name("&3&lNinja Star")
                 .enchant(Enchantment.DURABILITY, 1).setLore(Arrays.asList("&7Right click to teleport to", "&7the last person that hit you.")).build();
     }
+    public static ItemStack getFullInvis() {        return ItemBuilder.of(Material.INK_SAC, 8).name("&3&lFull Invisibility").setLore(Arrays.asList("&7Right click to become invisible to", "&7everyone. Left click to become visible.")).build();
+
+    }
 
 }

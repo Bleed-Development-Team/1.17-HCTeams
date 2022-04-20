@@ -91,7 +91,7 @@ public class BoneAbility implements Listener {
         if (event.getClickedBlock() != null){
             if (event.getClickedBlock().getType() == Material.OAK_DOOR || event.getClickedBlock().getType() == Material.OAK_FENCE_GATE){
                 if (Cooldown.isOnCooldown("boneAffected", player)) {
-                    event.setCancelled(true);
+                    //event.setCancelled(true);
                     player.sendMessage(CC.translate("&cYou must wait &f" + Cooldown.getCooldownString(player, "boneAffected") + " &cto place blocks!"));
                 }
             }

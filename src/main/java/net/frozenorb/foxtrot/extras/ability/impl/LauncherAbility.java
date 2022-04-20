@@ -16,8 +16,8 @@ public class LauncherAbility implements Listener {
 
         if (player.getItemInHand() == Items.getLauncher()){
             if (Cooldown.isOnCooldown("launcher", player)){
-                player.sendMessage(CC.translate("&cYou cannot use this for another &c&l" + Cooldown.getCooldownString(player, "bone") + "&c!"));
-                event.setCancelled(true);
+                player.sendMessage(CC.translate("&cYou cannot use this for another &c&l" + Cooldown.getCooldownString(player, "launcher") + "&c!"));
+                //event.setCancelled(true);
 
                 return;
             }
