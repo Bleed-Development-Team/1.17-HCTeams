@@ -7,6 +7,7 @@ import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.chat.ChatHandler;
 import net.frozenorb.foxtrot.chat.enums.ChatMode;
 import net.frozenorb.foxtrot.team.Team;
+import net.frozenorb.foxtrot.team.commands.team.TeamCommands;
 import net.frozenorb.foxtrot.team.track.TeamActionTracker;
 import net.frozenorb.foxtrot.team.track.TeamActionType;
 import org.bson.types.ObjectId;
@@ -105,7 +106,7 @@ public class ChatListener implements Listener {
         // and here starts the big logic switch
         switch (finalChatMode) {
             case PUBLIC -> {
-                if (TeamMuteCommand.getTeamMutes().containsKey(event.getPlayer().getUniqueId())) {
+                if (TeamCommands.getTeamMutes().containsKey(event.getPlayer().getUniqueId())) {
                     event.getPlayer().sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + "Your team is muted!");
                     return;
                 }
@@ -124,7 +125,7 @@ public class ChatListener implements Listener {
                     if (playerTeam == null) {
                         // If the player sending the message is shadowmuted (if their team was and they left it)
                         // then we don't allow them to. We probably could move this check "higher up", but oh well.
-                        if (TeamShadowMuteCommand.getTeamShadowMutes().containsKey(event.getPlayer().getUniqueId())) {
+                        if (TeamCommands.getTeamShadowMutes().containsKey(event.getPlayer().getUniqueId())) {
                             continue;
                         }
 
@@ -145,7 +146,7 @@ public class ChatListener implements Listener {
                             // Team members always see their team's messages
                             // Allies always see their allies' messages, 'cause they'll probably be in a TS or something
                             // and they could figure out this code even exists
-                            if (TeamShadowMuteCommand.getTeamShadowMutes().containsKey(event.getPlayer().getUniqueId())) {
+                            if (TeamCommands.getTeamShadowMutes().containsKey(event.getPlayer().getUniqueId())) {
                                 continue;
                             }
 

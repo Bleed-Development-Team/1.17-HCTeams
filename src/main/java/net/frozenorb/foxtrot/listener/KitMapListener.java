@@ -132,7 +132,7 @@ public class KitMapListener implements Listener {
             kitEditing.remove(event.getPlayer().getUniqueId());
         }
         
-        Foxtrot.getInstance().getMapHandler().getKitManager().logout(event.getPlayer().getUniqueId());
+        //Foxtrot.getInstance().getMapHandler().getKitManager().logout(event.getPlayer().getUniqueId());
     }
 
     /*
@@ -180,14 +180,14 @@ public class KitMapListener implements Listener {
                 return;
             }
             
-            Foxtrot.getInstance().getMapHandler().getKitManager().saveKit(event.getPlayer().getUniqueId(), editingKit, inventory.getContents());
+            //Foxtrot.getInstance().getMapHandler().getKitManager().saveKit(event.getPlayer().getUniqueId(), editingKit, inventory.getContents());
             player.sendMessage(ChatColor.GREEN + "Successfully saved kit!");
         }
     }
     
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        Foxtrot.getInstance().getMapHandler().getKitManager().loadKits(event.getPlayer().getUniqueId());
+        //Foxtrot.getInstance().getMapHandler().getKitManager().loadKits(event.getPlayer().getUniqueId());
     }
     
     @EventHandler(ignoreCancelled = true)

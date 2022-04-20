@@ -11,7 +11,6 @@ import net.frozenorb.foxtrot.events.EventHandler;
 import net.frozenorb.foxtrot.events.koth.KOTH;
 import net.frozenorb.foxtrot.listener.BorderListener;
 import net.frozenorb.foxtrot.map.killstreaks.KillstreakHandler;
-import net.frozenorb.foxtrot.map.kits.KitManager;
 import net.frozenorb.foxtrot.map.stats.StatsHandler;
 import net.frozenorb.foxtrot.server.Deathban;
 import net.frozenorb.foxtrot.server.ServerHandler;
@@ -61,7 +60,6 @@ public class MapHandler {
     // Kit-Map only stuff:
     @Getter private StatsHandler statsHandler;
     @Getter private KillstreakHandler killstreakHandler;
-    @Getter private KitManager kitManager;
 
     public MapHandler() {}
     
@@ -132,7 +130,6 @@ public class MapHandler {
         statsHandler = new StatsHandler();
         if (isKitMap() || Foxtrot.getInstance().getServerHandler().isVeltKitMap()) {
             killstreakHandler = new KillstreakHandler();
-            kitManager = new KitManager();
 
             // start a KOTH after 5 minutes of uptime
             Bukkit.getScheduler().runTaskLater(Foxtrot.getInstance(), () -> {

@@ -69,8 +69,6 @@ import net.frozenorb.foxtrot.team.dtr.DTRHandler;
 import net.frozenorb.foxtrot.util.Cooldown;
 import net.frozenorb.foxtrot.util.HourEvent;
 import net.frozenorb.foxtrot.util.RegenUtils;
-import net.frozenorb.foxtrot.util.provider.FloatProvider;
-import net.frozenorb.foxtrot.util.provider.IntegerProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.World;
@@ -247,7 +245,7 @@ public class Foxtrot extends JavaPlugin {
 		m.getCommandContexts().registerContext(Team.class, new TeamType());
 		m.getCommandContexts().registerContext(DTRBitmask.class, new DTRBitmaskType());
 		m.getCommandContexts().registerContext(Event.class, new EventParameterType());
-
+		m.getCommandContexts().registerContext(StatsTopCommand.StatsObjective.class, new StatsTopCommand.StatsObjectiveProvider());
 		m.registerCommand(new AddBalanceCommand());
 		m.registerCommand(new AssociateAccountsCommand());
 		m.registerCommand(new AssociateViewCommand());
@@ -477,7 +475,7 @@ public class Foxtrot extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new TeamListener(), this);
 		getServer().getPluginManager().registerEvents(new WebsiteListener(), this);
 		getServer().getPluginManager().registerEvents(new StatTrakListener(), this);
-		getServer().getPluginManager().registerEvents(new ResourcePack(), this);
+		//getServer().getPluginManager().registerEvents(new ResourcePack(), this);
 
 		if (getServerHandler().isReduceArmorDamage()) {
 			getServer().getPluginManager().registerEvents(new ArmorDamageListener(), this);

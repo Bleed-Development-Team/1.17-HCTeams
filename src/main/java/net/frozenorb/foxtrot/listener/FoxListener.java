@@ -14,6 +14,7 @@ import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.claims.Claim;
 import net.frozenorb.foxtrot.team.claims.LandBoard;
 import net.frozenorb.foxtrot.team.claims.Subclaim;
+import net.frozenorb.foxtrot.team.commands.team.TeamCommands;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import net.frozenorb.foxtrot.team.track.TeamActionTracker;
 import net.frozenorb.foxtrot.team.track.TeamActionType;
@@ -555,7 +556,7 @@ public class FoxListener implements Listener {
 
                         for (Claim claim : ownerTo.getClaims()) {
                             if (claim.contains(event.getFrom()) && !ownerTo.isMember(event.getPlayer().getUniqueId())) {
-                                Location nearest = TeamStuckCommand.nearestSafeLocation(event.getPlayer().getLocation());
+                                Location nearest = TeamCommands.nearestSafeLocation(event.getPlayer().getLocation());
                                 boolean spawn = false;
 
                                 if (nearest == null) {
