@@ -1,14 +1,13 @@
 package net.frozenorb.foxtrot.uuid.impl;
+
+import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.uuid.UUIDCache;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-
-import net.frozenorb.foxtrot.Foxtrot;
-import net.frozenorb.foxtrot.uuid.UUIDCache;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import redis.clients.jedis.Jedis;
 
 public final class RedisUUIDCache implements UUIDCache {
     private static final Map<UUID, String> uuidToName = new ConcurrentHashMap<>();

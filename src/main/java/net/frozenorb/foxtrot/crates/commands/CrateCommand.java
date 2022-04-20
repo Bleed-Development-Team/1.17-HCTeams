@@ -1,13 +1,10 @@
 package net.frozenorb.foxtrot.crates.commands;
 
-import me.vaperion.blade.annotation.Command;
-import me.vaperion.blade.annotation.Name;
-import me.vaperion.blade.annotation.Permission;
-import me.vaperion.blade.annotation.Sender;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.*;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.crates.Crate;
 import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -15,11 +12,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;
 
-public class CrateCommand {
+@CommandAlias("hctcrate")
+@CommandPermission("op")
+public class CrateCommand extends BaseCommand {
 
-    @Command(value = {"hctcrate",})
-    @Permission(value = "op")
-    public static void onGive(@Sender Player sender, @Name("kit") String kit) {
+
+    @Default
+    public static void onGive(Player sender, String kit) {
         ItemStack enderChest = new ItemStack(Material.ENDER_CHEST, 1);
         ItemMeta itemMeta = enderChest.getItemMeta();
 
@@ -37,9 +36,9 @@ public class CrateCommand {
         }
     }
     
-    @Command(value = "hctcrate give")
-    @Permission(value = "op")
-    public static void onGive(CommandSender sender, @Name("kit") String kit, @Name("target") Player target) {
+
+    @Subcommand("give")
+    public static void onGive(Player sender, String kit, @Flags("other") Player target) {
         ItemStack enderChest = new ItemStack(Material.ENDER_CHEST, 1);
         ItemMeta itemMeta = enderChest.getItemMeta();
 
@@ -58,18 +57,17 @@ public class CrateCommand {
         }
     }
 
-    @Command(value = "hctcrate create")
-    @Permission(value = "op")
-    public static void onCreate(Player player, @Name("kit") String kit) {
+
+    @Subcommand("create")
+    public static void onCreate(Player player, String kit) {
         Crate crate = new Crate(kit);
 
         Foxtrot.getInstance().getCrateHandler().getCrates().put(kit.toLowerCase(), crate);
         player.sendMessage(GREEN + "Created an empty crate for kit `" + crate.getKitName() + "`");
     }
 
-    @Command("hctcrate edit")
-    @Permission(value = "op")
-    public static void onEdit(Player player, @Name("kit") String kit) {
+    @Subcommand("edit")
+    public static void onEdit(Player player, String kit) {
         Crate crate = Foxtrot.getInstance().getCrateHandler().getCrates().get(kit.toLowerCase());
 
         if (crate == null) {

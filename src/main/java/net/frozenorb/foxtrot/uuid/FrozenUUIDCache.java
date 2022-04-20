@@ -1,9 +1,9 @@
 package net.frozenorb.foxtrot.uuid;
-import com.google.common.base.Preconditions;
-import java.util.UUID;
 
+import com.google.common.base.Preconditions;
 import net.frozenorb.foxtrot.Foxtrot;
-import org.bukkit.plugin.Plugin;
+
+import java.util.UUID;
 
 public final class FrozenUUIDCache {
     private static UUIDCache impl = null;

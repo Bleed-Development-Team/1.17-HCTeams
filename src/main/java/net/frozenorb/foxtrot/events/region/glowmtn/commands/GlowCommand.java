@@ -1,8 +1,9 @@
 package net.frozenorb.foxtrot.events.region.glowmtn.commands;
 
-import me.vaperion.blade.annotation.Command;
-import me.vaperion.blade.annotation.Permission;
-import me.vaperion.blade.annotation.Sender;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Subcommand;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.events.region.glowmtn.GlowHandler;
 import net.frozenorb.foxtrot.events.region.glowmtn.GlowMountain;
@@ -13,11 +14,13 @@ import org.bukkit.entity.Player;
 
 import static org.bukkit.ChatColor.*;
 
-public class GlowCommand {
+@CommandAlias("glow")
+@CommandPermission("op")
+public class GlowCommand extends BaseCommand {
 
-    @Command(value = "glow scan")
-    @Permission(value = "op")
-    public static void glowScan(@Sender Player sender) {
+
+    @Subcommand("scan")
+    public static void glowScan(Player sender) {
         Team team = Foxtrot.getInstance().getTeamHandler().getTeam(GlowHandler.getGlowTeamName());
 
         // Make sure we have a team
@@ -44,9 +47,9 @@ public class GlowCommand {
         sender.sendMessage(GREEN + "[Glowstone Mountain] Scanned all glowstone and saved glowstone mountain to file!");
     }
 
-    @Command(value = "glow reset")
-    @Permission(value = "op")
-    public static void glowReset(@Sender Player sender) {
+
+    @Subcommand("reset")
+    public static void glowReset(Player sender) {
         Team team = Foxtrot.getInstance().getTeamHandler().getTeam(GlowHandler.getGlowTeamName());
 
         // Make sure we have a team, claims, and a mountain!

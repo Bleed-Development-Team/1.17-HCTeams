@@ -1,16 +1,9 @@
 package net.frozenorb.foxtrot.team.commands;
 
 
-import me.vaperion.blade.annotation.Command;
-import me.vaperion.blade.annotation.Name;
-import me.vaperion.blade.annotation.Permission;
-import me.vaperion.blade.annotation.Sender;
-import net.frozenorb.foxtrot.Foxtrot;
-import net.frozenorb.foxtrot.team.Team;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
+import co.aikar.commands.BaseCommand;
 
-public class FocusCommand {
+public class FocusCommand extends BaseCommand {
 
     /*
     @Command(value ={ "focus" })

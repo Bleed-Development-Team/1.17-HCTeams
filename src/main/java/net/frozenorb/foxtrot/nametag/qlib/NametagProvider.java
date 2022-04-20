@@ -6,10 +6,7 @@
  */
 package net.frozenorb.foxtrot.nametag.qlib;
 
-import java.beans.ConstructorProperties;
-
 import lombok.AllArgsConstructor;
-import org.bukkit.entity.Player;
 
 @AllArgsConstructor
 public abstract class NametagProvider {

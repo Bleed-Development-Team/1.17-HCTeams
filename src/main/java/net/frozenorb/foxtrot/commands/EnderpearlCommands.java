@@ -5,7 +5,6 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.Subcommand;
-import me.vaperion.blade.annotation.*;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.server.EnderpearlCooldownHandler;
 import net.frozenorb.foxtrot.server.event.EnderpearlCooldownAppliedEvent;

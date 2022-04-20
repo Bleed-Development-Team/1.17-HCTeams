@@ -1,20 +1,20 @@
 package net.frozenorb.foxtrot.team.commands;
 
-import me.vaperion.blade.annotation.Command;
-import me.vaperion.blade.annotation.Name;
-import me.vaperion.blade.annotation.Permission;
-import me.vaperion.blade.annotation.Sender;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.*;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.team.Team;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 
-public class ResetForceInvitesCommand {
+@CommandAlias("resetforceinvites")
+@CommandPermission("op")
+public class ResetForceInvitesCommand extends BaseCommand {
 
-    @Command(value  = {"resetforceinvites all"})
-    @Permission(value = "op")
-    public static void resetforceinvites_all(@Sender Player sender) {
+    @Subcommand("all")
+    @Description("Reset all teams force invites to the max.")
+    public static void resetforceinvites_all(Player sender) {
         ConversationFactory factory = new ConversationFactory(Foxtrot.getInstance()).withModality(true).withPrefix(new NullConversationPrefix()).withFirstPrompt(new StringPrompt() {
 
             public String getPromptText(ConversationContext context) {
@@ -48,9 +48,10 @@ public class ResetForceInvitesCommand {
         sender.beginConversation(con);
     }
 
-    @Command(value = "resetforceinvites")
-    @Permission(value = "op")
-    public static void resetforceinvites(Player sender, @Name("team") Team team) {
+
+    @Default
+    @Description("Reset a team's force invites to the max.")
+    public static void resetforceinvites(Player sender, Team team) {
         team.setForceInvites(Team.MAX_FORCE_INVITES);
         sender.sendMessage(ChatColor.GREEN + team.getName() + " now has " + team.getForceInvites() + " force invites.");
     }

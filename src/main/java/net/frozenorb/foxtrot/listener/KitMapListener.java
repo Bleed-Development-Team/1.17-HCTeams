@@ -3,7 +3,6 @@ package net.frozenorb.foxtrot.listener;
 import com.google.common.collect.Maps;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.economy.FrozenEconomyHandler;
-import net.frozenorb.foxtrot.map.kits.Kit;
 import net.frozenorb.foxtrot.server.SpawnTagHandler;
 import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.claims.LandBoard;
@@ -21,14 +20,11 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.Inventory;
 
-import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
 

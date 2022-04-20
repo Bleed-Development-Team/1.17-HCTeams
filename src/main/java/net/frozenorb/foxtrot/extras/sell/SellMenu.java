@@ -6,7 +6,6 @@ import net.frozenorb.foxtrot.economy.FrozenEconomyHandler;
 import net.frozenorb.foxtrot.extras.sell.button.MainSellButton;
 import net.frozenorb.foxtrot.util.CC;
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;

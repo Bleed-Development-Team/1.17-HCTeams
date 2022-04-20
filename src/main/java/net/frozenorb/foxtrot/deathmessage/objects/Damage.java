@@ -2,7 +2,6 @@ package net.frozenorb.foxtrot.deathmessage.objects;
 
 import lombok.Getter;
 import net.frozenorb.foxtrot.Foxtrot;
-import net.frozenorb.foxtrot.util.UUIDUtils;
 import org.bukkit.ChatColor;
 
 public abstract class Damage {

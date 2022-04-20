@@ -1,18 +1,23 @@
 package net.frozenorb.foxtrot.team.commands;
 
-import me.vaperion.blade.annotation.Command;
-import me.vaperion.blade.annotation.Permission;
-import me.vaperion.blade.annotation.Sender;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Description;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.team.TeamHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class FreezeRostersCommand {
+@CommandAlias("freezerosters")
+@CommandPermission("op")
+public class FreezeRostersCommand extends BaseCommand {
 
-    @Command(value={ "freezerosters" })
-    @Permission(value = "op")
-    public static void freezeRosters(@Sender Player sender) {
+
+    @Default
+    @Description("Freeze Rosters")
+    public static void freezeRosters(Player sender) {
         TeamHandler teamHandler = Foxtrot.getInstance().getTeamHandler();
         teamHandler.setRostersLocked(!teamHandler.isRostersLocked());
 

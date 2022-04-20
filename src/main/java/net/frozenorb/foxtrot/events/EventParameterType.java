@@ -5,17 +5,14 @@ import me.vaperion.blade.argument.BladeProvider;
 import me.vaperion.blade.context.BladeContext;
 import me.vaperion.blade.exception.BladeExitMessage;
 import net.frozenorb.foxtrot.Foxtrot;
-import net.frozenorb.foxtrot.util.ParameterType;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class EventParameterType implements BladeProvider<Event> {
 

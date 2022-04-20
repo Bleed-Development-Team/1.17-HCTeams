@@ -7,8 +7,6 @@ import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.chat.ChatHandler;
 import net.frozenorb.foxtrot.chat.enums.ChatMode;
 import net.frozenorb.foxtrot.team.Team;
-import net.frozenorb.foxtrot.team.commands.team.TeamMuteCommand;
-import net.frozenorb.foxtrot.team.commands.team.TeamShadowMuteCommand;
 import net.frozenorb.foxtrot.team.track.TeamActionTracker;
 import net.frozenorb.foxtrot.team.track.TeamActionType;
 import org.bson.types.ObjectId;

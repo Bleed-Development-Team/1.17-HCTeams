@@ -2,7 +2,6 @@ package net.frozenorb.foxtrot.deathmessage.objects;
 
 import lombok.Getter;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 
 public abstract class MobDamage extends Damage {
 

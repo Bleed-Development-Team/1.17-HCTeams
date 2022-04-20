@@ -3,18 +3,11 @@ package net.frozenorb.foxtrot.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
-import me.vaperion.blade.annotation.Command;
-import me.vaperion.blade.annotation.Name;
-import me.vaperion.blade.annotation.Permission;
-import me.vaperion.blade.annotation.Sender;
+import co.aikar.commands.annotation.Subcommand;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.commands.SetTeamBalanceCommand;
-import net.frozenorb.foxtrot.team.commands.team.TeamCreateCommand;
-import net.frozenorb.foxtrot.team.menu.DTRMenu;
-import net.frozenorb.foxtrot.team.menu.DemoteMembersMenu;
-import net.frozenorb.foxtrot.team.menu.KickPlayersMenu;
-import net.frozenorb.foxtrot.team.menu.MuteMenu;
+import net.frozenorb.foxtrot.team.commands.team.TeamCommands;
 import net.frozenorb.foxtrot.util.Callback;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.*;
@@ -24,55 +17,53 @@ import org.bukkit.entity.Player;
 @CommandPermission("foxtrot.manage")
 public class TeamManageCommand extends BaseCommand {
 
-    @Command(value = {"manageteam leader"})
-    @Permission(value = "fotrot.manage")
-    public static void teamLeader(@Sender Player sender, @Name("team") Team team) {
+
+    @Subcommand("leader")
+    public static void teamLeader(Player sender, Team team) {
     }
 
-    @Command(value = {"manageteam promote"})
-    @Permission(value = "fotrot.manage")
-    public static void promoteTeam(@Sender Player sender, @Name("team") Team team) {
-    }
-
-    @Command(value = {"manageteam demote"})
-    @Permission(value = "fotrot.manage")
-    public static void demoteTeam(@Sender Player sender, @Name("team") Team team) {
-        new DemoteMembersMenu(team).openMenu(sender);
+    @Subcommand("promote")
+    public static void promoteTeam(Player sender, Team team) {
     }
 
 
-    @Command(value = {"manageteam kick"})
-    @Permission(value = "fotrot.manage")
-    public static void kickTeam(@Sender Player sender, @Name("team") Team team) {
-        new KickPlayersMenu(team).openMenu(sender);
+    @Subcommand("demote")
+    public static void demoteTeam(Player sender, Team team) {
+        //new DemoteMembersMenu(team).openMenu(sender);
     }
 
 
-    @Command(value = {"manageteam balance"})
-    @Permission(value = "fotrot.manage")
-    public static void balanceTeam(@Sender Player sender, @Name("team") Team team) {
+
+    @Subcommand("kick")
+    public static void kickTeam(Player sender, Team team) {
+        //new KickPlayersMenu(team).openMenu(sender);
+    }
+
+
+
+    @Subcommand("balance")
+    public static void balanceTeam(Player sender, Team team) {
         conversationDouble(sender, "§bEnter a new balance for " + team.getName() + ".", (d) -> {
             SetTeamBalanceCommand.setTeamBalance(sender, team, d.floatValue());
             sender.sendRawMessage(ChatColor.GRAY + team.getName() + " now has a balance of " + team.getBalance());
         });
     }
 
-    @Command(value = {"manageteam dtr"})
-    @Permission(value = "fotrot.manage")
-    public static void dtrTeam(@Sender Player sender, @Name("team") Team team) {
+    @Subcommand("dtr")
+    public static void dtrTeam(Player sender, Team team) {
         if (sender.hasPermission("foxtrot.manage.setdtr")) {
             conversationDouble(sender, "§eEnter a new DTR for " + team.getName() + ".", (d) -> {
                 team.setDTR(d.floatValue());
                 sender.sendRawMessage(ChatColor.LIGHT_PURPLE + team.getName() + ChatColor.YELLOW + " has a new DTR of " + ChatColor.LIGHT_PURPLE + d.floatValue() + ChatColor.YELLOW + ".");
             });
         } else {
-            new DTRMenu(team).openMenu(sender);
+            return;
         }
     }
 
-    @Command(value = {"manageteam rename"})
-    @Permission(value = "fotrot.manage")
-    public static void renameTeam(@Sender Player sender, @Name("team") Team team) {
+
+    @Subcommand("rename")
+    public static void renameTeam(Player sender, Team team) {
         conversationString(sender, "§aEnter a new name for " + team.getName() + ".", (name) -> {
             String oldName = team.getName();
             team.rename(name);
@@ -81,17 +72,16 @@ public class TeamManageCommand extends BaseCommand {
     }
 
 
-    @Command(value = {"manageteam mute"})
-    @Permission(value = "fotrot.manage")
-    public static void muteTeam(@Sender Player sender, @Name("team") Team team) {
-        new MuteMenu(team).openMenu(sender);
+    @Subcommand("mute")
+    public static void muteTeam(Player sender, Team team) {
+        //new MuteMenu(team).openMenu(sender);
 
     }
 
 
-    @Command(value = {"manageteam manage"})
-    @Permission(value = "foxtrot.manage")
-    public static void manageTeam(@Sender Player sender, @Name("team") Team team) {
+
+    @Subcommand("manage")
+    public static void manageTeam(Player sender, Team team) {
     }
 
     private static void conversationDouble(Player p, String prompt, Callback<Double> callback) {
@@ -139,7 +129,7 @@ public class TeamManageCommand extends BaseCommand {
                     return Prompt.END_OF_CONVERSATION;
                 }
 
-                if (!TeamCreateCommand.ALPHA_NUMERIC.matcher(newName).find()) {
+                if (!TeamCommands.ALPHA_NUMERIC.matcher(newName).find()) {
                     if (Foxtrot.getInstance().getTeamHandler().getTeam(newName) == null) {
                         callback.callback(newName);
                         return Prompt.END_OF_CONVERSATION;

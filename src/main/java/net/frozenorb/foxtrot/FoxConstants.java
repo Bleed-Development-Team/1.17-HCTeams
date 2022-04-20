@@ -1,7 +1,6 @@
 package net.frozenorb.foxtrot;
 
 import net.frozenorb.foxtrot.team.Team;
-import net.frozenorb.foxtrot.team.commands.team.TeamTopCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 

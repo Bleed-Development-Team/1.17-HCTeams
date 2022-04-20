@@ -6,7 +6,7 @@ import lombok.*;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.claims.Claim.CuboidDirection;
-import net.frozenorb.foxtrot.team.commands.team.TeamClaimCommand;
+import net.frozenorb.foxtrot.team.commands.team.TeamCommands;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import net.frozenorb.foxtrot.team.track.TeamActionTracker;
 import net.frozenorb.foxtrot.team.track.TeamActionType;
@@ -23,11 +23,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 @SuppressWarnings("deprecation")
 @RequiredArgsConstructor
@@ -347,7 +345,7 @@ public class VisualClaim implements Listener {
         }
 
         if (type == VisualClaimType.CREATE) {
-            if (!bypass && !Foxtrot.getInstance().getServerHandler().isUnclaimed(clicked) && Foxtrot.getInstance().getServerHandler().isWarzone(player.getLocation())) {
+            if (!bypass && !Foxtrot.getInstance().getServerHandler().isUnclaimed(clicked) && !Foxtrot.getInstance().getServerHandler().isWarzone(player.getLocation())) {
                 player.sendMessage(ChatColor.RED + "You can only claim land in the Wilderness!");
                 return;
             }
@@ -452,7 +450,7 @@ public class VisualClaim implements Listener {
 
     public void cancel() {
         if (type == VisualClaimType.CREATE || type == VisualClaimType.RESIZE) {
-            player.getInventory().remove(TeamClaimCommand.SELECTION_WAND);
+            player.getInventory().remove(TeamCommands.SELECTION_WAND);
         }
 
         HandlerList.unregisterAll(this);
@@ -812,7 +810,7 @@ public class VisualClaim implements Listener {
 
         if (event.getPlayer() == player) {
             player.getItemInHand();
-            if (player.getItemInHand().getType() == TeamClaimCommand.SELECTION_WAND.getType() && type == VisualClaimType.CREATE) {
+            if (player.getItemInHand().getType() == TeamCommands.SELECTION_WAND.getType() && type == VisualClaimType.CREATE) {
                 switch (event.getAction()) {
                     case RIGHT_CLICK_BLOCK:
                         setLoc(2, event.getClickedBlock().getLocation());

@@ -1,7 +1,8 @@
 package net.frozenorb.foxtrot.events.conquest.commands.conquest;
 
-import me.vaperion.blade.annotation.Command;
-import me.vaperion.blade.annotation.Sender;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Default;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.events.conquest.ConquestHandler;
 import net.frozenorb.foxtrot.events.conquest.game.ConquestGame;
@@ -12,10 +13,12 @@ import org.bukkit.entity.Player;
 
 import java.util.Map;
 
-public class ConquestCommand {
 
-    @Command(value={ "conquest" })
-    public static void conquest(@Sender Player sender) {
+@CommandAlias("conquest")
+public class ConquestCommand extends BaseCommand {
+
+    @Default
+    public static void conquest(Player sender) {
         ConquestGame game = Foxtrot.getInstance().getConquestHandler().getGame();
 
         if (game == null) {

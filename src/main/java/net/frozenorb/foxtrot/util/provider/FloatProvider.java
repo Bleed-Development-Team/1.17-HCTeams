@@ -4,11 +4,8 @@ import me.vaperion.blade.argument.BladeArgument;
 import me.vaperion.blade.argument.BladeProvider;
 import me.vaperion.blade.context.BladeContext;
 import me.vaperion.blade.exception.BladeExitMessage;
-import net.frozenorb.foxtrot.util.NumberUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class FloatProvider implements BladeProvider<Float> {
 

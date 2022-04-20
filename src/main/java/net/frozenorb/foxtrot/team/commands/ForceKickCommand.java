@@ -1,26 +1,26 @@
 package net.frozenorb.foxtrot.team.commands;
 
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Description;
 import com.lunarclient.bukkitapi.LunarClientAPI;
 import com.lunarclient.bukkitapi.object.LCWaypoint;
-import me.vaperion.blade.annotation.Command;
-import me.vaperion.blade.annotation.Name;
-import me.vaperion.blade.annotation.Permission;
-import me.vaperion.blade.annotation.Sender;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.team.Team;
-import net.frozenorb.foxtrot.util.UUIDUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.entity.Player;
 
-import java.util.UUID;
+@CommandAlias("forcekick")
+@CommandPermission("foxtrot.team.forcekick")
+public class ForceKickCommand extends BaseCommand {
 
-public class ForceKickCommand {
-
-    @Command(value ={ "forcekick" })
-    @Permission(value = "foxtrot.forcekick")
-    public static void forceKick(@Sender Player sender, @Name("player") Player player) {
+    @Default
+    @Description("Force a player to leave your team")
+    public static void forceKick(Player sender, Player player) {
         Team team = Foxtrot.getInstance().getTeamHandler().getTeam(player.getUniqueId());
 
         if (team == null) {

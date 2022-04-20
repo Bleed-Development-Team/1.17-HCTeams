@@ -1,24 +1,5 @@
 package net.frozenorb.foxtrot.nametag.qlib;
 
-import com.google.common.base.Preconditions;
-import com.google.common.primitives.Ints;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import net.frozenorb.foxtrot.Foxtrot;
-import net.frozenorb.foxtrot.nametag.packet.ScoreboardTeamPacketMod;
-import net.frozenorb.foxtrot.util.CC;
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-
 public final class FrozenNametagHandler {
     /*
     private static Map<String, Map<String, NametagInfo>> teamMap = new ConcurrentHashMap<>();

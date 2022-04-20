@@ -1,18 +1,16 @@
 package net.frozenorb.foxtrot.team.commands;
 
-import me.vaperion.blade.annotation.Command;
-import me.vaperion.blade.annotation.Permission;
-import me.vaperion.blade.annotation.Sender;
+import co.aikar.commands.BaseCommand;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.team.Team;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-public class RecalculatePointsCommand {
+public class RecalculatePointsCommand extends BaseCommand {//TODO Put this inside the team command base
     
-    @Command(value = {"team recalculatepoints", "f recalculatepoints", "team recalcpoints"})
-    @Permission(value = "op")
-    public static void recalculate(@Sender CommandSender sender) {
+    //@Command(value = {"team recalculatepoints", "f recalculatepoints", "team recalcpoints"})
+   /// @Permission(value = "op")
+    public static void recalculate(CommandSender sender) {
         int changed = 0;
         
         for (Team team : Foxtrot.getInstance().getTeamHandler().getTeams()) {

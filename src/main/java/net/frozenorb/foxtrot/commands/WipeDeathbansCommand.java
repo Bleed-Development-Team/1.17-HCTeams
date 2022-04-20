@@ -1,18 +1,19 @@
 package net.frozenorb.foxtrot.commands;
 
-import me.vaperion.blade.annotation.Command;
-import me.vaperion.blade.annotation.Permission;
-import me.vaperion.blade.annotation.Sender;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Default;
 import net.frozenorb.foxtrot.Foxtrot;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
+@CommandAlias("wipedeathbans")
+@CommandPermission("op")
+public class WipeDeathbansCommand extends BaseCommand {
 
-public class WipeDeathbansCommand {
-
-    @Command(value={ "WipeDeathbans" })
-    @Permission(value = "op")
-    public static void wipeDeathbans(@Sender Player sender) {
+    @Default
+    public static void wipeDeathbans(Player sender) {
         ConversationFactory factory = new ConversationFactory(Foxtrot.getInstance()).withModality(true).withPrefix(new NullConversationPrefix()).withFirstPrompt(new StringPrompt() {
 
             public String getPromptText(ConversationContext context) {

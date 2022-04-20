@@ -11,7 +11,6 @@ import net.frozenorb.foxtrot.events.koth.KOTH;
 import net.frozenorb.foxtrot.listener.BorderListener;
 import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.claims.LandBoard;
-import net.frozenorb.foxtrot.team.commands.team.TeamListCommand;
 import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.PlayerDirection;
 import net.frozenorb.foxtrot.util.TimeUtils;

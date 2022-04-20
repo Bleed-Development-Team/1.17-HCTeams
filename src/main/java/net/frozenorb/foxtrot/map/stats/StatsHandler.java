@@ -1,7 +1,6 @@
 package net.frozenorb.foxtrot.map.stats;
 
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.reflect.TypeToken;
 import com.mongodb.BasicDBObject;
@@ -13,13 +12,11 @@ import net.frozenorb.foxtrot.map.stats.command.StatsTopCommand.StatsObjective;
 import net.frozenorb.foxtrot.serialization.LocationSerializer;
 import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.util.UUIDUtils;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
 import org.bukkit.block.Skull;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

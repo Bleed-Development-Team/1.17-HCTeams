@@ -3,9 +3,7 @@ package net.frozenorb.foxtrot.persist;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import net.frozenorb.foxtrot.Foxtrot;
-import net.frozenorb.foxtrot.redis.RedisCommand;
 import org.bukkit.scheduler.BukkitRunnable;
-import redis.clients.jedis.Jedis;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

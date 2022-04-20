@@ -1,7 +1,5 @@
 package net.frozenorb.foxtrot.util;
 
-import java.beans.ConstructorProperties;
-
 import lombok.AllArgsConstructor;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

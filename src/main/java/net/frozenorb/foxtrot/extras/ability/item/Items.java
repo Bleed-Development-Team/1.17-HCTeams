@@ -1,6 +1,5 @@
 package net.frozenorb.foxtrot.extras.ability.item;
 
-import com.google.common.collect.Lists;
 import net.frozenorb.foxtrot.util.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;

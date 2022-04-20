@@ -1,12 +1,8 @@
 package net.frozenorb.foxtrot.sell.button;
 
 import io.github.nosequel.menu.buttons.Button;
-import net.frozenorb.foxtrot.economy.FrozenEconomyHandler;
 import net.frozenorb.foxtrot.util.CC;
 import org.bukkit.Material;
-
-import java.text.NumberFormat;
-import java.util.Locale;
 
 public class MainSellButton extends Button {
 

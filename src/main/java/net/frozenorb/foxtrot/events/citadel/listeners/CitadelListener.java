@@ -8,7 +8,6 @@ import net.frozenorb.foxtrot.events.events.EventActivatedEvent;
 import net.frozenorb.foxtrot.events.events.EventCapturedEvent;
 import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.util.HourEvent;
-import net.frozenorb.foxtrot.util.discord.Webhook;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

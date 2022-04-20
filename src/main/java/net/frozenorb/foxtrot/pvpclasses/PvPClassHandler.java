@@ -4,7 +4,6 @@ import lombok.Getter;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.pvpclasses.event.BardRestoreEvent;
 import net.frozenorb.foxtrot.pvpclasses.pvpclasses.*;
-import net.frozenorb.foxtrot.util.discord.Webhook;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

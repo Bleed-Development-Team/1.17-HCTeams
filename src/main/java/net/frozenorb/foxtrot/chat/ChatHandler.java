@@ -8,7 +8,6 @@ import lombok.Getter;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.chat.listeners.ChatListener;
 import net.frozenorb.foxtrot.chat.tasks.SaveCustomPrefixesTask;
-
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.FileUtils;
 

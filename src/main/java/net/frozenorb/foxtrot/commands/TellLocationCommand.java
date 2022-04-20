@@ -1,7 +1,8 @@
 package net.frozenorb.foxtrot.commands;
 
-import me.vaperion.blade.annotation.Command;
-import me.vaperion.blade.annotation.Sender;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Default;
 import net.frozenorb.foxtrot.FoxConstants;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.team.Team;
@@ -9,10 +10,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-public final class TellLocationCommand {
+@CommandAlias("telllocation|tl")
+public final class TellLocationCommand extends BaseCommand {
 
-    @Command(value = {"telllocation", "tl"})
-    public static void tellLocation(@Sender Player sender) {
+    @Default
+    public static void tellLocation(Player sender) {
         Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
 
         if (team == null) {

@@ -1,20 +1,13 @@
 package net.frozenorb.foxtrot.map.kits;
 
-import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import net.frozenorb.foxtrot.Foxtrot;
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter

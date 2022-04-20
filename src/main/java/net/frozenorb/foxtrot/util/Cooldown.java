@@ -2,8 +2,9 @@ package net.frozenorb.foxtrot.util;
 
 import net.frozenorb.foxtrot.scoreboard.ScoreFunction;
 import org.bukkit.entity.Player;
-import java.util.UUID;
+
 import java.util.HashMap;
+import java.util.UUID;
 
 public class Cooldown {
 

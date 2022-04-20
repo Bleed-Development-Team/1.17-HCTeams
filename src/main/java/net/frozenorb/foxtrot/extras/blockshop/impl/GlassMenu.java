@@ -1,8 +1,8 @@
 package net.frozenorb.foxtrot.extras.blockshop.impl;
 
 import io.github.nosequel.menu.Menu;
-import net.frozenorb.foxtrot.extras.blockshop.button.BlockShopButton;
 import net.frozenorb.foxtrot.economy.FrozenEconomyHandler;
+import net.frozenorb.foxtrot.extras.blockshop.button.BlockShopButton;
 import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.ItemUtils;
 import org.bukkit.Material;

@@ -7,7 +7,6 @@ import net.frozenorb.foxtrot.commands.EOTWCommand;
 import net.frozenorb.foxtrot.events.Event;
 import net.frozenorb.foxtrot.events.EventType;
 import net.frozenorb.foxtrot.events.conquest.game.ConquestGame;
-import net.frozenorb.foxtrot.events.dtc.DTC;
 import net.frozenorb.foxtrot.events.koth.KOTH;
 import net.frozenorb.foxtrot.listener.GoldenAppleListener;
 import net.frozenorb.foxtrot.map.stats.StatsEntry;
@@ -17,17 +16,19 @@ import net.frozenorb.foxtrot.server.EnderpearlCooldownHandler;
 import net.frozenorb.foxtrot.server.ServerHandler;
 import net.frozenorb.foxtrot.server.SpawnTagHandler;
 import net.frozenorb.foxtrot.team.Team;
-import net.frozenorb.foxtrot.team.commands.team.TeamStuckCommand;
+import net.frozenorb.foxtrot.team.commands.team.TeamCommands;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.Logout;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bson.types.ObjectId;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Fox;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class FoxtrotScoreboardProvider implements AssembleAdapter {
     @Override
@@ -111,7 +112,7 @@ public class FoxtrotScoreboardProvider implements AssembleAdapter {
             };
 
             if (event.getType() == EventType.DTC) {
-                scores.add(displayName + "&7: &c" + ((DTC) event).getCurrentPoints());
+                //scores.add(displayName + "&7: &c" + ((DTC) event).getCurrentPoints());
             } else {
                 scores.add(displayName + "&7: &c" + ScoreFunction.TIME_SIMPLE.apply((float) ((KOTH) event).getRemainingCapTime()));
             }
@@ -227,8 +228,8 @@ public class FoxtrotScoreboardProvider implements AssembleAdapter {
     }
 
     public String getFStuckScore(Player player) {
-        if (TeamStuckCommand.getWarping().containsKey(player.getName())) {
-            float diff = TeamStuckCommand.getWarping().get(player.getName()) - System.currentTimeMillis();
+        if (TeamCommands.getWarping().containsKey(player.getName())) {
+            float diff = TeamCommands.getWarping().get(player.getName()) - System.currentTimeMillis();
 
             if (diff >= 0) {
                 return (ScoreFunction.TIME_FANCY.apply(diff / 1000F));

@@ -1,8 +1,9 @@
 package net.frozenorb.foxtrot.util;
 
+import org.bukkit.entity.EntityType;
+
 import java.util.EnumMap;
 import java.util.Map;
-import org.bukkit.entity.EntityType;
 
 public final class EntityUtils {
     private static final Map<EntityType, String> displayNames = new EnumMap<>(EntityType.class);

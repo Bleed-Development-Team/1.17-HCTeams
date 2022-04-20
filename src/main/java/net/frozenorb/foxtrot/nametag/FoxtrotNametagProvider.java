@@ -1,17 +1,5 @@
 package net.frozenorb.foxtrot.nametag;
 
-import net.frozenorb.foxtrot.Foxtrot;
-import net.frozenorb.foxtrot.nametag.qlib.NametagInfo;
-import net.frozenorb.foxtrot.nametag.qlib.NametagProvider;
-import net.frozenorb.foxtrot.pvpclasses.pvpclasses.ArcherClass;
-import net.frozenorb.foxtrot.team.Team;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
-
-import java.util.Map;
-import java.util.UUID;
-
 public class FoxtrotNametagProvider   {
 
 

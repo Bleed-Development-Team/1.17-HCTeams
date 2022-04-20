@@ -1,14 +1,5 @@
 package net.frozenorb.foxtrot.nametag.packet;
 
-import java.lang.reflect.Field;
-import java.util.Collection;
-
-import io.netty.buffer.Unpooled;
-import net.minecraft.network.PacketDataSerializer;
-import net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
-import org.bukkit.entity.Player;
-
 public final class ScoreboardTeamPacketMod {
     /*
     private PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam(); //dawg I don't know what I'm doing here

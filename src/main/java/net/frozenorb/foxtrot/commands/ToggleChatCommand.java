@@ -1,15 +1,17 @@
 package net.frozenorb.foxtrot.commands;
 
-import me.vaperion.blade.annotation.Command;
-import me.vaperion.blade.annotation.Sender;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Default;
 import net.frozenorb.foxtrot.Foxtrot;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class ToggleChatCommand {
+@CommandAlias("ToggleChat|ToggleGlobalChat|TGC")
+public class ToggleChatCommand extends BaseCommand {
 
-    @Command(value = { "ToggleChat", "ToggleGlobalChat", "TGC" })
-    public static void toggleChat(@Sender Player sender) {
+    @Default
+    public static void toggleChat(Player sender) {
         boolean val = !Foxtrot.getInstance().getToggleGlobalChatMap().isGlobalChatToggled(sender.getUniqueId());
 
         sender.sendMessage(ChatColor.YELLOW + "You are now " + (!val ? ChatColor.RED + "unable" : ChatColor.GREEN + "able") + ChatColor.YELLOW + " to see global chat!");

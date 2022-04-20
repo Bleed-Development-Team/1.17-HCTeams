@@ -1,9 +1,11 @@
 package net.frozenorb.foxtrot.events.region.carepackage;
 
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Default;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import me.vaperion.blade.annotation.Command;
-import me.vaperion.blade.annotation.Permission;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.redis.RedisCommand;
 import net.frozenorb.foxtrot.team.claims.LandBoard;
@@ -22,14 +24,15 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
-import redis.clients.jedis.Jedis;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class CarePackageHandler implements Listener {
+@CommandAlias("savecarepackageloot")
+@CommandPermission("op")
+public class CarePackageHandler extends BaseCommand implements Listener {
 
     private Location lastCarePackage;
     private World world;
@@ -55,8 +58,8 @@ public class CarePackageHandler implements Listener {
         }
     }
 
-    @Command(value = "savecarepackageloot", async = true)
-    @Permission(value = "op")
+
+    @Default
     public static void save(Player sender) {
         Foxtrot.getInstance().runBackboneRedisCommand((redis) -> {
             String lookupString = Bukkit.getServer().getName() + ":" + "carePackageLoot";

@@ -1,9 +1,9 @@
 package net.frozenorb.foxtrot.extras.settings.menu;
 
 import com.google.common.collect.Maps;
+import net.frozenorb.foxtrot.extras.settings.Setting;
 import net.frozenorb.foxtrot.lib.menu.Button;
 import net.frozenorb.foxtrot.lib.menu.Menu;
-import net.frozenorb.foxtrot.extras.settings.Setting;
 import org.bukkit.entity.Player;
 
 import java.util.Map;

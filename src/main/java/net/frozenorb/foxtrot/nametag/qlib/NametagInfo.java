@@ -3,10 +3,6 @@
  */
 package net.frozenorb.foxtrot.nametag.qlib;
 
-import net.frozenorb.foxtrot.nametag.packet.ScoreboardTeamPacketMod;
-
-import java.util.ArrayList;
-
 public final class NametagInfo {
     /*
     private String name;

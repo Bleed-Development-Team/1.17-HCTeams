@@ -3,12 +3,10 @@ package net.frozenorb.foxtrot.extras.ability.impl;
 import net.frozenorb.foxtrot.extras.ability.item.Items;
 import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.Cooldown;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.util.Vector;
 
 public class LauncherAbility implements Listener {
 

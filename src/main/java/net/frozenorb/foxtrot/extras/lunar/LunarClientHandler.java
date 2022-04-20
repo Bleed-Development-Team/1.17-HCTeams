@@ -2,7 +2,6 @@ package net.frozenorb.foxtrot.extras.lunar;
 
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.extras.lunar.listener.ClientListener;
-import net.frozenorb.foxtrot.extras.lunar.tasks.TeammateTask;
 import org.bukkit.Bukkit;
 
 public class LunarClientHandler {

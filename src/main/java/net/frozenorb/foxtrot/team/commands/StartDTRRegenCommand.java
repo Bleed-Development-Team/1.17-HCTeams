@@ -1,18 +1,22 @@
 package net.frozenorb.foxtrot.team.commands;
 
-import me.vaperion.blade.annotation.Command;
-import me.vaperion.blade.annotation.Name;
-import me.vaperion.blade.annotation.Permission;
-import me.vaperion.blade.annotation.Sender;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Description;
 import net.frozenorb.foxtrot.team.Team;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class StartDTRRegenCommand {
+@CommandAlias("startdtrregen")
+@CommandPermission("foxtrot.team.startdtrregen")
+public class StartDTRRegenCommand  extends BaseCommand {
 
-    @Command(value={ "startdtrregen" })
-    @Permission(value = "foxtrot.startdtrregen")
-    public static void startDTRRegen(@Sender Player sender, @Name("team") Team team) {
+
+    @Default
+    @Description("Starts a team's DTR regeneration")
+    public static void startDTRRegen(Player sender, Team team) {
         team.setDTRCooldown(System.currentTimeMillis());
         sender.sendMessage(ChatColor.LIGHT_PURPLE + team.getName() + ChatColor.YELLOW + " is now regenerating DTR.");
     }

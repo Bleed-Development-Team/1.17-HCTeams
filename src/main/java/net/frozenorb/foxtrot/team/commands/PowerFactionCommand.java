@@ -1,33 +1,39 @@
 package net.frozenorb.foxtrot.team.commands;
 
-import me.vaperion.blade.annotation.Command;
-import me.vaperion.blade.annotation.Name;
-import me.vaperion.blade.annotation.Permission;
-import me.vaperion.blade.annotation.Sender;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Description;
+import co.aikar.commands.annotation.Subcommand;
 import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.TeamHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class PowerFactionCommand {
+@CommandAlias("powerfaction|pf")
+@CommandPermission("foxtrot.team.powerfaction")
+public class PowerFactionCommand extends BaseCommand {
 
-    @Command(value ={ "powerfaction add", "team powerfaction add", "pf add", "powerfac add" })
-    @Permission(value = "foxtrot.powerfactions")
-    public static void powerFactionAdd(@Sender Player sender, @Name("team") Team team) {
+
+    @Subcommand("add")
+    @Description("Add a team to the power faction list")
+    public static void powerFactionAdd(Player sender, Team team) {
         team.setPowerFaction(true);
         sender.sendMessage(ChatColor.LIGHT_PURPLE + team.getName() + ChatColor.YELLOW + " is now a power faction!");
     }
 
-    @Command(value ={ "powerfaction remove", "team powerfaction remove", "pf remove", "powerfac remove" })
-    @Permission(value = "foxtrot.powerfactions")
-    public static void powerFactionRemove(@Sender Player sender, @Name("team") Team team) {
+
+    @Subcommand("remove")
+    @Description("Remove a team from the power faction list")
+    public static void powerFactionRemove(Player sender, Team team) {
         team.setPowerFaction(false);
         sender.sendMessage(ChatColor.LIGHT_PURPLE + team.getName() + ChatColor.YELLOW + " is no longer a power faction!");
     }
 
-    @Command(value ={ "powerfaction list", "team powerfaction list", "pf list", "powerfac list" })
-    @Permission(value = "foxtrot.powerfactions")
-    public static void powerFactionList(@Sender Player sender) {
+
+    @Subcommand("list")
+    @Description("List all power factions")
+    public static void powerFactionList(Player sender) {
         sender.sendMessage(ChatColor.YELLOW + "Found " + ChatColor.RED + TeamHandler.getPowerFactions().size() + ChatColor.YELLOW + " Power Factions.");
         int i = 1;
         for( Team t : TeamHandler.getPowerFactions() ) {

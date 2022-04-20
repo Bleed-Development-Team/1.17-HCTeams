@@ -2,15 +2,15 @@ package net.frozenorb.foxtrot.serialization;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Objects;
-
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Objects;
 
 public final class ItemStackSerializer {
     public static final BasicDBObject AIR = new BasicDBObject();

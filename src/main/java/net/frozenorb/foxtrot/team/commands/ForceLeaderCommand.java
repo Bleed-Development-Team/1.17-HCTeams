@@ -1,20 +1,24 @@
 package net.frozenorb.foxtrot.team.commands;
 
-import me.vaperion.blade.annotation.*;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Description;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.team.Team;
-import net.frozenorb.foxtrot.util.UUIDUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.util.UUID;
+@CommandAlias("forceleader")
+@CommandPermission("foxtrot.team.forceleader")
+public class ForceLeaderCommand extends BaseCommand {
 
-public class ForceLeaderCommand {
 
-    @Command(value ={ "ForceLeader" })
-    @Permission(value = "foxtrot.forceleader")
-    public static void forceLeader(@Sender Player sender, @Optional("self") Player player) {
+    @Default
+    @Description("Force a player to be the leader of a team")
+    public static void forceLeader(Player sender, Player player) {
         Team playerTeam = Foxtrot.getInstance().getTeamHandler().getTeam(player.getUniqueId());
 
         if (playerTeam == null) {
