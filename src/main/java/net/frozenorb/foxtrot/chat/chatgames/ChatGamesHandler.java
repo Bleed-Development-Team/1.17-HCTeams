@@ -5,6 +5,7 @@ import lombok.Setter;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.chat.chatgames.listener.ChatGamesListener;
 import net.frozenorb.foxtrot.chat.chatgames.tasks.ChatGamesTask;
+import net.frozenorb.foxtrot.util.CC;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -34,6 +35,7 @@ public class ChatGamesHandler {
         answers.add("alebab");
         answers.add("friday");
         answers.add("24h");
+        answers.add("bleedhcf");
 
         // Listeners
         Bukkit.getPluginManager().registerEvents(new ChatGamesListener(), Foxtrot.getInstance());
@@ -47,10 +49,10 @@ public class ChatGamesHandler {
         pickRandomQuestion();
 
         Bukkit.broadcastMessage("");
-        Bukkit.broadcastMessage("&b&lChat Games &7| &fStarting");
+        Bukkit.broadcastMessage(CC.translate("&b&lChat Games &7| &fStarting"));
         Bukkit.broadcastMessage("");
-        Bukkit.broadcastMessage("&fThe question is:");
-        Bukkit.broadcastMessage(question);
+        Bukkit.broadcastMessage(CC.translate("&fThe question is:"));
+        Bukkit.broadcastMessage(CC.translate(question));
         Bukkit.broadcastMessage("");
 
     }
@@ -60,18 +62,18 @@ public class ChatGamesHandler {
 
         if (lost){
             Bukkit.broadcastMessage("");
-            Bukkit.broadcastMessage("&b&lChat Games &7| &fEnding");
+            Bukkit.broadcastMessage(CC.translate("&b&lChat Games &7| &fEnding"));
             Bukkit.broadcastMessage("");
-            Bukkit.broadcastMessage("&fYou ran out of time!");
-            Bukkit.broadcastMessage("&fThe answer was: " + answer);
+            Bukkit.broadcastMessage(CC.translate("&fYou ran out of time!"));
+            Bukkit.broadcastMessage(CC.translate("&fThe answer was: " + answer));
             Bukkit.broadcastMessage("");
 
         } else {
             Bukkit.broadcastMessage("");
-            Bukkit.broadcastMessage("&b&lChat Games &7| &fEnding");
+            Bukkit.broadcastMessage(CC.translate("&b&lChat Games &7| &fEnding"));
             Bukkit.broadcastMessage("");
-            Bukkit.broadcastMessage("&fCongratulations to &b" + player.getName() + " &ffor getting the word correct!");
-            Bukkit.broadcastMessage("&fThe answer was: &b" + answer);
+            Bukkit.broadcastMessage(CC.translate("&fCongratulations to &b" + player.getName() + " &ffor getting the word correct!"));
+            Bukkit.broadcastMessage(CC.translate("&fThe answer was: &b" + answer));
             Bukkit.broadcastMessage("");
         }
 

@@ -16,6 +16,7 @@ import java.util.List;
 public class TeamChatSpyCommand extends BaseCommand {
 
     @Subcommand("add")
+    @CommandCompletion("@team")
     public static void teamChatSpyAdd(Player sender, Team team) {
         if (Foxtrot.getInstance().getChatSpyMap().getChatSpy(sender.getUniqueId()).contains(team.getUniqueId())) {
             sender.sendMessage(ChatColor.RED + "You are already spying on " + team.getName() + ".");
@@ -38,6 +39,7 @@ public class TeamChatSpyCommand extends BaseCommand {
 
     @Subcommand("del")
     @Description("Stops spying on a team")
+    @CommandCompletion("@team")
     public static void teamChatSpyDel(Player sender, Team team) {
         if (!Foxtrot.getInstance().getChatSpyMap().getChatSpy(sender.getUniqueId()).contains(team.getUniqueId())) {
             sender.sendMessage(ChatColor.RED + "You are not spying on " + team.getName() + ".");

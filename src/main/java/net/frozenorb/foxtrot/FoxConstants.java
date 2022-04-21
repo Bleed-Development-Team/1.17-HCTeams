@@ -27,7 +27,7 @@ public final class FoxConstants {
         return (ChatColor.GOLD + "[" + Team.ALLY_COLOR + "AC: " + ChatColor.YELLOW + team.getName() + ChatColor.GOLD + "]" + Team.ALLY_COLOR + player.getName() + ": " + message);
     }
 
-    public static String publicChatFormat(Team team, String rankPrefix, String customPrefixString) {
+    public static String publicChatFormat(Team team, String rankPrefix, String customPrefixString, String rankSuffix) {
         String starting = "";
 
         if (team != null) {
@@ -41,7 +41,7 @@ public final class FoxConstants {
         return starting + customPrefixString + rankPrefix + ChatColor.WHITE + "%s" + ChatColor.WHITE + ": %s";
     }
 
-    public static String publicChatFormatTwoPointOhBaby(Player player, Team team, String rankPrefix, String customPrefixString) {
+    public static String publicChatFormatTwoPointOhBaby(Player player, Team team, String rankPrefix, String customPrefixString, String rankSuffix) {
         String starting = "";
 
         if (team != null) {
@@ -53,8 +53,8 @@ public final class FoxConstants {
 
             starting = ChatColor.GOLD  + "[" +  Foxtrot.getInstance().getServerHandler().getDefaultRelationColor() + team.getName() + ChatColor.GOLD  + "] ";
         }
-
-        return starting + customPrefixString + rankPrefix + ChatColor.WHITE + "%s" + ChatColor.WHITE + ": %s";
+        String prefix = rankPrefix + customPrefixString;
+        return starting + customPrefixString + ChatColor.WHITE + rankPrefix + "%s"  + rankSuffix + ChatColor.WHITE + ": %s";
     }
 
 }

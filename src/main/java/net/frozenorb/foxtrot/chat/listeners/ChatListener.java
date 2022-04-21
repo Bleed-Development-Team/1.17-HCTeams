@@ -10,6 +10,7 @@ import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.commands.team.TeamCommands;
 import net.frozenorb.foxtrot.team.track.TeamActionTracker;
 import net.frozenorb.foxtrot.team.track.TeamActionType;
+import net.frozenorb.foxtrot.util.CC;
 import org.bson.types.ObjectId;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -61,7 +62,10 @@ public class ChatListener implements Listener {
 
         Team playerTeam = Foxtrot.getInstance().getTeamHandler().getTeam(event.getPlayer());
 
-        String rankPrefix = PlaceholderAPI.setPlaceholders(event.getPlayer(), "%groupmanager_group_prefix%");
+        String prefix1 = PlaceholderAPI.setPlaceholders(event.getPlayer(), "%luckperms_prefix%");
+        String rankPrefix = CC.translateHex(prefix1);
+        String suffix1 = PlaceholderAPI.setPlaceholders(event.getPlayer(), "%luckperms_suffix%");
+        String rankSuffix = CC.translateHex(suffix1);
         String customPrefix = getCustomPrefix(event.getPlayer().getUniqueId());
         ChatMode playerChatMode = Foxtrot.getInstance().getChatModeMap().getChatMode(event.getPlayer().getUniqueId());
         ChatMode forcedChatMode = ChatMode.findFromForcedPrefix(event.getMessage().charAt(0));

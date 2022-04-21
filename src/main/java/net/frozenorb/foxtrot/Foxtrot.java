@@ -82,7 +82,9 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -249,6 +251,15 @@ public class Foxtrot extends JavaPlugin {
 		m.getCommandContexts().registerContext(Event.class, new EventParameterType());
 		m.getCommandContexts().registerContext(StatsTopCommand.StatsObjective.class, new StatsTopCommand.StatsObjectiveProvider());
 		m.getCommandContexts().registerContext(Subclaim.class, new SubclaimProvider());
+		m.getCommandCompletions().registerCompletion("team", c -> {
+			List<String> teams = new ArrayList<>();
+			for (Team team : getTeamHandler().getTeams()) {
+				if (team.hasDTRBitmask(DTRBitmask.KOTH) || team.hasDTRBitmask(DTRBitmask.SAFE_ZONE) || team.hasDTRBitmask(DTRBitmask.CITADEL) || team.hasDTRBitmask(DTRBitmask.ROAD)) continue;
+				teams.add(team.getName());
+			}
+			return teams;
+		});
+
 		m.registerCommand(new AddBalanceCommand());
 		m.registerCommand(new AssociateAccountsCommand());
 		m.registerCommand(new AssociateViewCommand());
@@ -478,7 +489,7 @@ public class Foxtrot extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new TeamListener(), this);
 		getServer().getPluginManager().registerEvents(new WebsiteListener(), this);
 		getServer().getPluginManager().registerEvents(new StatTrakListener(), this);
-		//getServer().getPluginManager().registerEvents(new ResourcePack(), this);
+		getServer().getPluginManager().registerEvents(new ResourcePack(), this);
 
 		if (getServerHandler().isReduceArmorDamage()) {
 			getServer().getPluginManager().registerEvents(new ArmorDamageListener(), this);

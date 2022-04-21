@@ -2,6 +2,7 @@ package net.frozenorb.foxtrot.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
 import net.frozenorb.foxtrot.Foxtrot;
@@ -42,6 +43,7 @@ public class TeamManageCommand extends BaseCommand {
 
 
     @Subcommand("balance")
+    @CommandCompletion("@team")
     public static void balanceTeam(Player sender, Team team) {
         conversationDouble(sender, "§bEnter a new balance for " + team.getName() + ".", (d) -> {
             SetTeamBalanceCommand.setTeamBalance(sender, team, d.floatValue());

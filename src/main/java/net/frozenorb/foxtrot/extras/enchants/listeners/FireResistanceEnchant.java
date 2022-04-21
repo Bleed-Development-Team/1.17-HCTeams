@@ -23,6 +23,8 @@ public class FireResistanceEnchant implements Listener {
                 player.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
             }
             player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE, 0));
+        } else {
+            player.removePotionEffect(PotionEffectType.INVISIBILITY);
         }
 
     }

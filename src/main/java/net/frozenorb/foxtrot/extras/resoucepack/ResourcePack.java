@@ -13,15 +13,15 @@ public class ResourcePack implements Listener {
     @EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        player.setResourcePack(Foxtrot.getInstance().getConfig().getString("resource-pack"));
+        player.setResourcePack("https://www.dropbox.com/s/ol9ssqnlsih3bzp/BleedHCF.zip?dl=1");
     }
 
     @EventHandler
     public void onResourcePackInteraction(PlayerResourcePackStatusEvent event) {
         Player player = event.getPlayer();
-        if (event.getStatus().equals(PlayerResourcePackStatusEvent.Status.ACCEPTED)) {
+        if (event.getStatus().equals(PlayerResourcePackStatusEvent.Status.ACCEPTED) || event.getStatus().equals(PlayerResourcePackStatusEvent.Status.ACCEPTED)) {
             return;
         }
-        player.kickPlayer(CC.translate("&6&lFoxtrot &7>> &cResource pack rejected."));
+        //player.kickPlayer(CC.translate("&6&lFoxtrot &7>> &cResource pack rejected."));
     }
 }

@@ -960,18 +960,22 @@ public class TeamCommands extends BaseCommand implements Listener {
     }
     @Subcommand("who|info|show|i")
     @Description("Show info about your team")
-    public static void teamInfo(final Player sender, @Optional final Team team) {
+    @CommandCompletion("@team")
+    public static void teamInfo(final Player sender, @Optional Team team) {
 
-
+        if (team == null) {
+            team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        }
+        Team finalTeam = team;
         new BukkitRunnable() {
             public void run() {
-                Team exactPlayerTeam = Foxtrot.getInstance().getTeamHandler().getTeam(UUIDUtils.uuid(team.getName()));
+                Team exactPlayerTeam = Foxtrot.getInstance().getTeamHandler().getTeam(UUIDUtils.uuid(finalTeam.getName()));
 
-                if (exactPlayerTeam != null && exactPlayerTeam != team) {
+                if (exactPlayerTeam != null && exactPlayerTeam != finalTeam) {
                     exactPlayerTeam.sendTeamInfo(sender);
                 }
 
-                team.sendTeamInfo(sender);
+                finalTeam.sendTeamInfo(sender);
             }
         }.runTask(Foxtrot.getInstance());
     }

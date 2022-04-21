@@ -23,6 +23,8 @@ public class SpeedEnchant implements Listener {
                 player.removePotionEffect(PotionEffectType.SPEED);
             }
             player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
+        } else {
+            player.removePotionEffect(PotionEffectType.INVISIBILITY);
         }
 
     }

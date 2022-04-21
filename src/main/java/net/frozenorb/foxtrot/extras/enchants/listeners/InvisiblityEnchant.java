@@ -12,6 +12,7 @@ public class InvisiblityEnchant implements Listener {
     @EventHandler
     public void onArmorEquip(PlayerArmorEquipEvent event) {
         refreshInvisibility(event.getPlayer());
+
     }
 
     public static void refreshInvisibility(Player player) {
@@ -24,6 +25,8 @@ public class InvisiblityEnchant implements Listener {
                 player.removePotionEffect(PotionEffectType.INVISIBILITY);
             }
             player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0));
+        } else {
+            player.removePotionEffect(PotionEffectType.INVISIBILITY);
         }
 
     }

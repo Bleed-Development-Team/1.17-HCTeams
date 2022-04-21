@@ -2,6 +2,7 @@ package net.frozenorb.foxtrot.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
 import net.frozenorb.foxtrot.team.Team;
@@ -23,6 +24,7 @@ public class BitmaskCommand extends BaseCommand {
 
 
     @Subcommand("info")
+    @CommandCompletion("@team")
     public static void bitmaskInfo(Player sender, Team team) {
         if (team.getOwner() != null) {
             sender.sendMessage(ChatColor.RED + "Bitmask flags cannot be applied to teams without a null leader.");
