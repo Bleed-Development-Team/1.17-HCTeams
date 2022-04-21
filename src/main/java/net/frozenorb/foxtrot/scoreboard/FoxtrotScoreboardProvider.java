@@ -23,17 +23,15 @@ import net.frozenorb.foxtrot.util.Logout;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bson.types.ObjectId;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Fox;
 import org.bukkit.entity.Player;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FoxtrotScoreboardProvider implements AssembleAdapter {
     @Override
     public String getTitle(Player player) {
-        return CC.translate("&4&l\uD835\uDE09\uD835\uDE2D\uD835\uDE26\uD835\uDE26\uD835\uDE25&7" + StringEscapeUtils.unescapeJava("❘") + " &fHCF");
+        return CC.translate("&b&lFrozen &7" + StringEscapeUtils.unescapeJava("❘") + " &fHCF");
     }
 
     @Override
@@ -56,32 +54,32 @@ public class FoxtrotScoreboardProvider implements AssembleAdapter {
         if (Foxtrot.getInstance().getMapHandler().isKitMap() || Foxtrot.getInstance().getServerHandler().isVeltKitMap()) {
             StatsEntry stats = Foxtrot.getInstance().getMapHandler().getStatsHandler().getStats(player.getUniqueId());
 
-            scores.add("&b&l\uD835\uDE12\uD835\uDE2A\uD835\uDE2D\uD835\uDE2D\uD835\uDE34&7: &f" + stats.getKills());
-            scores.add("&b&l\uD835\uDE0B\uD835\uDE26\uD835\uDE22\uD835\uDE35\uD835\uDE29\uD835\uDE34&7: &f" + stats.getDeaths());
+            scores.add("&b&lKills&7: &f" + stats.getKills());
+            scores.add("&b&lDeaths&7: &f" + stats.getDeaths());
         }
 
 
         if (spawnTagScore != null) {
-            scores.add("&c&l\uD835\uDE1A\uD835\uDE31\uD835\uDE22\uD835\uDE38\uD835\uDE2F \uD835\uDE1B\uD835\uDE22\uD835\uDE28&7: &c" + spawnTagScore);
+            scores.add("&c&lSpawn Tag&7: &c" + spawnTagScore);
         }
 
         if (homeScore != null) {
-            scores.add("&9&l\uD835\uDE0F\uD835\uDE30\uD835\uDE2E\uD835\uDE26§7: &c" + homeScore);
+            scores.add("&9&lHome§7: &c" + homeScore);
         }
 
         if (appleScore != null) {
-            scores.add("&6&l\uD835\uDE08\uD835\uDE31\uD835\uDE31\uD835\uDE2D\uD835\uDE26&7: &c" + appleScore);
+            scores.add("&6&lApple&7: &c" + appleScore);
         }
 
         if (enderpearlScore != null) {
-            scores.add("&e&l\uD835\uDE0C\uD835\uDE2F\uD835\uDE25\uD835\uDE26\uD835\uDE33\uD835\uDE31\uD835\uDE26\uD835\uDE22\uD835\uDE33\uD835\uDE2D&7: &c" + enderpearlScore);
+            scores.add("&e&lEnderpearl&7: &c" + enderpearlScore);
         }
 
         if (pvpTimerScore != null) {
             if (Foxtrot.getInstance().getStartingPvPTimerMap().get(player.getUniqueId())) {
-                scores.add("&a&l\uD835\uDE1A\uD835\uDE35\uD835\uDE22\uD835\uDE33\uD835\uDE35\uD835\uDE2A\uD835\uDE2F\uD835\uDE28 \uD835\uDE1B\uD835\uDE2A\uD835\uDE2E\uD835\uDE26\uD835\uDE33&7: &c" + pvpTimerScore);
+                scores.add("&a&lStarting Timer&7: &c" + pvpTimerScore);
             } else {
-                scores.add("&a&l\uD835\uDE17\uD835\uDE37\uD835\uDE17 \uD835\uDE1B\uD835\uDE2A\uD835\uDE2E\uD835\uDE26\uD835\uDE33&7: &c" + pvpTimerScore);
+                scores.add("&a&lPvP Timer&7: &c" + pvpTimerScore);
             }
         }
 
@@ -93,8 +91,8 @@ public class FoxtrotScoreboardProvider implements AssembleAdapter {
                 continue;
             }
 
-            if (timer.getKey().equals("&a&l\uD835\uDE1A\uD835\uDE16\uD835\uDE1B\uD835\uDE1E")) {
-                scores.add(CC.translate("&a&l\uD835\uDE1A\uD835\uDE16\uD835\uDE1B\uD835\uDE1E \uD835\uDE26\uD835\uDE2F\uD835\uDE25\uD835\uDE34 \uD835\uDE2A\uD835\uDE2F &a&l" + getTimerScore(timer)));
+            if (timer.getKey().equals("&a&lSOTW")) {
+                scores.add(CC.translate("&a&lSOTW ends in &a&l" + getTimerScore(timer)));
             } else {
                 scores.add(CC.translate(timer.getKey() + "&7: &c" + getTimerScore(timer)));
             }
@@ -106,16 +104,13 @@ public class FoxtrotScoreboardProvider implements AssembleAdapter {
             }
 
             String displayName = switch (event.getName()) {
-                case "EOTW" -> ChatColor.DARK_RED.toString() + ChatColor.BOLD + "\uD835\uDE0C\uD835\uDE16\uD835\uDE1B\uD835\uDE1E";
-                case "Citadel" -> ChatColor.DARK_PURPLE.toString() + ChatColor.BOLD + "\uD835\uDE0A\uD835\uDE2A\uD835\uDE35\uD835\uDE22\uD835\uDE25\uD835\uDE26\uD835\uDE2D";
+                case "EOTW" -> ChatColor.DARK_RED.toString() + ChatColor.BOLD + "EOTW";
+                case "Citadel" -> ChatColor.DARK_PURPLE.toString() + ChatColor.BOLD + "Citadel";
                 default -> ChatColor.BLUE.toString() + ChatColor.BOLD + event.getName();
             };
 
-            if (event.getType() == EventType.DTC) {
-                //scores.add(displayName + "&7: &c" + ((DTC) event).getCurrentPoints());
-            } else {
-                scores.add(displayName + "&7: &c" + ScoreFunction.TIME_SIMPLE.apply((float) ((KOTH) event).getRemainingCapTime()));
-            }
+            scores.add(displayName + "&7: &c" + ScoreFunction.TIME_SIMPLE.apply((float) ((KOTH) event).getRemainingCapTime()));
+
         }
 
         if (EOTWCommand.isFfaEnabled()) {

@@ -259,6 +259,13 @@ public class Foxtrot extends JavaPlugin {
 			}
 			return teams;
 		});
+		m.getCommandCompletions().registerCompletion("event", c -> {
+			List<String> events = new ArrayList<>();
+			for (Event event : getEventHandler().getEvents()) {
+				events.add(event.getName());
+			}
+			return events;
+			});
 
 		m.registerCommand(new AddBalanceCommand());
 		m.registerCommand(new AssociateAccountsCommand());

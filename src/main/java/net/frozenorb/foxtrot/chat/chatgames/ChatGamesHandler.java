@@ -73,7 +73,7 @@ public class ChatGamesHandler {
             Bukkit.broadcastMessage(CC.translate("&b&lChat Games &7| &fEnding"));
             Bukkit.broadcastMessage("");
             Bukkit.broadcastMessage(CC.translate("&fCongratulations to &b" + player.getName() + " &ffor getting the word correct!"));
-            Bukkit.broadcastMessage(CC.translate("&fThe answer was: &b" + answer));
+            Bukkit.broadcastMessage(CC.translate("&fThe answer was: &b" + answer.substring(0, 1).toUpperCase() + answer.substring(1)));
             Bukkit.broadcastMessage("");
         }
 

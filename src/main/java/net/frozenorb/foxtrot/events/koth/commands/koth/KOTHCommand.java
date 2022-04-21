@@ -27,6 +27,7 @@ public class KOTHCommand extends BaseCommand {
     @Subcommand("activate")
     @Description("Activate an event")
     @CommandPermission("foxtrot.event.koth.activate")
+    @CommandCompletion("@event")
     public static void kothActivate(Player sender, Event koth) {
         // Don't start a KOTH if another one is active.
         for (Event otherKoth : Foxtrot.getInstance().getEventHandler().getEvents()) {
@@ -56,6 +57,8 @@ public class KOTHCommand extends BaseCommand {
     @Subcommand("deactivate|inactive")
     @CommandPermission("foxtrot.event.koth.deactivate")
     @Description("Deactivate an event")
+    @CommandCompletion("@event")
+
     public static void kothDectivate(CommandSender sender, Event koth) {
         koth.deactivate();
         sender.sendMessage(ChatColor.GRAY + "Deactivated " + koth.getName() + " event.");
@@ -64,6 +67,7 @@ public class KOTHCommand extends BaseCommand {
     @Subcommand("delete")
     @Description("Delete an event")
     @CommandPermission("foxtrot.event.koth.delete")
+    @CommandCompletion("@event")
     public static void kothDelete(Player sender, Event koth) {
         Foxtrot.getInstance().getEventHandler().getEvents().remove(koth);
         Foxtrot.getInstance().getEventHandler().saveEvents();
@@ -73,6 +77,8 @@ public class KOTHCommand extends BaseCommand {
     @Subcommand("dist|distance")
     @Description("Set the distance of a KOTH Capture Zone!")
     @CommandPermission("foxtrot.event.koth.distance")
+    @CommandCompletion("@event")
+
     public static void kothDist(Player sender, Event koth, Integer distance) {
         if (koth.getType() != EventType.KOTH) {
             sender.sendMessage(ChatColor.RED + "Can only set distance for KOTHs");
@@ -102,6 +108,8 @@ public class KOTHCommand extends BaseCommand {
     @Subcommand("hidden")
     @Description("Toggles whether a KOTH is hidden")
     @CommandPermission("foxtrot.event.koth.hidden")
+    @CommandCompletion("@event")
+
     public static void kothHidden(Player sender, Event koth, boolean hidden) {
         koth.setHidden(hidden);
         sender.sendMessage(ChatColor.GRAY + "Set visibility for the " + koth.getName() + " event.");
@@ -127,6 +135,8 @@ public class KOTHCommand extends BaseCommand {
     @Subcommand("loc")
     @Description("Set a KOTH's cap location")
     @CommandPermission("foxtrot.event.koth.loc")
+    @CommandCompletion("@event")
+
     public static void kothLoc(Player sender, Event koth) {
         if (koth.getType() != EventType.KOTH) {
             sender.sendMessage(ChatColor.RED + "Unable to set location for a non-KOTH event.");
@@ -182,6 +192,8 @@ public class KOTHCommand extends BaseCommand {
     @Subcommand("tp")
     @Description("Teleport to a KOTH's cap location")
     @CommandPermission("foxtrot.event.koth.tp")
+    @CommandCompletion("@event")
+
     public static void kothTP(Player sender, Event koth) {
         if (koth.getType() == EventType.KOTH) {
             sender.teleport(((KOTH) koth).getCapLocation().toLocation(Foxtrot.getInstance().getServer().getWorld(((KOTH) koth).getWorld())));

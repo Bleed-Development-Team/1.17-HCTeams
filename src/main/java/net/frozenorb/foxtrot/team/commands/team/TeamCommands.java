@@ -1827,12 +1827,12 @@ public class TeamCommands extends BaseCommand implements Listener {
             return;
         }
 
-        int seconds = sender.isOp() && sender.getGameMode() == GameMode.CREATIVE ? 5 : 300;
+        int seconds = sender.isOp() && sender.getGameMode() == GameMode.CREATIVE ? 5 : 60;
         warping.put(sender.getName(), System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(seconds));
 
         new BukkitRunnable() {
 
-            private int seconds = sender.isOp() && sender.getGameMode() == GameMode.CREATIVE ? 5 : 300;
+            private int seconds = sender.isOp() && sender.getGameMode() == GameMode.CREATIVE ? 5 : 60;
 
             private Location loc = sender.getLocation();
 
