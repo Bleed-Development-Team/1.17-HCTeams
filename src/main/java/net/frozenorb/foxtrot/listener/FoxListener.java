@@ -91,6 +91,16 @@ public class FoxListener implements Listener {
         processTerritoryInfo(event); // this only works because I'm lucky and PlayerTeleportEvent extends PlayerMoveEvent :0
     }
 
+    @EventHandler
+    public void onPlayerJoin2(PlayerJoinEvent event){
+        Player player = event.getPlayer();
+
+        player.sendMessage(CC.translate(""));
+        player.sendMessage(CC.translate("&fYou've been connected to &6&lBleed&f."));
+        player.sendMessage(CC.translate("&7This map began on 28th of April."));
+        player.sendMessage(CC.translate(""));
+    }
+
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
         if (event.getFrom().getBlockX() == Objects.requireNonNull(event.getTo()).getBlockX() && event.getFrom().getBlockY() == event.getTo().getBlockY() && event.getFrom().getBlockZ() == event.getTo().getBlockZ()) {

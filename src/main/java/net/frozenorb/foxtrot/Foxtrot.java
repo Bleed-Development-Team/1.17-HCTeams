@@ -258,6 +258,7 @@ public class Foxtrot extends JavaPlugin {
 				if (team.hasDTRBitmask(DTRBitmask.KOTH) || team.hasDTRBitmask(DTRBitmask.SAFE_ZONE) || team.hasDTRBitmask(DTRBitmask.CITADEL) || team.hasDTRBitmask(DTRBitmask.ROAD)) continue;
 				teams.add(team.getName());
 			}
+
 			return teams;
 		});
 		m.getCommandCompletions().registerCompletion("event", c -> {
