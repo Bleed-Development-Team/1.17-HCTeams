@@ -54,8 +54,8 @@ public class FoxtrotScoreboardProvider implements AssembleAdapter {
         if (Foxtrot.getInstance().getMapHandler().isKitMap() || Foxtrot.getInstance().getServerHandler().isVeltKitMap()) {
             StatsEntry stats = Foxtrot.getInstance().getMapHandler().getStatsHandler().getStats(player.getUniqueId());
 
-            scores.add("&b&lKills&7: &f" + stats.getKills());
-            scores.add("&b&lDeaths&7: &f" + stats.getDeaths());
+            scores.add("&4&lKills&7: &f" + stats.getKills());
+            scores.add("&4&lDeaths&7: &f" + stats.getDeaths());
         }
 
 
@@ -91,8 +91,8 @@ public class FoxtrotScoreboardProvider implements AssembleAdapter {
                 continue;
             }
 
-            if (timer.getKey().equals("&a&lSOTW")) {
-                scores.add(CC.translate("&a&lSOTW ends in &a&l" + getTimerScore(timer)));
+            if (timer.getKey().equals("&aSOTW")) {
+                scores.add(CC.translate("&aSOTW&7: &f" + getTimerScore(timer)));
             } else {
                 scores.add(CC.translate(timer.getKey() + "&7: &c" + getTimerScore(timer)));
             }
@@ -149,16 +149,13 @@ public class FoxtrotScoreboardProvider implements AssembleAdapter {
             if (!scores.isEmpty()){
                 scores.add("&3&l&7&m--------------------");
             }
-            scores.add("&b&lTeam&7: &f" + focusedTeam.getName());
+            scores.add("&4&lTeam&7: &f" + focusedTeam.getName());
             if (focusedTeam.getHQ() != null){
-                scores.add("&b&lHQ&7: &f" + Math.round(focusedTeam.getHQ().getX()) + "&7, &f" + Math.round(focusedTeam.getHQ().getZ()));
-            } else {
-                scores.add("&b&lHQ&7: &fNot set");
+                scores.add("&4&lHQ&7: &f" + Math.round(focusedTeam.getHQ().getX()) + "&7, &f" + Math.round(focusedTeam.getHQ().getZ()));
             }
-            scores.add("&b&lDTR&7: &f" + focusedTeam.getFormattedDTR());
+            scores.add("&4&lDTR&7: &f" + focusedTeam.getFormattedDTR());
             if (!focusedTeam.hasDTRBitmask(DTRBitmask.KOTH) || focusedTeam.hasDTRBitmask(DTRBitmask.CITADEL) || focusedTeam.hasDTRBitmask(DTRBitmask.SAFE_ZONE)){
-                scores.add("&b&lOnline&7: &f" + focusedTeam.getOnlineMembers().size());
-
+                scores.add("&4&lOnline&7: &f" + focusedTeam.getOnlineMembers().size());
             }
         }
 
