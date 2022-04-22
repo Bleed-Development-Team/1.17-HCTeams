@@ -22,7 +22,7 @@ public class GuideMenu extends Menu {
     public void tick() {
         //TODO Lores on these look at orbitzone for ideas
         this.buttons[11] = new Button(ItemBuilder.of(Material.END_PORTAL_FRAME).name(CC.translate("&a&lThe End")).build());
-        this.buttons[13] = new Button(ItemBuilder.of(Material.PLAYER_HEAD).name("&4&lBleed &7| &fHCF").owningPlayer("MeeZoid").build());
+        this.buttons[13] = new Button(ItemBuilder.of(Material.PLAYER_HEAD).name("&4&lBleed &7| &fHCF").owningPlayer("lolitsalex").build());
         this.buttons[15] = new Button(ItemBuilder.of(Material.OBSIDIAN).name(CC.translate("&c&lThe Nether")).build());
 
         this.buttons[29] = new Button(ItemBuilder.of(Material.GOLDEN_CHESTPLATE).name(CC.translate("&e&lBard Class")).build());

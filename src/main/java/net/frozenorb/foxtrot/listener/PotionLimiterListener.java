@@ -48,9 +48,14 @@ public class PotionLimiterListener implements Listener {
             }
         }
         PotionMeta potion = (PotionMeta) event.getPotion().getItem().getItemMeta();
+        PotionType type = potion.getBasePotionData().getType();
+        if (type == PotionType.INSTANT_DAMAGE || type == PotionType.STRENGTH || type == PotionType.WEAKNESS || type == PotionType.AWKWARD || type == PotionType.INVISIBILITY) {
+            event.setCancelled(true);
+            return;
+        }
         //Potion potion = Potion.fromItemStack(event.getPotion().getItem());
         if (!Foxtrot.getInstance().getMapHandler().isKitMap() && !Foxtrot.getInstance().getServerHandler().isVeltKitMap()) {
-            if (!Foxtrot.getInstance().getServerHandler().isDrinkablePotionAllowed(potion.getBasePotionData().getType()) || !Foxtrot.getInstance().getServerHandler().isPotionLevelAllowed(potion.getBasePotionData().getType(), potion.getBasePotionData().hashCode())) {//TODO its supposed to be potion.getLevel() but I dont see that so please look into that
+            if (!Foxtrot.getInstance().getServerHandler().isDrinkablePotionAllowed(potion.getBasePotionData().getType()) || !Foxtrot.getInstance().getServerHandler().isPotionLevelAllowed(potion.getBasePotionData().getType(), potion.getCustomEffects().get(0).getAmplifier())) {//TODO its supposed to be potion.getLevel() but I dont see that so please look into that
                 event.setCancelled(true);
             } else if (potion.getBasePotionData().isExtended() && (potion.getBasePotionData().getType() == PotionType.SLOWNESS || potion.getBasePotionData().getType() == PotionType.POISON)) {
                 event.setCancelled(true);
@@ -58,37 +63,19 @@ public class PotionLimiterListener implements Listener {
                 event.setCancelled(true);
             }
         }
-        if (potion.getBasePotionData().getType() == PotionType.INSTANT_DAMAGE) {
-            event.setCancelled(true);
-            return;
-        } else if (potion.getBasePotionData().getType() == PotionType.STRENGTH) {
-            event.setCancelled(true);
-            return;
-        }
-
-        if (event.getPotion().getShooter() instanceof Player && !event.isCancelled()) {
-            Iterator<PotionEffect> iterator = event.getPotion().getEffects().iterator();
-
-            if (iterator.hasNext()) {
-                if (FoxListener.DEBUFFS.contains(iterator.next().getType())) {
-                    if (event.getAffectedEntities().size() > 1 || (event.getAffectedEntities().size() == 1 && !event.getAffectedEntities().contains(event.getPotion().getShooter()))) {
-                        SpawnTagHandler.addOffensiveSeconds((Player) event.getPotion().getShooter(), SpawnTagHandler.getMaxTagTime());
-                    }
-                }
-            }
-        }
     }
 
     @EventHandler
     public void onPlayerItemConsume(PlayerItemConsumeEvent event) {
-        if (event.getItem().getType() != Material.POTION || event.getItem().getDurability() == 0) {
+        if (event.getItem().getType() != Material.POTION) {
             return;
         }
 
         //Potion potion = Potion.fromItemStack(event.getItem());
         if (!(event.getItem().getItemMeta() instanceof PotionMeta potion)) return;
 
-        if (!Foxtrot.getInstance().getServerHandler().isDrinkablePotionAllowed(potion.getBasePotionData().getType()) || !Foxtrot.getInstance().getServerHandler().isPotionLevelAllowed(potion.getBasePotionData().getType(), potion.getBasePotionData().hashCode())) {//TODO look into how to get the level ofi t
+
+        if (!Foxtrot.getInstance().getServerHandler().isDrinkablePotionAllowed(potion.getBasePotionData().getType()) || !Foxtrot.getInstance().getServerHandler().isPotionLevelAllowed(potion.getBasePotionData().getType(), potion.getCustomEffects().get(0).getAmplifier())) {//TODO look into how to get the level ofi t
             DisallowedPotionDrinkEvent potionDrinkEvent = new DisallowedPotionDrinkEvent(event.getPlayer(), potion);
 
             if (!potionDrinkEvent.isAllowed()) {
