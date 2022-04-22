@@ -74,7 +74,7 @@ public class ChatGamesHandler {
             Bukkit.broadcastMessage(CC.translate("&4&lChat Games &7| &fEnding"));
             Bukkit.broadcastMessage("");
             Bukkit.broadcastMessage(CC.translate("&fYou ran out of time!"));
-            Bukkit.broadcastMessage(CC.translate("&fThe answer was: " + answer));
+            Bukkit.broadcastMessage(CC.translate("&fThe answer was: " + answer.substring(0, 1).toUpperCase() + answer.substring(1)));
             Bukkit.broadcastMessage("");
 
         } else {

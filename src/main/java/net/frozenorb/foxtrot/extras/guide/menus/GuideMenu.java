@@ -29,6 +29,6 @@ public class GuideMenu extends Menu {
         this.buttons[31] = new Button(ItemBuilder.of(Material.LEATHER_CHESTPLATE).name(CC.translate("&a&lArcher Class")).build());
         this.buttons[33] = new Button(ItemBuilder.of(Material.CHAINMAIL_CHESTPLATE).name(CC.translate("&8&lRogue Class")).build());
 
-        this.buttons[50] = new Button(ItemBuilder.of(Material.DIAMOND_SWORD).name(CC.translate("&b&lPvP")).build());
+        this.buttons[49] = new Button(ItemBuilder.of(Material.DIAMOND_SWORD).name(CC.translate("&b&lPvP")).build());
     }
 }
