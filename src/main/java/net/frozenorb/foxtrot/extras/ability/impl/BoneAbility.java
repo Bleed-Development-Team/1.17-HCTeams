@@ -58,6 +58,8 @@ public class BoneAbility extends Ability implements Listener {
         Player victim = event.getEntity() instanceof Player ? (Player) event.getEntity() : null;
         Player damager = event.getDamager() instanceof Player ? (Player) event.getDamager() : null;
 
+        if (damager == null || victim == null) return;
+
         if (!isSimilarTo(damager.getItemInHand(), Items.getBoneAbility())) return;
 
         if (isOnGlobalCooldown(damager)){

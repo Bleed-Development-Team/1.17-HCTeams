@@ -1,17 +1,28 @@
 package net.frozenorb.foxtrot.extras.ability.impl;
 
+import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.extras.ability.Ability;
 import net.frozenorb.foxtrot.extras.ability.util.Items;
 import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.Cooldown;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+
 public class RocketAbility extends Ability implements Listener {
+
+    List<UUID> rockets = new ArrayList<>();
 
     @Override
     public String getName() {
@@ -62,6 +73,12 @@ public class RocketAbility extends Ability implements Listener {
 
             player.setVelocity(player.getLocation().getDirection().multiply(4));
             applySelf(player);
+
+            Bukkit.getScheduler().runTaskLater(Foxtrot.getInstance(), () -> {
+                if (!rockets.contains(player.getUniqueId())) return;
+
+                rockets.remove(player.getUniqueId());
+            }, 20L * 15L);
         }
     }
 
@@ -76,6 +93,19 @@ public class RocketAbility extends Ability implements Listener {
                 player.sendMessage(CC.translate("&cYou are on the " + getName() + "&6's cooldown for another &c&l" + getCooldownFormatted(player) + "&c."));
             } else {
                 player.sendMessage(CC.translate("&cYou are not on cooldown for this item."));
+            }
+        }
+    }
+
+    @EventHandler
+    public void damage(EntityDamageEvent event){
+        Player victim = (Player) event.getEntity();
+
+        if (Objects.requireNonNull(victim.getLastDamageCause()).getCause() == EntityDamageByEntityEvent.DamageCause.FALL){
+            if (rockets.contains(victim.getUniqueId())){
+                event.setCancelled(true);
+
+                rockets.remove(victim.getUniqueId());
             }
         }
     }

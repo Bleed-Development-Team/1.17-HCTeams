@@ -48,10 +48,11 @@ public class BackToTheRootsAbility extends Ability implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onDamage(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player) || event.getEntity() instanceof Player) return;
+        if (!(event.getDamager() instanceof Player) || !(event.getEntity() instanceof Player)) return;
 
         Player victim = (Player) event.getEntity();
         Player damager = (Player) event.getDamager();
+
         if (!isSimilarTo(damager.getItemInHand(), Items.getBackToTheRoots())) return;
 
         if (isOnGlobalCooldown(damager)){
@@ -63,10 +64,12 @@ public class BackToTheRootsAbility extends Ability implements Listener {
             damager.sendMessage(CC.translate("&cYou are on cooldown for &f&lBack to the Roots &cfor another &c&l" + getCooldownFormatted(damager) + "&c."));
             return;
         }
+
         if (victim.hasMetadata("backtotheroots")) {
             damager.sendMessage(CC.translate("&cThat player is already under the back to the roots effect."));
             return;
         }
+
         int maxDamageTick = victim.getMaximumNoDamageTicks();
 
         victim.setNoDamageTicks(0);

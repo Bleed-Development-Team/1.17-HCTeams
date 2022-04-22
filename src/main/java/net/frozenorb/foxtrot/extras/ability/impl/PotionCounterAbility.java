@@ -78,7 +78,7 @@ public class PotionCounterAbility extends Ability implements Listener {
             damager.setItemInHand(null);
         }
 
-        damager.sendMessage(CC.translate("&f  " + victim.getName() + " &6has &f" + potions + " &6potions."));
+        damager.sendMessage(CC.translate("&f" + victim.getName() + " &6has &f" + potions + " &6potions."));
         giveCooldowns(damager);
 
     }
