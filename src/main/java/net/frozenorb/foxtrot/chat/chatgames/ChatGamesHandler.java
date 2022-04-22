@@ -6,11 +6,13 @@ import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.chat.chatgames.listener.ChatGamesListener;
 import net.frozenorb.foxtrot.chat.chatgames.tasks.ChatGamesTask;
 import net.frozenorb.foxtrot.util.CC;
+import net.frozenorb.foxtrot.util.RandomUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ChatGamesHandler {
 
@@ -78,12 +80,15 @@ public class ChatGamesHandler {
             Bukkit.broadcastMessage("");
 
         } else {
+            int keys = Foxtrot.RANDOM.nextInt(1, 2);
             Bukkit.broadcastMessage("");
             Bukkit.broadcastMessage(CC.translate("&4&lChat Games &7| &fEnding"));
             Bukkit.broadcastMessage("");
             Bukkit.broadcastMessage(CC.translate("&fCongratulations to &c" + player.getName() + " &ffor getting the word correct!"));
             Bukkit.broadcastMessage(CC.translate("&fThe answer was: &c" + answer.substring(0, 1).toUpperCase() + answer.substring(1)));
+            Bukkit.broadcastMessage(CC.translate("&c" + player.getName() + " &fhas been awarded &c" + keys + " &6Legendary Keys!"));
             Bukkit.broadcastMessage("");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "crate givekey " + player.getName() + "legendary " + keys);
         }
 
         answer = null;

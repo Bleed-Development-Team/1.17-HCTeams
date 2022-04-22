@@ -12,25 +12,25 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import java.util.Arrays;
 
-public class PotionCounterAbility extends Ability implements Listener {
+public class AntiPearlAbility extends Ability implements Listener {
     @Override
     public String getName() {
-        return "&3&lPotion Counter";
+        return "&3&lAnti-Pearl";
     }
 
     @Override
     public String getUncoloredName() {
-        return "Potion Counter";
+        return "Anti-Pearl";
     }
 
     @Override
     public String getDescription() {
-        return "Checks how many potions a player has.";
+        return "Puts a player on ender pearl cooldown.";
     }
 
     @Override
     public String getCooldownID() {
-        return "potioncounter";
+        return "antipearl";
     }
 
     @Override
@@ -40,7 +40,7 @@ public class PotionCounterAbility extends Ability implements Listener {
 
     @Override
     public Material getMaterial() {
-        return Material.STICK;
+        return Material.ENDER_EYE;
     }
 
     @EventHandler
@@ -57,9 +57,9 @@ public class PotionCounterAbility extends Ability implements Listener {
             damager.sendMessage(CC.translate("&cYou are on cooldown for the " + getName() + " &cfor another &c&l" + getCooldownFormatted(damager) + "&c."));
             return;
         }
+        Cooldown.addCooldown("enderpearl", damager, 16);
+        applyOther(damager, victim);
 
-        damager.sendMessage(CC.translate("&f  " + victim.getName() + " &6has &f" + Arrays.stream(victim.getInventory().getContents()).filter(item -> item.getType() == Material.SPLASH_POTION).count() + " &6potions."));
-        giveCooldowns(damager);
 
     }
 }
