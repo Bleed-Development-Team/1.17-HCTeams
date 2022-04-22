@@ -22,6 +22,8 @@ public class AbilityCommand extends BaseCommand {
         player.getInventory().addItem(Items.getSnowball());
         player.getInventory().addItem(Items.getPotionCounter());
         player.getInventory().addItem(Items.getAntiPearl());
+        player.getInventory().addItem(Items.getRocket());
+        player.getInventory().addItem(Items.getBackToTheRoots());
 
     }
 }

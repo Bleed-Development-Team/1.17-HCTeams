@@ -145,6 +145,7 @@ net\frozenorb\foxtrot\events\EventType.class
 net\frozenorb\foxtrot\persist\PersistMap$4.class
 net\frozenorb\foxtrot\events\region\cavern\Cavern.class
 net\frozenorb\foxtrot\listener\ClientListener.class
+net\frozenorb\foxtrot\extras\ability\impl\BackToTheRootsAbility.class
 net\frozenorb\foxtrot\persist\maps\statistics\SplashPotionsBrewedMap.class
 net\frozenorb\foxtrot\commands\TeamManageCommand.class
 net\frozenorb\foxtrot\map\stats\command\StatsTopCommand$StatsObjectiveProvider.class
@@ -463,6 +464,7 @@ net\frozenorb\foxtrot\commands\LocationCommand.class
 net\frozenorb\foxtrot\deathmessage\trackers\VoidTracker.class
 net\frozenorb\foxtrot\map\stats\command\KillstreaksCommand.class
 net\frozenorb\foxtrot\util\DamageUtil$1.class
+net\frozenorb\foxtrot\extras\ability\impl\RocketAbility.class
 net\frozenorb\foxtrot\persist\StringPersistMap.class
 mkremins\fanciful\TextualComponent$ArbitraryTextTypeComponent$1.class
 net\frozenorb\foxtrot\extras\blockshop\button\BlockShopButton.class
