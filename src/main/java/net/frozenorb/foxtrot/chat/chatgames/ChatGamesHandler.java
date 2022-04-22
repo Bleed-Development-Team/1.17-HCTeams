@@ -86,7 +86,7 @@ public class ChatGamesHandler {
             Bukkit.broadcastMessage("");
             Bukkit.broadcastMessage(CC.translate("&fCongratulations to &c" + player.getName() + " &ffor getting the word correct!"));
             Bukkit.broadcastMessage(CC.translate("&fThe answer was: &c" + answer.substring(0, 1).toUpperCase() + answer.substring(1)));
-            Bukkit.broadcastMessage(CC.translate("&c" + player.getName() + " &fhas been awarded &c" + keys + " &6Legendary Keys!"));
+            Bukkit.broadcastMessage(CC.translate("&c" + player.getName() + " &fhas been awarded &f" + keys + " &6Legendary Keys!"));
             Bukkit.broadcastMessage("");
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "crate givekey " + player.getName() + "legendary " + keys);
         }
