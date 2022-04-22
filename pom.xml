@@ -158,7 +158,7 @@
         </dependency>
         <dependency>
             <groupId>co.aikar</groupId>
-            <artifactId>acf-bukkit</artifactId> <!-- Don't forget to replace this -->
+            <artifactId>acf-paper</artifactId> <!-- Don't forget to replace this -->
             <version>0.5.1-SNAPSHOT</version>
         </dependency>
         <dependency>

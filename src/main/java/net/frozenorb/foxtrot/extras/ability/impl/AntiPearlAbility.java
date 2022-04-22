@@ -1,7 +1,11 @@
 package net.frozenorb.foxtrot.extras.ability.impl;
 
+import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.extras.ability.Ability;
 import net.frozenorb.foxtrot.extras.ability.util.Items;
+import net.frozenorb.foxtrot.server.EnderpearlCooldownHandler;
+import net.frozenorb.foxtrot.server.event.EnderpearlCooldownAppliedEvent;
+import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.Cooldown;
 import org.bukkit.Material;
@@ -57,8 +61,13 @@ public class AntiPearlAbility extends Ability implements Listener {
             damager.sendMessage(CC.translate("&cYou are on cooldown for the " + getName() + " &cfor another &c&l" + getCooldownFormatted(damager) + "&c."));
             return;
         }
-        Cooldown.addCooldown("enderpearl", damager, 16);
-        applyOther(damager, victim);
+
+        long timeToApply = DTRBitmask.THIRTY_SECOND_ENDERPEARL_COOLDOWN.appliesAt(victim.getLocation()) ? 30_000L : Foxtrot.getInstance().getMapHandler().getScoreboardTitle().contains("Staging") ? 1_000L : 16_000L;
+
+        EnderpearlCooldownAppliedEvent appliedEvent = new EnderpearlCooldownAppliedEvent(victim, timeToApply);
+        Foxtrot.getInstance().getServer().getPluginManager().callEvent(appliedEvent);
+
+        EnderpearlCooldownHandler.getEnderpearlCooldown().put(victim.getName(), System.currentTimeMillis() + appliedEvent.getTimeToApply());        applyOther(damager, victim);
 
 
     }

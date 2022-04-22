@@ -410,7 +410,10 @@ public class TeamCommands extends BaseCommand implements Listener {
             sender.sendMessage(ChatColor.RED + "You can't create teams during FFA.");
             return;
         }
-
+        if (Foxtrot.getInstance().getServerHandler().isEOTW()) {
+            sender.sendMessage(ChatColor.RED + "You can't create teams during EOTW.");
+            return;
+        }
         // sender.sendMessage(ChatColor.DARK_AQUA + "Team Created!");
         sender.sendMessage(ChatColor.GRAY + "To learn more about teams, do /team");
 

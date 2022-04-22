@@ -1,6 +1,7 @@
 package net.frozenorb.foxtrot;
 
 import co.aikar.commands.BukkitCommandManager;
+import co.aikar.commands.PaperCommandManager;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.Gson;
@@ -248,7 +249,7 @@ public class Foxtrot extends JavaPlugin {
 			world.setGameRule(GameRule.MOB_GRIEFING, false);
 		}
 		Cooldown.createCooldown("lff");
-		BukkitCommandManager m = new BukkitCommandManager(this);
+		PaperCommandManager m = new PaperCommandManager(this);
 		m.getCommandContexts().registerContext(Team.class, new TeamType());
 		m.getCommandContexts().registerContext(DTRBitmask.class, new DTRBitmaskType());
 		m.getCommandContexts().registerContext(Event.class, new EventParameterType());

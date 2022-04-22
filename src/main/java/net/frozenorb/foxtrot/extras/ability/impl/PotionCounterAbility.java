@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
 
@@ -43,7 +44,7 @@ public class PotionCounterAbility extends Ability implements Listener {
         return Material.STICK;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onDamage(EntityDamageByEntityEvent event) {
         Player victim = (Player) event.getEntity();
         Player damager = (Player) event.getDamager();
@@ -57,8 +58,14 @@ public class PotionCounterAbility extends Ability implements Listener {
             damager.sendMessage(CC.translate("&cYou are on cooldown for the " + getName() + " &cfor another &c&l" + getCooldownFormatted(damager) + "&c."));
             return;
         }
-
-        damager.sendMessage(CC.translate("&f  " + victim.getName() + " &6has &f" + Arrays.stream(victim.getInventory().getContents()).filter(item -> item.getType() == Material.SPLASH_POTION).count() + " &6potions."));
+        int potions = 0;
+        for (ItemStack item : victim.getInventory().getContents()) {
+            if (item == null) continue;
+            if (item.getType() == Material.SPLASH_POTION ||item.getType() == Material.POTION) {
+                potions++;
+            }
+        }
+        damager.sendMessage(CC.translate("&f  " + victim.getName() + " &6has &f" + potions + " &6potions."));
         giveCooldowns(damager);
 
     }

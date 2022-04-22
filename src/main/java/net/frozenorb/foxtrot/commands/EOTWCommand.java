@@ -11,14 +11,17 @@ import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.listener.EndListener;
 import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
+import net.frozenorb.foxtrot.util.CC;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @CommandAlias("eotw")
 @CommandPermission("foxtrot.eotw")
@@ -26,7 +29,7 @@ public class EOTWCommand extends BaseCommand {
 
     @Getter @Setter private static boolean ffaEnabled = false;
     @Getter @Setter private static long ffaActiveAt = -1L;
-    
+    public static int SecondsToCountDown = 10;
 
     @Default
     public static void eotw(Player sender) {
@@ -82,7 +85,26 @@ public class EOTWCommand extends BaseCommand {
         sender.sendMessage(ChatColor.RED + "Players teleported.");
     }
 
+    @Subcommand("reduce")
+    public void onReduceCommand(Player sender, int amount) {
+        Double newAmount = Bukkit.getServer().getWorld("world").getWorldBorder().getSize() - amount;
+        Bukkit.broadcastMessage(CC.translate("&6The border will be reduced to &f" + newAmount + " &6in &f10 &6seconds."));
+        int runnable = 5431;
+        int finalRunnable = runnable;
+        runnable = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Foxtrot.getInstance(), new Runnable() {
+            public void run() {
+                SecondsToCountDown--;
+                if (SecondsToCountDown <= 5) {
+                    Bukkit.broadcastMessage(CC.translate("&6The border will be reduced to &f" + newAmount + " &6in &f" + SecondsToCountDown + "&6 seconds."));
+                }
+                if (SecondsToCountDown==0) {
+                    sender.getWorld().getWorldBorder().setSize(newAmount);
+                    Bukkit.getServer().getScheduler().cancelTask(finalRunnable);
+                }
+            }
+        }, 0L, 20L);
 
+    }
 
     @Subcommand("ffa")
     public static void ffa(Player sender) {
