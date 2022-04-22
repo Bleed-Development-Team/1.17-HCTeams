@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -49,9 +50,10 @@ public class ComboAbility extends Ability implements Listener {
         return 60 * 3;
     }
 
+
     @Override
-    public Material getMaterial() {
-        return Material.PUFFERFISH;
+    public ItemStack getItemStack() {
+        return Items.getComboAbility();
     }
 
     @EventHandler
@@ -62,11 +64,13 @@ public class ComboAbility extends Ability implements Listener {
             if (isSimilarTo(player.getItemInHand(), Items.getComboAbility())){
                 if (isOnGlobalCooldown(player)){
                     player.sendMessage(CC.translate("&cYou are still on cooldown for &d&lPartner &cfor another &c&l" + Cooldown.getCooldownString(player,"partner") + "&c."));
+                    event.setCancelled(true);
                     return;
                 }
 
                 if (isOnCooldown(player)){
                     player.sendMessage(CC.translate("&cYou are on cooldown for the &6&lCombo Ability &cfor another &c&l" + getCooldownFormatted(player) + "&c."));
+                    event.setCancelled(true);
                     return;
                 }
 
@@ -110,5 +114,12 @@ public class ComboAbility extends Ability implements Listener {
                 player.sendMessage(CC.translate("&cYou are not on cooldown for this item."));
             }
         }
+    }
+    @EventHandler
+    public void onBlockPlace(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (!isSimilarTo(event.getPlayer().getItemInHand(), Items.getComboAbility()) || !isSimilarTo(event.getPlayer().getInventory().getItemInOffHand(), Items.getComboAbility())) return;
+        event.setCancelled(true);
+
     }
 }

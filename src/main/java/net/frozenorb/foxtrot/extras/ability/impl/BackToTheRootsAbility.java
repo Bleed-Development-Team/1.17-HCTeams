@@ -14,6 +14,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class BackToTheRootsAbility extends Ability implements Listener {
     @Override
@@ -41,9 +42,10 @@ public class BackToTheRootsAbility extends Ability implements Listener {
         return 60*3;
     }
 
+
     @Override
-    public Material getMaterial() {
-        return Material.BONE_MEAL;
+    public ItemStack getItemStack() {
+        return Items.getBackToTheRoots();
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -102,5 +104,12 @@ public class BackToTheRootsAbility extends Ability implements Listener {
                 player.sendMessage(CC.translate("&cYou are not on cooldown for this item."));
             }
         }
+    }
+    @EventHandler
+    public void onBlockPlace(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (!isSimilarTo(event.getPlayer().getItemInHand(), Items.getBackToTheRoots())) return;
+        event.setCancelled(true);
+
     }
 }

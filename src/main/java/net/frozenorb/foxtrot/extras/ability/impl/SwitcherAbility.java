@@ -15,6 +15,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class SwitcherAbility extends Ability implements Listener {
     @Override
@@ -43,8 +44,8 @@ public class SwitcherAbility extends Ability implements Listener {
     }
 
     @Override
-    public Material getMaterial() {
-        return Material.SNOWBALL;
+    public ItemStack getItemStack() {
+        return Items.getSnowball();
     }
 
     @EventHandler
@@ -120,6 +121,7 @@ public class SwitcherAbility extends Ability implements Listener {
                 player.updateInventory();
 
                 player.sendMessage(CC.translate("&cYou are still on cooldown for &d&lPartner &cfor another &c&l" + Cooldown.getCooldownString(player,"partner") + "&c."));
+                event.setCancelled(true);
                 return;
             }
 
@@ -128,6 +130,7 @@ public class SwitcherAbility extends Ability implements Listener {
                 player.updateInventory();
 
                 player.sendMessage(CC.translate("&cYou are on cooldown for the &f&lSwitcher &cfor another &c&l" + getCooldownFormatted(player) + "&c."));
+                event.setCancelled(true);
                 return;
             }
         }
@@ -147,4 +150,6 @@ public class SwitcherAbility extends Ability implements Listener {
             }
         }
     }
+
+
 }

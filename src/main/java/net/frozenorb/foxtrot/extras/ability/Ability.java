@@ -18,7 +18,7 @@ public abstract class Ability implements Listener {
     public abstract String getDescription();
     public abstract String getCooldownID();
     public abstract int getCooldown();
-    public abstract Material getMaterial();
+    public abstract ItemStack getItemStack();
 
 
     public boolean isSimilarTo(ItemStack item, ItemStack compareTo){

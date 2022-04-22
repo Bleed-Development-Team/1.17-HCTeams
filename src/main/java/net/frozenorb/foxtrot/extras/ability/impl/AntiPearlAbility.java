@@ -13,8 +13,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
 
@@ -45,9 +47,10 @@ public class AntiPearlAbility extends Ability implements Listener {
     }
 
     @Override
-    public Material getMaterial() {
-        return Material.ENDER_EYE;
+    public ItemStack getItemStack() {
+        return Items.getAntiPearl();
     }
+
 
     @EventHandler(ignoreCancelled = true)
     public void onDamage(EntityDamageByEntityEvent event) {
@@ -89,5 +92,13 @@ public class AntiPearlAbility extends Ability implements Listener {
                 player.sendMessage(CC.translate("&cYou are not on cooldown for this item."));
             }
         }
+    }
+
+    @EventHandler
+    public void onBlockPlace(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (!isSimilarTo(event.getPlayer().getItemInHand(), Items.getAntiPearl())) return;
+        event.setCancelled(true);
+
     }
 }

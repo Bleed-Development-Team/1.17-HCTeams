@@ -14,6 +14,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,10 +51,9 @@ public class RocketAbility extends Ability implements Listener {
     }
 
     @Override
-    public Material getMaterial() {
-        return Material.FIREWORK_ROCKET;
+    public ItemStack getItemStack() {
+        return Items.getRocket();
     }
-
     @EventHandler
     public void onInteraction(PlayerInteractEvent event){
         Player player = event.getPlayer();
@@ -63,11 +63,13 @@ public class RocketAbility extends Ability implements Listener {
 
             if (isOnGlobalCooldown(player)){
                 player.sendMessage(CC.translate("&cYou are still on cooldown for &d&lPartner &cfor another &c&l" + Cooldown.getCooldownString(player,"partner") + "&c."));
+                event.setCancelled(true);
                 return;
             }
 
             if (isOnCooldown(player)){
                 player.sendMessage(CC.translate("&cYou are on cooldown for the &c&lRocket &cfor another &c&l" + getCooldownFormatted(player) + "&c."));
+                event.setCancelled(true);
                 return;
             }
 
@@ -108,5 +110,12 @@ public class RocketAbility extends Ability implements Listener {
                 rockets.remove(victim.getUniqueId());
             }
         }
+    }
+    @EventHandler
+    public void onBlockPlace(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (!isSimilarTo(event.getPlayer().getItemInHand(), Items.getComboAbility()) || !isSimilarTo(event.getPlayer().getInventory().getItemInOffHand(), Items.getComboAbility())) return;
+        event.setCancelled(true);
+
     }
 }

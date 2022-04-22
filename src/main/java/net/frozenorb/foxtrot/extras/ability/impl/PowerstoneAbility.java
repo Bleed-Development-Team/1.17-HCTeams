@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -43,8 +44,8 @@ public class PowerstoneAbility extends Ability implements Listener {
     }
 
     @Override
-    public Material getMaterial() {
-        return Material.PURPLE_DYE;
+    public ItemStack getItemStack() {
+        return Items.getPowerstone();
     }
 
     @EventHandler
@@ -56,11 +57,13 @@ public class PowerstoneAbility extends Ability implements Listener {
             if (isSimilarTo(player.getItemInHand(), Items.getPowerstone())) {
                 if (isOnGlobalCooldown(player)){
                     player.sendMessage(CC.translate("&cYou are still on cooldown for &d&lPartner &cfor another &c&l" + Cooldown.getCooldownString(player,"partner") + "&c."));
+                    event.setCancelled(true);
                     return;
                 }
 
                 if (isOnCooldown(player)){
                     player.sendMessage(CC.translate("&cYou are on cooldown for the &5&lPowerstone &cfor another &c&l" + getCooldownFormatted(player) + "&c."));
+                    event.setCancelled(true);
                     return;
                 }
 
@@ -88,4 +91,5 @@ public class PowerstoneAbility extends Ability implements Listener {
             }
         }
     }
+
 }

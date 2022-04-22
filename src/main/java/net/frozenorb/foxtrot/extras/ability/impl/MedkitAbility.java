@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -41,8 +42,8 @@ public class MedkitAbility extends Ability implements Listener {
     }
 
     @Override
-    public Material getMaterial() {
-        return Material.PAPER;
+    public ItemStack getItemStack() {
+        return Items.getMedkit();
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -83,4 +84,5 @@ public class MedkitAbility extends Ability implements Listener {
             }
         }
     }
+
 }

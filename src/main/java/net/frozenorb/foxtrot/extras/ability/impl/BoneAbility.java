@@ -14,6 +14,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,9 +49,10 @@ public class BoneAbility extends Ability implements Listener {
         return 120;
     }
 
+
     @Override
-    public Material getMaterial(){
-        return Material.STICK;
+    public ItemStack getItemStack() {
+        return Items.getBoneAbility();
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -151,5 +153,12 @@ public class BoneAbility extends Ability implements Listener {
                 player.sendMessage(CC.translate("&cYou are not on cooldown for this item."));
             }
         }
+    }
+    @EventHandler
+    public void onBlockPlace(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (!isSimilarTo(event.getPlayer().getItemInHand(), Items.getBoneAbility())) return;
+        event.setCancelled(true);
+
     }
 }

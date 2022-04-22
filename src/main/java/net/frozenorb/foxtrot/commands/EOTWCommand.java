@@ -90,7 +90,7 @@ public class EOTWCommand extends BaseCommand {
     public void onReduceCommand(Player sender, int amount) {
         Double newAmount = Bukkit.getServer().getWorld("world").getWorldBorder().getSize() - amount;
         Bukkit.broadcastMessage(CC.translate("&6The border will be reduced to &f" + newAmount + " &6in &f10 &6seconds."));
-
+        SecondsToCountDown = 10;
         new BukkitRunnable(){
             @Override
             public void run() {
