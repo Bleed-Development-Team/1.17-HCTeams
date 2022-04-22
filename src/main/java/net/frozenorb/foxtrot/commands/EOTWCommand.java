@@ -19,6 +19,7 @@ import org.bukkit.Sound;
 import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -89,15 +90,14 @@ public class EOTWCommand extends BaseCommand {
     public void onReduceCommand(Player sender, int amount) {
         Double newAmount = Bukkit.getServer().getWorld("world").getWorldBorder().getSize() - amount;
         Bukkit.broadcastMessage(CC.translate("&6The border will be reduced to &f" + newAmount + " &6in &f10 &6seconds."));
-        int runnable = 5431;
-        int finalRunnable = runnable;
-        runnable = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Foxtrot.getInstance(), new BukkitRunnable() {
+        Bukkit.getServer().getScheduler().runTaskTimer(Foxtrot.getInstance(), new BukkitRunnable() {
             public void run() {
                 SecondsToCountDown--;
                 if (SecondsToCountDown <= 5 && SecondsToCountDown > 0) {
                     Bukkit.broadcastMessage(CC.translate("&6The border will be reduced to &f" + newAmount + " &6in &f" + SecondsToCountDown + "&6 seconds."));
                 }
                 if (SecondsToCountDown <= 0) {
+                    Bukkit.broadcastMessage(CC.translate("&6The border has been reduced to &f" + sender.getWorld().getWorldBorder() + "&6."));
                     sender.getWorld().getWorldBorder().setSize(newAmount);
                     cancel();
                 }
