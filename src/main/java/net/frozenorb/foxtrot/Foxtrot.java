@@ -33,7 +33,6 @@ import net.frozenorb.foxtrot.events.region.carepackage.CarePackageHandler;
 import net.frozenorb.foxtrot.events.region.cavern.CavernHandler;
 import net.frozenorb.foxtrot.events.region.glowmtn.GlowHandler;
 import net.frozenorb.foxtrot.extras.blockshop.command.BlockShopCommand;
-import net.frozenorb.foxtrot.extras.enchants.CustomEnchant;
 import net.frozenorb.foxtrot.extras.guide.GuideCommand;
 import net.frozenorb.foxtrot.extras.lunar.LunarClientHandler;
 import net.frozenorb.foxtrot.extras.lunar.nametag.ClientNametagProvider;
@@ -351,12 +350,6 @@ public class Foxtrot extends JavaPlugin {
 		m.registerCommand(new QuestsCommand());
 		m.registerCommand(new GuideCommand());
 		m.registerCommand(new TeamChatSpyCommand());
-
-
-		CustomEnchant.init();
-
-				//.bind(Team.class, new TeamType()).bind(Integer.class, new IntegerProvider()).bind(Float.class, new FloatProvider()).bind(DTRBitmask.class, new DTRBitmaskType()).bind(Event.class, new EventParameterType()).bind(StatsTopCommand.StatsObjective.class, new StatsTopCommand.StatsObjectiveProvider())
-
 
 
 
