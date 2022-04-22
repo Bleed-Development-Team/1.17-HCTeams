@@ -75,11 +75,15 @@ public abstract class Ability implements Listener {
         if (DTRBitmask.CITADEL.appliesAt(player.getLocation())){
             player.sendMessage(CC.translate("&cYou cannot use abilities in &5&lCitadel&c."));
             return false;
-        } else         if (DTRBitmask.CITADEL.appliesAt(player.getLocation())){
-            player.sendMessage(CC.translate("&cYou cannot use abilities in &5&lCitadel&c."));
+        } else if (DTRBitmask.KOTH.appliesAt(player.getLocation())){
+            player.sendMessage(CC.translate("&cYou cannot use abilities in &b&lKOTH&c."));
+            return false;
+        } else if (DTRBitmask.SAFE_ZONE.appliesAt(player.getLocation())){
+            player.sendMessage(CC.translate("&cYou cannot use abilities in a &a&lSafe-Zone&c."));
             return false;
         }
-
+        
+        return true;
     }
 
     public boolean isOnCooldown(Player player){
