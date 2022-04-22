@@ -18,7 +18,7 @@ public class EventParameterType implements ContextResolver<Event, BukkitCommandE
 
     @Override
     public Event getContext(BukkitCommandExecutionContext arg) throws InvalidCommandArgument {
-        String source = arg.getFirstArg();
+        String source = arg.popFirstArg();
         Player sender = arg.getPlayer();
 
         if (sender == null) throw new InvalidCommandArgument("There was an error whilst attempting to process this command.");

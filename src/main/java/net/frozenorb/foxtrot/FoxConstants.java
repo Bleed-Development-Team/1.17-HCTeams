@@ -2,8 +2,11 @@ package net.frozenorb.foxtrot;
 
 import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.commands.team.TeamCommands;
+import net.frozenorb.foxtrot.util.GradientChatTransformer;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
+import java.awt.*;
 
 public final class FoxConstants {
 
@@ -37,11 +40,10 @@ public final class FoxConstants {
 
             starting = ChatColor.GOLD + "[" + Foxtrot.getInstance().getServerHandler().getDefaultRelationColor() + team.getName() + ChatColor.GOLD + "] ";
         }
-
-        return starting + customPrefixString + rankPrefix + ChatColor.WHITE + "%s" + ChatColor.WHITE + ": %s";
+        return starting + customPrefixString + ChatColor.WHITE + rankPrefix + "%s" + ChatColor.WHITE + ": %s";
     }
 
-    public static String publicChatFormatTwoPointOhBaby(Player player, Team team, String rankPrefix, String customPrefixString, String rankSuffix) {
+    public static String publicChatFormatTwoPointOhBaby(Player player, Team team, String rankPrefix, String customPrefixString) {
         String starting = "";
 
         if (team != null) {
@@ -54,7 +56,7 @@ public final class FoxConstants {
             starting = ChatColor.GOLD  + "[" +  Foxtrot.getInstance().getServerHandler().getDefaultRelationColor() + team.getName() + ChatColor.GOLD  + "] ";
         }
         String prefix = rankPrefix + customPrefixString;
-        return starting + customPrefixString + ChatColor.WHITE + rankPrefix + "%s"  + rankSuffix + ChatColor.WHITE + ": %s";
+        return starting + customPrefixString + ChatColor.WHITE + rankPrefix + "%s"  + ChatColor.WHITE + ": %s";
     }
 
 }

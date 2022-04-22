@@ -235,7 +235,7 @@ public class ServerHandler {
         }
 
         int WARZONE_RADIUS2 = 300;
-        int WARZONE_BORDER2 = 1000;
+        int WARZONE_BORDER2 = 800;
 
 
         return (Math.abs(loc.getBlockX()) <= WARZONE_RADIUS2 && Math.abs(loc.getBlockZ()) <= WARZONE_RADIUS2) || ((Math.abs(loc.getBlockX()) > WARZONE_BORDER2 || Math.abs(loc.getBlockZ()) > WARZONE_BORDER2));
@@ -319,7 +319,7 @@ public class ServerHandler {
     }
 
     public Location getSpawnLocation() {
-        return new Location(Bukkit.getWorld("ul_aaaaaa"), 0, 71, 0);
+        return new Location(Bukkit.getWorld("world"), -0.500, 73, -0.500);
     }
 
     public boolean isUnclaimedOrRaidable(Location loc) {

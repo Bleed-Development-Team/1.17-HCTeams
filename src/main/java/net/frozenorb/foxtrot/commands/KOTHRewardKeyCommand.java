@@ -44,15 +44,14 @@ public class KOTHRewardKeyCommand extends BaseCommand {
         stack.setAmount(amount);
         Map<Integer, ItemStack> failed = player.getInventory().addItem(stack);
 
+        String msg;
         if (amount == 1) {
-            String msg = ChatColor.YELLOW + "Gave " + player.getName() + " a KOTH reward key." + failed == null || failed.isEmpty() ? "" : " " + failed.size() + " didn't fit.";
-            org.bukkit.command.Command.broadcastCommandMessage(sender, msg);
-            sender.sendMessage(msg);
+            msg = ChatColor.YELLOW + "Gave " + player.getName() + " a KOTH reward key." + failed == null || failed.isEmpty() ? "" : " " + failed.size() + " didn't fit.";
         } else {
-            String msg = ChatColor.YELLOW + "Gave " + player.getName() + " " + amount + " KOTH reward keys." + failed == null || failed.isEmpty() ? "" : " " + failed.size() + " didn't fit.";
-            org.bukkit.command.Command.broadcastCommandMessage(sender, msg);
-            sender.sendMessage(msg);
+            msg = ChatColor.YELLOW + "Gave " + player.getName() + " " + amount + " KOTH reward keys." + failed == null || failed.isEmpty() ? "" : " " + failed.size() + " didn't fit.";
         }
+        org.bukkit.command.Command.broadcastCommandMessage(sender, msg);
+        sender.sendMessage(msg);
     }
 
 }

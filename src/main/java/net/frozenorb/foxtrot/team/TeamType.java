@@ -18,7 +18,7 @@ public class TeamType implements ContextResolver<Team, BukkitCommandExecutionCon
     @Override
     public Team getContext(BukkitCommandExecutionContext arg) throws InvalidCommandArgument {
         Player sender = arg.getPlayer();
-        String source = arg.getFirstArg();
+        String source = arg.popFirstArg();
 
         if (sender != null && (source.equalsIgnoreCase("self") || source.equals(""))) {
             Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender.getUniqueId());

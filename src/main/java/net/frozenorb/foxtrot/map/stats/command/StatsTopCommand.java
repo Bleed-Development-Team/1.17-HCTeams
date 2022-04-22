@@ -58,7 +58,7 @@ public class StatsTopCommand extends BaseCommand {
 
         @Override
         public StatsObjective getContext(BukkitCommandExecutionContext arg) throws InvalidCommandArgument {
-            return switch (arg.getFirstArg()) {
+            return switch (arg.popFirstArg()) {
                 case "d", "deaths" -> StatsObjective.DEATHS;
                 case "kdr", "kd" -> StatsObjective.KD;
                 default -> StatsObjective.KILLS;

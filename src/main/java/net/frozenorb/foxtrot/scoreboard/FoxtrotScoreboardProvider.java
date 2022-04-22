@@ -31,7 +31,7 @@ import java.util.*;
 public class FoxtrotScoreboardProvider implements AssembleAdapter {
     @Override
     public String getTitle(Player player) {
-        return CC.translate("&b&lFrozen &7" + StringEscapeUtils.unescapeJava("❘") + " &fHCF");
+        return CC.translate("&4&lBleed &7" + StringEscapeUtils.unescapeJava("❘") + " &fHCF");
     }
 
     @Override

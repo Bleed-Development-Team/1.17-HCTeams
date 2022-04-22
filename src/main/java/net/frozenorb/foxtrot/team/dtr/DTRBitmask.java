@@ -8,7 +8,7 @@ import org.bukkit.Location;
 public enum DTRBitmask {
 
     // Used in spawns
-    SAFE_ZONE(1, "Safe-Zone", "Determines if a region is considered completely safe"),
+        SAFE_ZONE(1, "Safe-Zone", "Determines if a region is considered completely safe"),
 
     // Used in the end spawn
     DENY_REENTRY(2, "Deny-Reentry", "Determines if a region can be reentered"),

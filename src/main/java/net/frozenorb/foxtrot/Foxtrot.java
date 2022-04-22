@@ -34,8 +34,10 @@ import net.frozenorb.foxtrot.events.region.cavern.CavernHandler;
 import net.frozenorb.foxtrot.events.region.glowmtn.GlowHandler;
 import net.frozenorb.foxtrot.extras.blockshop.command.BlockShopCommand;
 import net.frozenorb.foxtrot.extras.enchants.CustomEnchant;
+import net.frozenorb.foxtrot.extras.guide.GuideCommand;
 import net.frozenorb.foxtrot.extras.lunar.LunarClientHandler;
 import net.frozenorb.foxtrot.extras.lunar.nametag.ClientNametagProvider;
+import net.frozenorb.foxtrot.extras.quests.QuestsCommand;
 import net.frozenorb.foxtrot.extras.resoucepack.ResourcePack;
 import net.frozenorb.foxtrot.extras.sell.command.SellShopCommand;
 import net.frozenorb.foxtrot.listener.*;
@@ -195,7 +197,7 @@ public class Foxtrot extends JavaPlugin {
 		}
 
 		try {
-			this.localJedisPool = new JedisPool(new JedisPoolConfig(), "redis-19823.c258.us-east-1-4.ec2.cloud.redislabs.com", 19823, 20000, "yQ4evkvAStkc3eXTjDX4rFeMKFTr2zZg");
+			this.localJedisPool = new JedisPool(new JedisPoolConfig(), "redis-15427.c258.us-east-1-4.ec2.cloud.redislabs.com", 15427, 20000, "qhOnjp9unEsi1JDiQsdQ8QN7Roc0YSnF");
 			System.out.println("Connected to the local Jedis pool.");
 
 		} catch (Exception e) {
@@ -204,7 +206,7 @@ public class Foxtrot extends JavaPlugin {
 		}
 
 		try {
-			this.backboneJedisPool = new JedisPool(new JedisPoolConfig(), "redis-19823.c258.us-east-1-4.ec2.cloud.redislabs.com", 19823, 20000, "yQ4evkvAStkc3eXTjDX4rFeMKFTr2zZg");
+			this.backboneJedisPool = new JedisPool(new JedisPoolConfig(), "redis-15427.c258.us-east-1-4.ec2.cloud.redislabs.com", 15427, 20000, "qhOnjp9unEsi1JDiQsdQ8QN7Roc0YSnF");
 			System.out.println("Connected to the Backbone Jedis pool.");
 		} catch (Exception e) {
 			this.backboneJedisPool = null;
@@ -346,6 +348,8 @@ public class Foxtrot extends JavaPlugin {
 		m.registerCommand(new TeamChatThree());
 		m.registerCommand(new TeamChatTwo());
 		m.registerCommand(new TeamCommands());
+		m.registerCommand(new QuestsCommand());
+		m.registerCommand(new GuideCommand());
 		m.registerCommand(new TeamChatSpyCommand());
 
 

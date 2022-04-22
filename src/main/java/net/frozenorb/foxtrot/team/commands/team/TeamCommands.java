@@ -964,6 +964,9 @@ public class TeamCommands extends BaseCommand implements Listener {
     public static void teamInfo(final Player sender, @Optional Team team) {
 
         if (team == null) {
+            if (Foxtrot.getInstance().getTeamHandler().getTeam(sender) == null) {
+                sender.sendMessage(CC.translate( "&7You are not on a team!"));
+            }
             team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
         }
         Team finalTeam = team;

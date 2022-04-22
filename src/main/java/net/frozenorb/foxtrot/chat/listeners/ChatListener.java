@@ -118,7 +118,7 @@ public class ChatListener implements Listener {
                 String publicChatFormat = FoxConstants.publicChatFormat(playerTeam, " " + rankPrefix, customPrefix, rankSuffix);
 
                 if (Foxtrot.getInstance().getConfig().getBoolean("legions")) {
-                    publicChatFormat = FoxConstants.publicChatFormatTwoPointOhBaby(event.getPlayer(), playerTeam, rankPrefix, customPrefix, rankSuffix);
+                    publicChatFormat = FoxConstants.publicChatFormatTwoPointOhBaby(event.getPlayer(), playerTeam, rankPrefix, customPrefix);
                 }
 
                 String finalMessage = String.format(publicChatFormat, event.getPlayer().getDisplayName(), event.getMessage());

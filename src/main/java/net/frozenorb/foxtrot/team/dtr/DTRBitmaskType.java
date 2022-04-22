@@ -10,7 +10,7 @@ public class DTRBitmaskType implements ContextResolver<DTRBitmask, BukkitCommand
     @Override
     public DTRBitmask getContext(BukkitCommandExecutionContext arg) throws InvalidCommandArgument {
         Player player = arg.getPlayer();
-        String source = arg.getFirstArg();
+        String source = arg.popFirstArg();
         for (DTRBitmask bitmaskType : DTRBitmask.values()) {
             if (source.equalsIgnoreCase(bitmaskType.getName())) {
                 return (bitmaskType);
