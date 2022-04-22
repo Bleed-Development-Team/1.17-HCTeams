@@ -82,7 +82,7 @@ public abstract class Ability implements Listener {
             player.sendMessage(CC.translate("&cYou cannot use abilities in a &a&lSafe-Zone&c."));
             return false;
         }
-        
+
         return true;
     }
 
