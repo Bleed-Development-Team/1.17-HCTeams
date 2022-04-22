@@ -9,15 +9,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.potion.Potion;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionType;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.*;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Iterator;
@@ -48,22 +47,21 @@ public class PotionLimiterListener implements Listener {
                 event.setIntensity(livingEntity, 0D);
             }
         }
-
-        Potion potion = Potion.fromItemStack(event.getPotion().getItem());
+        PotionMeta potion = (PotionMeta) event.getPotion().getItem().getItemMeta();
+        //Potion potion = Potion.fromItemStack(event.getPotion().getItem());
         if (!Foxtrot.getInstance().getMapHandler().isKitMap() && !Foxtrot.getInstance().getServerHandler().isVeltKitMap()) {
-            if (!Foxtrot.getInstance().getServerHandler().isDrinkablePotionAllowed(potion.getType()) || !Foxtrot.getInstance().getServerHandler().isPotionLevelAllowed(potion.getType(), potion.getLevel())) {
+            if (!Foxtrot.getInstance().getServerHandler().isDrinkablePotionAllowed(potion.getBasePotionData().getType()) || !Foxtrot.getInstance().getServerHandler().isPotionLevelAllowed(potion.getBasePotionData().getType(), potion.getBasePotionData().hashCode())) {//TODO its supposed to be potion.getLevel() but I dont see that so please look into that
                 event.setCancelled(true);
-            } else if (potion.hasExtendedDuration() && (potion.getType() == PotionType.SLOWNESS || potion.getType() == PotionType.POISON)) {
+            } else if (potion.getBasePotionData().isExtended() && (potion.getBasePotionData().getType() == PotionType.SLOWNESS || potion.getBasePotionData().getType() == PotionType.POISON)) {
                 event.setCancelled(true);
-            } else if (potion.getType() == PotionType.POISON && 1 < potion.getLevel()) {
+            } else if (potion.getBasePotionData().getType() == PotionType.POISON && potion.getBasePotionData().isUpgraded()) {
                 event.setCancelled(true);
             }
         }
-
-        if (potion.getType() == PotionType.INSTANT_DAMAGE) {
+        if (potion.getBasePotionData().getType() == PotionType.INSTANT_DAMAGE) {
             event.setCancelled(true);
             return;
-        } else if (potion.getType() == PotionType.STRENGTH) {
+        } else if (potion.getBasePotionData().getType() == PotionType.STRENGTH) {
             event.setCancelled(true);
             return;
         }
@@ -87,9 +85,10 @@ public class PotionLimiterListener implements Listener {
             return;
         }
 
-        Potion potion = Potion.fromItemStack(event.getItem());
+        //Potion potion = Potion.fromItemStack(event.getItem());
+        if (!(event.getItem().getItemMeta() instanceof PotionMeta potion)) return;
 
-        if (!Foxtrot.getInstance().getServerHandler().isDrinkablePotionAllowed(potion.getType()) || !Foxtrot.getInstance().getServerHandler().isPotionLevelAllowed(potion.getType(), potion.getLevel())) {
+        if (!Foxtrot.getInstance().getServerHandler().isDrinkablePotionAllowed(potion.getBasePotionData().getType()) || !Foxtrot.getInstance().getServerHandler().isPotionLevelAllowed(potion.getBasePotionData().getType(), potion.getBasePotionData().hashCode())) {//TODO look into how to get the level ofi t
             DisallowedPotionDrinkEvent potionDrinkEvent = new DisallowedPotionDrinkEvent(event.getPlayer(), potion);
 
             if (!potionDrinkEvent.isAllowed()) {

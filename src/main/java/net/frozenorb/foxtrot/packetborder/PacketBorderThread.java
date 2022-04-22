@@ -115,10 +115,12 @@ public class PacketBorderThread extends Thread {
                         bordersIterator.remove();
                     }
                 }
-
-                for (Claim claim : claims) {
-                    sendClaimToPlayer(player, claim);
+                if (!Foxtrot.getInstance().getServerHandler().isEOTW()) {
+                    for (Claim claim : claims) {
+                        sendClaimToPlayer(player, claim);
+                    }
                 }
+
             }
         } catch (Exception e) {
             e.printStackTrace();

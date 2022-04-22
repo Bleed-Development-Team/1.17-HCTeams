@@ -49,7 +49,7 @@ public class ChatGamesHandler {
         pickRandomQuestion();
 
         Bukkit.broadcastMessage("");
-        Bukkit.broadcastMessage(CC.translate("&b&lChat Games &7| &fStarting"));
+        Bukkit.broadcastMessage(CC.translate("&4&lChat Games &7| &fStarting"));
         Bukkit.broadcastMessage("");
         Bukkit.broadcastMessage(CC.translate("&fThe question is:"));
         Bukkit.broadcastMessage(CC.translate(question));
@@ -62,7 +62,7 @@ public class ChatGamesHandler {
 
         if (lost){
             Bukkit.broadcastMessage("");
-            Bukkit.broadcastMessage(CC.translate("&b&lChat Games &7| &fEnding"));
+            Bukkit.broadcastMessage(CC.translate("&4&lChat Games &7| &fEnding"));
             Bukkit.broadcastMessage("");
             Bukkit.broadcastMessage(CC.translate("&fYou ran out of time!"));
             Bukkit.broadcastMessage(CC.translate("&fThe answer was: " + answer));

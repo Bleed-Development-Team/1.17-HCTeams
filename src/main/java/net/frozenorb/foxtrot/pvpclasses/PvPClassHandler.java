@@ -33,7 +33,7 @@ public class PvPClassHandler implements Listener, Runnable {
             pvpClasses.add(new ArcherClass());
         }
 
-        pvpClasses.add(new MageClass());
+        //pvpClasses.add(new MageClass());
 
         if (Foxtrot.getInstance().getConfig().getBoolean("pvpClasses.bard")) {
             pvpClasses.add(new BardClass());
