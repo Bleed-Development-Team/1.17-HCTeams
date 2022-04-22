@@ -91,7 +91,7 @@ public class EOTWCommand extends BaseCommand {
         Bukkit.broadcastMessage(CC.translate("&6The border will be reduced to &f" + newAmount + " &6in &f10 &6seconds."));
         int runnable = 5431;
         int finalRunnable = runnable;
-        runnable = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Foxtrot.getInstance(), new Runnable() {
+        runnable = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Foxtrot.getInstance(), new BukkitRunnable() {
             public void run() {
                 SecondsToCountDown--;
                 if (SecondsToCountDown <= 5 && SecondsToCountDown > 0) {
@@ -99,7 +99,7 @@ public class EOTWCommand extends BaseCommand {
                 }
                 if (SecondsToCountDown <= 0) {
                     sender.getWorld().getWorldBorder().setSize(newAmount);
-                    Bukkit.getServer().getScheduler().cancelTask(finalRunnable);
+                    cancel();
                 }
             }
         }, 0L, 20L);
