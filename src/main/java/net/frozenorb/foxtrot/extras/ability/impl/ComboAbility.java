@@ -87,6 +87,7 @@ public class ComboAbility extends Ability implements Listener {
 
     @EventHandler
     public void hitPlayer(EntityDamageByEntityEvent event){
+        if (event.isCancelled()) return;
         Player damager = (Player) event.getDamager();
 
         if (Cooldown.isOnCooldown("combo-eff", damager)){

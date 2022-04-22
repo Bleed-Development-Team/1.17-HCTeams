@@ -25,6 +25,7 @@ public class AbilityHandler {
         abilities.put("potioncounter", new PotionCounterAbility());
         abilities.put("antipearl", new AntiPearlAbility());
         abilities.put("medkit", new MedkitAbility());
+        abilities.put("backtotheroos", new BackToTheRootsAbility());
         abilities.put("rocket", new RocketAbility());
 
         for (Ability ability : abilities.values()){
@@ -51,6 +52,7 @@ public class AbilityHandler {
         Cooldown.createCooldown("antipearl");
 
         Cooldown.createCooldown("rocket");
+        Cooldown.createCooldown("backtotheroots");
     }
 
     public List<Ability> getAbilities(){

@@ -64,9 +64,6 @@ public class  SpawnListener implements Listener {
         } else if (DTRBitmask.ROAD.appliesAt(event.getBlock().getLocation())) {
             event.setCancelled(true);
             event.getPlayer().sendMessage(ChatColor.YELLOW + "You cannot build on the road!");
-        } else if (event.getPlayer().getWorld().getEnvironment() == World.Environment.NETHER){
-            event.setCancelled(true);
-            event.getPlayer().sendMessage(ChatColor.YELLOW + "You cannot build in the nether!");
         } else if (Foxtrot.getInstance().getServerHandler().isSpawnBufferZone(event.getBlock().getLocation()) || Foxtrot.getInstance().getServerHandler().isNetherBufferZone(event.getBlock().getLocation())) {
             //if (!DTRBitmask.SAFE_ZONE.appliesAt(event.getBlock().getLocation()) && event.getItemInHand() != null && event.getItemInHand().getType() == Material.COBWEB && (Foxtrot.getInstance().getMapHandler().isKitMap() || Foxtrot.getInstance().getServerHandler().isVeltKitMap())) {
                 for (Event playableEvent : Foxtrot.getInstance().getEventHandler().getEvents()) {
@@ -127,9 +124,6 @@ public class  SpawnListener implements Listener {
         } else if (DTRBitmask.ROAD.appliesAt(event.getBlock().getLocation())) {
             event.setCancelled(true);
             event.getPlayer().sendMessage(ChatColor.YELLOW + "You cannot build on the road!");
-        } else if (event.getPlayer().getWorld().getEnvironment() == World.Environment.NETHER){
-            event.setCancelled(true);
-            event.getPlayer().sendMessage(ChatColor.YELLOW + "You cannot build in the nether!");
         }else if (Foxtrot.getInstance().getServerHandler().isWarzone(event.getBlock().getLocation())) {
             if (event.getPlayer().isOp() && event.getPlayer().getGameMode() == GameMode.CREATIVE || Foxtrot.getInstance().getServerHandler().isEOTW()) return;
 
