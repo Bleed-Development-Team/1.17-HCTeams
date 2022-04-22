@@ -5,13 +5,16 @@ import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.extras.ability.impl.*;
 import net.frozenorb.foxtrot.util.Cooldown;
 import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AbilityHandler {
+public class AbilityHandler implements Listener {
 
     @Getter private final Map<String, Ability> abilities = new HashMap<>();
 
@@ -25,7 +28,7 @@ public class AbilityHandler {
         abilities.put("potioncounter", new PotionCounterAbility());
         abilities.put("antipearl", new AntiPearlAbility());
         abilities.put("medkit", new MedkitAbility());
-        abilities.put("backtotheroos", new BackToTheRootsAbility());
+        abilities.put("backtotheroots", new BackToTheRootsAbility());
         abilities.put("rocket", new RocketAbility());
 
         for (Ability ability : abilities.values()){
@@ -58,5 +61,6 @@ public class AbilityHandler {
     public List<Ability> getAbilities(){
         return new ArrayList<>(abilities.values());
     }
+
 
 }
