@@ -1,5 +1,6 @@
 package net.frozenorb.foxtrot.extras.ability;
 
+import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.Cooldown;
 import org.bukkit.Material;
@@ -58,6 +59,27 @@ public abstract class Ability implements Listener {
     public void giveCooldowns(Player player){
         Cooldown.addCooldown(getCooldownID(), player, getCooldown());
         Cooldown.addCooldown("partner", player, 10);
+    }
+
+    public boolean canUse(Player player){
+        if (isOnGlobalCooldown(player)){
+            player.sendMessage(CC.translate("&cYou are still on cooldown for &d&lPartner &cfor another &c&l" + Cooldown.getCooldownString(player,"partner") + "&c."));
+            return false;
+        }
+
+        if (isOnCooldown(player)){
+            player.sendMessage(CC.translate("&cYou are on cooldown for the " + getName() + " &cfor another &c&l" + getCooldownFormatted(player) + "&c."));
+            return false;
+        }
+
+        if (DTRBitmask.CITADEL.appliesAt(player.getLocation())){
+            player.sendMessage(CC.translate("&cYou cannot use abilities in &5&lCitadel&c."));
+            return false;
+        } else         if (DTRBitmask.CITADEL.appliesAt(player.getLocation())){
+            player.sendMessage(CC.translate("&cYou cannot use abilities in &5&lCitadel&c."));
+            return false;
+        }
+
     }
 
     public boolean isOnCooldown(Player player){

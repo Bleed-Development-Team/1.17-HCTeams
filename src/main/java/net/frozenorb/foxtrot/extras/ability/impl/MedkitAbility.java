@@ -49,7 +49,7 @@ public class MedkitAbility extends Ability implements Listener {
     public void interaction(PlayerInteractEvent event){
         Player player = event.getPlayer();
 
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
+        if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             if (!isSimilarTo(player.getItemInHand(), Items.getMedkit())) return;
 
             if (isOnGlobalCooldown(player)){

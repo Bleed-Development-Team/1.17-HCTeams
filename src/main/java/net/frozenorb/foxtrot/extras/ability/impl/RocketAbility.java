@@ -90,7 +90,7 @@ public class RocketAbility extends Ability implements Listener {
             if (!isSimilarTo(player.getItemInHand(), Items.getRocket())) return;
 
             if (isOnCooldown(player)){
-                player.sendMessage(CC.translate("&cYou are on the " + getName() + "&6's cooldown for another &c&l" + getCooldownFormatted(player) + "&c."));
+                player.sendMessage(CC.translate("&cYou are on the " + getName() + "&c's cooldown for another &c&l" + getCooldownFormatted(player) + "&c."));
             } else {
                 player.sendMessage(CC.translate("&cYou are not on cooldown for this item."));
             }
@@ -101,7 +101,7 @@ public class RocketAbility extends Ability implements Listener {
     public void damage(EntityDamageEvent event){
         Player victim = (Player) event.getEntity();
 
-        if (Objects.requireNonNull(victim.getLastDamageCause()).getCause() == EntityDamageByEntityEvent.DamageCause.FALL){
+        if (event.getCause() == EntityDamageEvent.DamageCause.FALL){
             if (rockets.contains(victim.getUniqueId())){
                 event.setCancelled(true);
 
