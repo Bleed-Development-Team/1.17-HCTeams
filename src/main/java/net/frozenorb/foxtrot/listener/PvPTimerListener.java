@@ -59,23 +59,6 @@ public class PvPTimerListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent event) {
-        for (ItemStack itemStack : event.getDrops()) {
-            ItemMeta meta = itemStack.getItemMeta();
-
-            List<String> lore = new ArrayList<>();
-
-            if (meta.hasLore()) {
-                lore = meta.getLore();
-            }
-
-            lore.add("§8PVP Loot");
-            meta.setLore(lore);
-            itemStack.setItemMeta(meta);
-        }
-    }
-
-    @EventHandler
     public void onEntityShootBow(EntityShootBowEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();

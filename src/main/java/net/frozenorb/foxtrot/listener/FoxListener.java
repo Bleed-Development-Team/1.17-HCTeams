@@ -20,6 +20,7 @@ import net.frozenorb.foxtrot.team.track.TeamActionTracker;
 import net.frozenorb.foxtrot.team.track.TeamActionType;
 import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.InventoryUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -95,10 +96,12 @@ public class FoxListener implements Listener {
     public void onPlayerJoin2(PlayerJoinEvent event){
         Player player = event.getPlayer();
 
-        player.sendMessage(CC.translate(""));
-        player.sendMessage(CC.translate("&fYou've been connected to &6&lBleed&f."));
-        player.sendMessage(CC.translate("&7This map began on 29th of April."));
-        player.sendMessage(CC.translate(""));
+        Bukkit.getScheduler().runTaskLater(Foxtrot.getInstance(), () -> {
+            player.sendMessage(CC.translate(""));
+            player.sendMessage(CC.translate("&fYou've been connected to &4&lBleed&f."));
+            player.sendMessage(CC.translate("&7This map began on 29th of April."));
+            player.sendMessage(CC.translate(""));
+        }, 5L);
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)

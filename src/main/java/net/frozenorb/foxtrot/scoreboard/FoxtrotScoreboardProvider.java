@@ -19,6 +19,7 @@ import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.commands.team.TeamCommands;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import net.frozenorb.foxtrot.util.CC;
+import net.frozenorb.foxtrot.util.Cooldown;
 import net.frozenorb.foxtrot.util.Logout;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bson.types.ObjectId;
@@ -75,12 +76,17 @@ public class FoxtrotScoreboardProvider implements AssembleAdapter {
             scores.add("&e&lEnderpearl&7: &c" + enderpearlScore);
         }
 
+
         if (pvpTimerScore != null) {
             if (Foxtrot.getInstance().getStartingPvPTimerMap().get(player.getUniqueId())) {
                 scores.add("&a&lStarting Timer&7: &c" + pvpTimerScore);
             } else {
                 scores.add("&a&lPvP Timer&7: &c" + pvpTimerScore);
             }
+        }
+
+        if (Cooldown.isOnCooldown("partner", player)){
+            scores.add("&d&lPartner&7: &c" + Cooldown.getCooldownString(player,"partner"));
         }
 
         Iterator<Map.Entry<String, Long>> iterator = CustomTimerCreateCommand.getCustomTimers().entrySet().iterator();
@@ -121,6 +127,7 @@ public class FoxtrotScoreboardProvider implements AssembleAdapter {
             }
         }
 
+
         if (archerMarkScore != null) {
             scores.add("&6&lArcher Mark&7: &c" + archerMarkScore);
         }
@@ -140,6 +147,7 @@ public class FoxtrotScoreboardProvider implements AssembleAdapter {
         if (logoutScore != null) {
             scores.add("&4&lLogout&7: &c" + logoutScore);
         }
+
 
         Team team = Foxtrot.getInstance().getTeamHandler().getTeam(player.getUniqueId());
 

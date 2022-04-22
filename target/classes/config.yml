@@ -1,0 +1,103 @@
+Mongo:
+  URI: "mongodb+srv://Foxes:FoxesAreCool@hydrogenapi.hg5wo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+
+jedis:
+  host: "redis-19823.c258.us-east-1-4.ec2.cloud.redislabs.com"
+  port: 19823
+  user: "FrozenHCF"
+  pass: "yQ4evkvAStkc3eXTjDX4rFeMKFTr2zZg"
+
+serverName: FrozenHCF
+networkWebsite: frozenhcf.net
+statsRoot: frozenhcf.net/teams
+tab:
+  serverName: '&6&lHCTeams'
+  sectionColor: '&5'
+  infoColor: '&e'
+scoreboard:
+  title: "&6&lHCTeams &c[Map 1]" # doesmt worjk
+nightmare:
+  enabled: true
+  worldName: "NightmareEvent"
+glowstoneMountain: false
+cavern: false
+startingTimer: false
+forceInvites: true
+squads: false
+idleCheck: true
+uhcHealing: false
+passiveTag: true
+allowBoosting: false
+waterPlacementInClaims: false
+blockRemoval: false
+rodPrevention: false
+skybridgePrevention: false
+reduceArmorDamage: true
+blockEntitiesThroughPortals: true
+archerTagColor: YELLOW
+defaultRelationColor: RED
+legions: true
+pvpClasses:
+  archer: true
+  bard: true
+  rogue: true
+  ranger: true
+minerWorld:
+  regen:
+    COAL_ORE: 30
+    IRON_ORE: 60
+    GOLD_ORE: 90
+    DIAMOND_ORE: 120
+potions:
+  REGEN:
+    splash: false
+    drinkables: false
+  SPEED:
+    splash: true
+    drinkables: true
+  FIRE_RESISTANCE:
+    splash: true
+    drinkables: true
+  POISON:
+    splash: true
+    drinkables: false
+  INSTANT_HEAL:
+    splash: true
+    drinkables: true
+  NIGHT_VISION:
+    splash: true
+    drinkables: true
+  WEAKNESS:
+    splash: false
+    drinkables: false
+  STRENGTH:
+    splash: false
+    drinkables: false
+  SLOWNESS:
+    splash: true
+    drinkables: false
+  INSTANT_DAMAGE:
+    splash: false
+    drinkables: false
+  WATER_BREATHING:
+    splash: true
+    drinkables: true
+  INVISIBILITY:
+    splash: false
+    drinkables: false
+
+    #redis shit 100% not stolen from qlib :D
+
+  #IGNORE THIS STUFF, I'M TESTING
+  Redis:
+    Host: 'redis-15371.c99.us-east-1-4.ec2.cloud.redislabs.com'
+    Password: 'k5SYX0bEmU1PFthdCrn08fR8u5WinVHw'
+    Port: 15371
+    DbId: 7
+  BackboneRedis:
+    Host: 'redis-15371.c99.us-east-1-4.ec2.cloud.redislabs.com'
+    Password: 'k5SYX0bEmU1PFthdCrn08fR8u5WinVHw'
+    Port: 15371
+    DbId: 7
+  UUIDCache:
+    Backend: 'net.frozenorb.foxtrot.uuid.impl.RedisUUIDCache'

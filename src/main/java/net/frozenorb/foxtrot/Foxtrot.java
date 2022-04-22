@@ -32,6 +32,9 @@ import net.frozenorb.foxtrot.events.koth.commands.kothschedule.KothScheduleComma
 import net.frozenorb.foxtrot.events.region.carepackage.CarePackageHandler;
 import net.frozenorb.foxtrot.events.region.cavern.CavernHandler;
 import net.frozenorb.foxtrot.events.region.glowmtn.GlowHandler;
+import net.frozenorb.foxtrot.extras.ability.AbilityHandler;
+import net.frozenorb.foxtrot.extras.ability.commands.AbilityCommand;
+import net.frozenorb.foxtrot.extras.ability.commands.AbiltiesCommand;
 import net.frozenorb.foxtrot.extras.blockshop.command.BlockShopCommand;
 import net.frozenorb.foxtrot.extras.guide.GuideCommand;
 import net.frozenorb.foxtrot.extras.lunar.LunarClientHandler;
@@ -111,6 +114,7 @@ public class Foxtrot extends JavaPlugin {
 	@Getter private CavernHandler cavernHandler;
 	@Getter private GlowHandler glowHandler;
 	@Getter private CrateHandler crateHandler;
+	@Getter private AbilityHandler abilityHandler;
 
 	@Getter private PlaytimeMap playtimeMap;
 	@Getter private OppleMap oppleMap;
@@ -351,9 +355,8 @@ public class Foxtrot extends JavaPlugin {
 		m.registerCommand(new QuestsCommand());
 		m.registerCommand(new GuideCommand());
 		m.registerCommand(new TeamChatSpyCommand());
-
-
-
+		m.registerCommand(new AbilityCommand());
+		m.registerCommand(new AbiltiesCommand());
 
 
 	}
@@ -400,6 +403,7 @@ public class Foxtrot extends JavaPlugin {
 		mapHandler.load();
 		setupHourEvents();
 
+		abilityHandler = new AbilityHandler();
 
 		new LunarClientHandler();
 
