@@ -1,5 +1,7 @@
 package net.frozenorb.foxtrot.listener;
 
+import com.lunarclient.bukkitapi.LunarClientAPI;
+import com.lunarclient.bukkitapi.object.LCWaypoint;
 import lombok.Getter;
 import lombok.Setter;
 import net.frozenorb.foxtrot.Foxtrot;
@@ -235,6 +237,11 @@ public class EndListener implements Listener {
                     event.getPlayer().removePotionEffect(potionEffect.getType());
                 }
             }
+
+            LunarClientAPI.getInstance().sendWaypoint(player, new LCWaypoint("End Exit",
+                    new Location(Bukkit.getWorld("world_the_end"), -60, 83, 160),
+                    Color.PURPLE.asRGB(),
+                    true, true));
         }
     }
 

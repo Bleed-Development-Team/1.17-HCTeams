@@ -48,6 +48,7 @@ public class PotionCounterAbility extends Ability implements Listener {
     public void onDamage(EntityDamageByEntityEvent event) {
         Player victim = (Player) event.getEntity();
         Player damager = (Player) event.getDamager();
+
         if (!isSimilarTo(damager.getItemInHand(), Items.getPotionCounter())) return;
 
         if (isOnGlobalCooldown(damager)){
@@ -58,13 +59,23 @@ public class PotionCounterAbility extends Ability implements Listener {
             damager.sendMessage(CC.translate("&cYou are on cooldown for the " + getName() + " &cfor another &c&l" + getCooldownFormatted(damager) + "&c."));
             return;
         }
+
         int potions = 0;
+
         for (ItemStack item : victim.getInventory().getContents()) {
             if (item == null) continue;
             if (item.getType() == Material.SPLASH_POTION ||item.getType() == Material.POTION) {
                 potions++;
             }
         }
+
+        if (damager.getItemInHand().getAmount() > 1) {
+            int amount = damager.getItemInHand().getAmount() - 1;
+            damager.getItemInHand().setAmount(amount);
+        } else {
+            damager.setItemInHand(null);
+        }
+
         damager.sendMessage(CC.translate("&f  " + victim.getName() + " &6has &f" + potions + " &6potions."));
         giveCooldowns(damager);
 

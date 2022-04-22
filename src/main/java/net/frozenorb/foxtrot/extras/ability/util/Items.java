@@ -38,7 +38,7 @@ public class Items {
     }
 
     public static ItemStack getPotionCounter(){
-        return ItemBuilder.of(Material.POTION)
+        return ItemBuilder.of(Material.STICK)
                 .name("&3&lPotion Counter")
                 .addToLore("&7Checks how many potions a player has.")
                 .build();
@@ -48,6 +48,30 @@ public class Items {
         return ItemBuilder.of(Material.PAPER)
                 .name("&6&lMed Kit")
                 .addToLore("&7Right click to receive Resistance III & Regeneration III", "&7for 4 seconds.")
+                .amount(1)
+                .build();
+    }
+
+    public static ItemStack getAntiPearl(){
+        return ItemBuilder.of(Material.ENDER_EYE)
+                .name("&3&lAnti-Pearl")
+                .addToLore("&7Puts a player on ender pearl cooldown.")
+                .enchant(Enchantment.DURABILITY, 1)
+                .amount(1)
+                .build();
+    }
+
+    public static ItemStack getRocket(){
+        return ItemBuilder.of(Material.FIREWORK_ROCKET)
+                .name("&c&lRocket")
+                .addToLore("&7Right click to launch yourself up into the air.")
+                .build();
+    }
+
+    public static ItemStack getBackToTheRoots(){
+        return ItemBuilder.of(Material.BONE_MEAL)
+                .name("&f&lBack to the Roots")
+                .addToLore("&7Hit a player 3 times to remove hit cooldown for 5 seconds")
                 .build();
     }
 

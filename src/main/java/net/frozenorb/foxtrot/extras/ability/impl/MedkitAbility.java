@@ -45,7 +45,7 @@ public class MedkitAbility extends Ability implements Listener {
         return Material.PAPER;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void interaction(PlayerInteractEvent event){
         Player player = event.getPlayer();
 

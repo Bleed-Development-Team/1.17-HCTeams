@@ -24,6 +24,8 @@ public class AbilityHandler {
         abilities.put("switcher", new SwitcherAbility());
         abilities.put("potioncounter", new PotionCounterAbility());
         abilities.put("antipearl", new AntiPearlAbility());
+        abilities.put("medkit", new MedkitAbility());
+        abilities.put("rocket", new RocketAbility());
 
         for (Ability ability : abilities.values()){
             Bukkit.getServer().getPluginManager().registerEvents(ability, Foxtrot.getInstance());
@@ -40,9 +42,15 @@ public class AbilityHandler {
 
         Cooldown.createCooldown("combo");
         Cooldown.createCooldown("combo-eff");
+
         Cooldown.createCooldown("potioncounter");
+
+        Cooldown.createCooldown("medkit");
+
         Cooldown.createCooldown("switcher");
         Cooldown.createCooldown("antipearl");
+
+        Cooldown.createCooldown("rocket");
     }
 
     public List<Ability> getAbilities(){

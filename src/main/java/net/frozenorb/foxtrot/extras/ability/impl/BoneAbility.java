@@ -52,10 +52,10 @@ public class BoneAbility extends Ability implements Listener {
         return Material.STICK;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void hit(EntityDamageByEntityEvent event){
-        Player victim = (Player) event.getEntity();
-        Player damager = (Player) event.getDamager();
+        Player victim = event.getEntity() instanceof Player ? (Player) event.getEntity() : null;
+        Player damager = event.getDamager() instanceof Player ? (Player) event.getDamager() : null;
 
         if (!isSimilarTo(damager.getItemInHand(), Items.getBoneAbility())) return;
 

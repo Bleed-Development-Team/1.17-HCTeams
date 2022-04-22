@@ -31,6 +31,7 @@ net\frozenorb\foxtrot\events\conquest\game\ConquestGame$1.class
 net\frozenorb\foxtrot\listener\PotionLimiterListener.class
 net\frozenorb\foxtrot\map\stats\StatsHandler$3.class
 net\frozenorb\foxtrot\server\EnderpearlCooldownHandler.class
+net\frozenorb\foxtrot\extras\ability\impl\PotionCounterAbility.class
 io\github\thatkawaiisam\assemble\AssembleBoard.class
 net\frozenorb\foxtrot\events\koth\commands\koth\KOTHCommand.class
 net\frozenorb\foxtrot\team\track\TeamActionTracker.class
@@ -200,6 +201,7 @@ net\frozenorb\foxtrot\persist\maps\statistics\ExpCollectedMap.class
 net\frozenorb\foxtrot\commands\BottleCommand.class
 net\frozenorb\foxtrot\commands\EnderpearlCommands.class
 net\frozenorb\foxtrot\scoreboard\ScoreFunction.class
+net\frozenorb\foxtrot\extras\ability\impl\SwitcherAbility.class
 net\frozenorb\foxtrot\FoxConstants.class
 net\frozenorb\foxtrot\tab\TabListMode.class
 net\frozenorb\foxtrot\persist\maps\statistics\SplashPotionsUsedMap.class
@@ -286,6 +288,7 @@ net\frozenorb\foxtrot\team\commands\ResetForceInvitesCommand.class
 net\frozenorb\foxtrot\deathmessage\util\MobUtil.class
 net\frozenorb\foxtrot\server\RegionType.class
 net\frozenorb\foxtrot\team\commands\SetTeamBalanceCommand.class
+net\frozenorb\foxtrot\extras\ability\impl\AntiPearlAbility.class
 net\frozenorb\foxtrot\map\stats\command\StatModifyCommands.class
 net\frozenorb\foxtrot\events\koth\listeners\KOTHListener.class
 net\frozenorb\foxtrot\commands\SetWorldBorderCommand.class
@@ -328,6 +331,7 @@ net\frozenorb\foxtrot\team\commands\team\TeamChatCommand.class
 net\frozenorb\foxtrot\chat\chatgames\listener\ChatGamesListener.class
 net\frozenorb\foxtrot\crates\Crate.class
 net\frozenorb\foxtrot\uuid\UUIDListener.class
+net\frozenorb\foxtrot\extras\ability\impl\MedkitAbility.class
 net\frozenorb\foxtrot\deathmessage\trackers\BurnTracker$BurnDamageByPlayer.class
 net\frozenorb\foxtrot\deathmessage\trackers\GeneralTracker$GeneralDamage.class
 net\frozenorb\foxtrot\extras\blockshop\impl\ChristmasBlocksMenu.class
@@ -427,6 +431,7 @@ net\frozenorb\foxtrot\chat\enums\ChatMode.class
 net\frozenorb\foxtrot\persist\maps\ChatModeMap.class
 net\frozenorb\foxtrot\persist\maps\EmeraldMinedMap.class
 net\frozenorb\foxtrot\team\dtr\DTRBitmask.class
+net\frozenorb\foxtrot\commands\EOTWCommand$2.class
 net\frozenorb\foxtrot\util\ProgressBarBuilder.class
 io\github\thatkawaiisam\assemble\AssembleListener.class
 net\frozenorb\foxtrot\events\citadel\events\CitadelCapturedEvent.class

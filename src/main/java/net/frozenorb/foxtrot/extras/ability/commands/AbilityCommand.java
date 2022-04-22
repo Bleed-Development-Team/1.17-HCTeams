@@ -14,16 +14,14 @@ import org.bukkit.entity.Player;
 public class AbilityCommand extends BaseCommand {
 
     @Subcommand("give")
-    public void onAbilityCommand(Player player, @Name(value = "player") Player target, @Name(value = "ability") String ability) {
-        switch (ability.toLowerCase()) {
-            case "powerstone" -> {
-                player.getInventory().addItem(Items.getPowerstone());
-                player.sendMessage(CC.translate("&aYou gave " + target.getName() + " a powerstone."));
-            }
-            case "bone" -> {
-                player.getInventory().addItem(Items.getBoneAbility());
-                player.sendMessage(CC.translate("&aYou gave " + target.getName() + " a bone."));
-            }
-        }
+    public void onAbilityCommand(Player player) {
+        player.getInventory().addItem(Items.getBoneAbility());
+        player.getInventory().addItem(Items.getMedkit());
+        player.getInventory().addItem(Items.getPowerstone());
+        player.getInventory().addItem(Items.getComboAbility());
+        player.getInventory().addItem(Items.getSnowball());
+        player.getInventory().addItem(Items.getPotionCounter());
+        player.getInventory().addItem(Items.getAntiPearl());
+
     }
 }

@@ -85,6 +85,13 @@ public abstract class Ability implements Listener {
         player.sendMessage(CC.translate("&c❤ &6" + getDescription()));
         player.sendMessage(CC.translate("&c❤ &6You are now on cooldown for &f" + getCooldownFormatted(player) + "&6."));
         player.sendMessage(CC.translate(""));
+
+        if (player.getItemInHand().getAmount() > 1) {
+            int amount = player.getItemInHand().getAmount() - 1;
+            player.getItemInHand().setAmount(amount);
+        } else {
+            player.setItemInHand(null);
+        }
     }
 
     public void applyOther(Player player, Player victim){
@@ -98,5 +105,12 @@ public abstract class Ability implements Listener {
         player.sendMessage(CC.translate(""));
 
         victim.sendMessage(CC.translate("&c❤ &6You have been hit by &f" + player.getName() + " &6with the &f" + getName() + " &6ability&6!"));
+
+        if (player.getItemInHand().getAmount() > 1) {
+            int amount = player.getItemInHand().getAmount() - 1;
+            player.getItemInHand().setAmount(amount);
+        } else {
+            player.setItemInHand(null);
+        }
     }
 }

@@ -47,17 +47,17 @@ public class AntiPearlAbility extends Ability implements Listener {
         return Material.ENDER_EYE;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onDamage(EntityDamageByEntityEvent event) {
         Player victim = (Player) event.getEntity();
         Player damager = (Player) event.getDamager();
-        if (!isSimilarTo(damager.getItemInHand(), Items.getPotionCounter())) return;
+        if (!isSimilarTo(damager.getItemInHand(), Items.getAntiPearl())) return;
 
         if (isOnGlobalCooldown(damager)){
             damager.sendMessage(CC.translate("&cYou are still on cooldown for &d&lPartner &cfor another &c&l" + Cooldown.getCooldownString(damager,"partner") + "&c."));
             return;
         }
-        if (isOnCooldown(damager)){
+        if (isOnCooldown(damager)) {
             damager.sendMessage(CC.translate("&cYou are on cooldown for the " + getName() + " &cfor another &c&l" + getCooldownFormatted(damager) + "&c."));
             return;
         }
@@ -68,6 +68,9 @@ public class AntiPearlAbility extends Ability implements Listener {
         Foxtrot.getInstance().getServer().getPluginManager().callEvent(appliedEvent);
 
         EnderpearlCooldownHandler.getEnderpearlCooldown().put(victim.getName(), System.currentTimeMillis() + appliedEvent.getTimeToApply());        applyOther(damager, victim);
+
+        Cooldown.addCooldown("enderpearl", damager, 16);
+        applyOther(damager, victim);
 
 
     }

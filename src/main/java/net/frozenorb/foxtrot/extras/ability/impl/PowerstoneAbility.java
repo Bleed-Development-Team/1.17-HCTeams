@@ -64,12 +64,6 @@ public class PowerstoneAbility extends Ability implements Listener {
                     return;
                 }
 
-                if (player.getItemInHand().getAmount() > 1) {
-                    int amount = player.getItemInHand().getAmount() - 1;
-                    player.getItemInHand().setAmount(amount);
-                } else {
-                    player.setItemInHand(null);
-                }
 
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 5, 2));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20 * 5, 1));

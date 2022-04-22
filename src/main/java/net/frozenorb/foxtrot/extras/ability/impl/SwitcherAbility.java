@@ -2,6 +2,7 @@ package net.frozenorb.foxtrot.extras.ability.impl;
 
 import net.frozenorb.foxtrot.extras.ability.Ability;
 import net.frozenorb.foxtrot.extras.ability.util.Items;
+import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.Cooldown;
 import org.bukkit.Location;
@@ -12,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class SwitcherAbility extends Ability implements Listener {
@@ -54,6 +56,43 @@ public class SwitcherAbility extends Ability implements Listener {
 
             if (snowball.getShooter() instanceof Player){
 
+                if (event.isCancelled()) return;
+
+                if (isOnGlobalCooldown(((Player) snowball.getShooter()))){
+                    event.setCancelled(true);
+
+                    ((Player) snowball.getShooter()).sendMessage(CC.translate("&cYou are still on cooldown for &d&lPartner &cfor another &c&l" + Cooldown.getCooldownString(((Player) snowball.getShooter()),"partner") + "&c."));
+                    return;
+                }
+
+                if (isOnCooldown(((Player) snowball.getShooter()))){
+                    event.setCancelled(true);
+
+                    ((Player) snowball.getShooter()).getInventory().addItem(Items.getSnowball());
+                    ((Player) snowball.getShooter()).updateInventory();
+
+                    ((Player) snowball.getShooter()).sendMessage(CC.translate("&cYou are on cooldown for the &f&lSwitcher &cfor another &c&l" + getCooldownFormatted(((Player) snowball.getShooter())) + "&c."));
+                    return;
+                }
+
+                if (DTRBitmask.SAFE_ZONE.appliesAt(victim.getLocation())){
+                    giveCooldowns(victim);
+                    ((Player) snowball.getShooter()).sendMessage(CC.translate("&cYou cannot switcher people inside of &a&lSpawn&c."));
+                    return;
+                }
+
+                if (DTRBitmask.KOTH.appliesAt(victim.getLocation())){
+                    giveCooldowns(victim);
+                    ((Player) snowball.getShooter()).sendMessage(CC.translate("&cYou cannot switcher people inside of &b&lKOTH&c."));
+                    return;
+                }
+
+                if (DTRBitmask.CITADEL.appliesAt(victim.getLocation())){
+                    giveCooldowns(victim);
+                    ((Player) snowball.getShooter()).sendMessage(CC.translate("&cYou cannot switcher people inside of &5&lCitadel&c."));
+                    return;
+                }
+
                 if (((Player) snowball.getShooter()).getLocation().distance(victim.getLocation()) > 8){
                     ((Player) snowball.getShooter()).sendMessage(CC.translate("&cYou cannot switcher people from more than 8 blocks away!"));
                     return;
@@ -71,10 +110,11 @@ public class SwitcherAbility extends Ability implements Listener {
     }
 
     @EventHandler
-    public void interact(PlayerInteractEvent event){
-        Player player = event.getPlayer();
+    public void interact(ProjectileLaunchEvent event){
+        Player player = event.getEntity().getShooter() instanceof Player ? (Player) event.getEntity().getShooter() : null;
 
-        if (player.getItemInHand() == Items.getSnowball()){
+        if (event.getEntity() instanceof Snowball && event.getEntity() == Items.getSnowball()){
+
             if (isOnGlobalCooldown(player)){
                 event.setCancelled(true);
                 player.updateInventory();
