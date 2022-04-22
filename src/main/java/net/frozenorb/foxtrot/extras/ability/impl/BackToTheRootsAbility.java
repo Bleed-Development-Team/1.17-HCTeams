@@ -10,7 +10,9 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class BackToTheRootsAbility extends Ability implements Listener {
@@ -47,6 +49,7 @@ public class BackToTheRootsAbility extends Ability implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onDamage(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Player) || event.getEntity() instanceof Player) return;
+
         Player victim = (Player) event.getEntity();
         Player damager = (Player) event.getDamager();
         if (!isSimilarTo(damager.getItemInHand(), Items.getBackToTheRoots())) return;
@@ -80,6 +83,21 @@ public class BackToTheRootsAbility extends Ability implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         if (event.getPlayer().hasMetadata("backtotheroots")) {
             event.getPlayer().removeMetadata("backtotheroots", Foxtrot.getInstance());
+        }
+    }
+
+    @EventHandler
+    public void cooldownCheck(PlayerInteractEvent event){
+        Player player = event.getPlayer();
+
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK){
+            if (!isSimilarTo(player.getItemInHand(), Items.getBackToTheRoots())) return;
+
+            if (isOnCooldown(player)){
+                player.sendMessage(CC.translate("&cYou are on the " + getName() + "&6's cooldown for another &c&l" + getCooldownFormatted(player) + "&c."));
+            } else {
+                player.sendMessage(CC.translate("&cYou are not on cooldown for this item."));
+            }
         }
     }
 }

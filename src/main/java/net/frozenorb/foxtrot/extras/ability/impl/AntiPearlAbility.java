@@ -12,7 +12,9 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.Arrays;
 
@@ -69,9 +71,23 @@ public class AntiPearlAbility extends Ability implements Listener {
 
         EnderpearlCooldownHandler.getEnderpearlCooldown().put(victim.getName(), System.currentTimeMillis() + appliedEvent.getTimeToApply());        applyOther(damager, victim);
 
-        Cooldown.addCooldown("enderpearl", damager, 16);
         applyOther(damager, victim);
 
 
+    }
+
+    @EventHandler
+    public void cooldownCheck(PlayerInteractEvent event){
+        Player player = event.getPlayer();
+
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK){
+            if (!isSimilarTo(player.getItemInHand(), Items.getAntiPearl())) return;
+
+            if (isOnCooldown(player)){
+                player.sendMessage(CC.translate("&cYou are on the " + getName() + "&6's cooldown for another &c&l" + getCooldownFormatted(player) + "&c."));
+            } else {
+                player.sendMessage(CC.translate("&cYou are not on cooldown for this item."));
+            }
+        }
     }
 }
