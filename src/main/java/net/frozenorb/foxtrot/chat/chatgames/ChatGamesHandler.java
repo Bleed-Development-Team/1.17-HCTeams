@@ -46,6 +46,9 @@ public class ChatGamesHandler {
     }
 
     public void startNewGame(){
+        if (isGoingOn()){
+            return;
+        }
         pickRandomQuestion();
 
         Bukkit.broadcastMessage("");
@@ -54,6 +57,12 @@ public class ChatGamesHandler {
         Bukkit.broadcastMessage(CC.translate("&fThe question is:"));
         Bukkit.broadcastMessage(CC.translate(question));
         Bukkit.broadcastMessage("");
+
+        Bukkit.getScheduler().runTaskLater(Foxtrot.getInstance(), () -> {
+            if (isGoingOn()){
+                endGame(true, null);
+            }
+        }, 15 * 20);
 
     }
 
@@ -70,7 +79,7 @@ public class ChatGamesHandler {
 
         } else {
             Bukkit.broadcastMessage("");
-            Bukkit.broadcastMessage(CC.translate("&b&lChat Games &7| &fEnding"));
+            Bukkit.broadcastMessage(CC.translate("&4&lChat Games &7| &fEnding"));
             Bukkit.broadcastMessage("");
             Bukkit.broadcastMessage(CC.translate("&fCongratulations to &b" + player.getName() + " &ffor getting the word correct!"));
             Bukkit.broadcastMessage(CC.translate("&fThe answer was: &b" + answer.substring(0, 1).toUpperCase() + answer.substring(1)));
