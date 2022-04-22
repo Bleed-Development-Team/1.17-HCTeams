@@ -94,7 +94,7 @@ public class EOTWCommand extends BaseCommand {
         runnable = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Foxtrot.getInstance(), new Runnable() {
             public void run() {
                 SecondsToCountDown--;
-                if (SecondsToCountDown <= 5) {
+                if (SecondsToCountDown <= 5 && SecondsToCountDown > 0) {
                     Bukkit.broadcastMessage(CC.translate("&6The border will be reduced to &f" + newAmount + " &6in &f" + SecondsToCountDown + "&6 seconds."));
                 }
                 if (SecondsToCountDown <= 0) {
