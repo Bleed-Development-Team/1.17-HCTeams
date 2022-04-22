@@ -97,7 +97,7 @@ public class FoxListener implements Listener {
 
         player.sendMessage(CC.translate(""));
         player.sendMessage(CC.translate("&fYou've been connected to &6&lBleed&f."));
-        player.sendMessage(CC.translate("&7This map began on 28th of April."));
+        player.sendMessage(CC.translate("&7This map began on 29th of April."));
         player.sendMessage(CC.translate(""));
     }
 
