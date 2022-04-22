@@ -36,10 +36,18 @@ public class Items {
                 .addToLore("&7Right click to throw a snowball", "&7that will switch your position", "&7with the player you hit.")
                 .build();
     }
+
     public static ItemStack getPotionCounter(){
         return ItemBuilder.of(Material.POTION)
                 .name("&3&lPotion Counter")
                 .addToLore("&7Checks how many potions a player has.")
+                .build();
+    }
+
+    public static ItemStack getMedkit(){
+        return ItemBuilder.of(Material.PAPER)
+                .name("&6&lMed Kit")
+                .addToLore("&7Right click to receive Resistance III & Regeneration III", "&7for 4 seconds.")
                 .build();
     }
 

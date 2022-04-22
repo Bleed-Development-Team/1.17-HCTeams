@@ -55,6 +55,11 @@ public abstract class Ability implements Listener {
         return Cooldown.getCooldownString(player, getCooldownID());
     }
 
+    public void giveCooldowns(Player player){
+        Cooldown.addCooldown(getCooldownID(), player, getCooldown());
+        Cooldown.addCooldown("partner", player, 10);
+    }
+
     public boolean isOnCooldown(Player player){
         return Cooldown.isOnCooldown(getCooldownID(), player);
     }
