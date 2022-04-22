@@ -193,14 +193,15 @@ public class KOTHCommand extends BaseCommand {
     @Description("Teleport to a KOTH's cap location")
     @CommandPermission("foxtrot.event.koth.tp")
     @CommandCompletion("@event")
-
     public static void kothTP(Player sender, Event koth) {
         if (koth.getType() == EventType.KOTH) {
             sender.teleport(((KOTH) koth).getCapLocation().toLocation(Foxtrot.getInstance().getServer().getWorld(((KOTH) koth).getWorld())));
             sender.sendMessage(ChatColor.GRAY + "Teleported to the " + koth.getName() + " KOTH.");
+            return;
         } else if (koth.getType() == EventType.DTC) {
             sender.teleport(((KOTH) koth).getCapLocation().toLocation(Foxtrot.getInstance().getServer().getWorld(((KOTH) koth).getWorld())));
             sender.sendMessage(ChatColor.GRAY + "Teleported to the " + koth.getName() + " DTC.");
+            return;
         }
 
         sender.sendMessage(ChatColor.RED + "You can't TP to an event that doesn't have a location.");

@@ -2,10 +2,7 @@ package net.frozenorb.foxtrot.extras.ability;
 
 import lombok.Getter;
 import net.frozenorb.foxtrot.Foxtrot;
-import net.frozenorb.foxtrot.extras.ability.impl.BoneAbility;
-import net.frozenorb.foxtrot.extras.ability.impl.ComboAbility;
-import net.frozenorb.foxtrot.extras.ability.impl.PowerstoneAbility;
-import net.frozenorb.foxtrot.extras.ability.impl.SwitcherAbility;
+import net.frozenorb.foxtrot.extras.ability.impl.*;
 import net.frozenorb.foxtrot.util.Cooldown;
 import org.bukkit.Bukkit;
 
@@ -25,6 +22,7 @@ public class AbilityHandler {
         abilities.put("powerstone", new PowerstoneAbility());
         abilities.put("combo", new ComboAbility());
         abilities.put("switcher", new SwitcherAbility());
+        abilities.put("potioncounter", new PotionCounterAbility());
 
         for (Ability ability : abilities.values()){
             Bukkit.getServer().getPluginManager().registerEvents(ability, Foxtrot.getInstance());
@@ -41,7 +39,7 @@ public class AbilityHandler {
 
         Cooldown.createCooldown("combo");
         Cooldown.createCooldown("combo-eff");
-
+        Cooldown.createCooldown("potioncounter");
         Cooldown.createCooldown("switcher");
     }
 

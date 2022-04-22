@@ -36,4 +36,11 @@ public class Items {
                 .addToLore("&7Right click to throw a snowball", "&7that will switch your position", "&7with the player you hit.")
                 .build();
     }
+    public static ItemStack getPotionCounter(){
+        return ItemBuilder.of(Material.POTION)
+                .name("&3&lPotion Counter")
+                .addToLore("&7Checks how many potions a player has.")
+                .build();
+    }
+
 }

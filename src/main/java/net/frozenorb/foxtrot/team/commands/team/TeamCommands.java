@@ -512,7 +512,7 @@ public class TeamCommands extends BaseCommand implements Listener {
         Foxtrot.getInstance().getWrappedBalanceMap().setBalance(sender.getUniqueId(), FrozenEconomyHandler.getBalance(sender.getUniqueId()));
     }
 
-    @Subcommand("deposit all|d all")
+    @Subcommand("deposit-all|d-all")
     @Description("Deposit all money to your team.")
     public static void teamDepositAll(Player sender) {
         teamDeposit(sender, (float) FrozenEconomyHandler.getBalance(sender.getUniqueId()));

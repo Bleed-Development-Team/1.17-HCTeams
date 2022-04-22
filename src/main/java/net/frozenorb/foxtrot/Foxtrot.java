@@ -155,8 +155,6 @@ public class Foxtrot extends JavaPlugin {
 	@Getter private RaidableTeamsMap raidableTeamsMap;
 
 	@Getter private ChatGamesHandler chatGamesHandler;
-
-
 	@Getter private CombatLoggerListener combatLoggerListener;
 	@Getter
 	@Setter
