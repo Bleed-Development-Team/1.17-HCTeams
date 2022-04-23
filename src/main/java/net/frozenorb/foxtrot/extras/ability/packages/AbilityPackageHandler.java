@@ -23,7 +23,7 @@ public class AbilityPackageHandler implements Listener {
     public void onAbilityPackage(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         if (!event.getAction().equals(Action.RIGHT_CLICK_AIR) || !event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
-        if (isSimilarTo(player.getItemInHand(), Foxtrot.getInstance().getAbilityPackage().getPackage()))  return;
+        if (!isSimilarTo(player.getItemInHand(), Foxtrot.getInstance().getAbilityPackage().getPackage()))  return;
         ItemStack partnerPackage = null;
         for (ItemStack item : player.getInventory().getContents()) {
             if (item.equals(Foxtrot.getInstance().getAbilityPackage().getPackage())) {

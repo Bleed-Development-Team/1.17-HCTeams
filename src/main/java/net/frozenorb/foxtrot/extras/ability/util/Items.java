@@ -130,4 +130,10 @@ public class Items {
                 .enchant(Enchantment.DURABILITY, 1)
                 .build();
     }
+    public static ItemStack getNinjaStar() {
+        return ItemBuilder.of(Material.NETHER_STAR)
+                .name("&b&lNinja Star")
+                .addToLore("Teleports you to the last person who hit you (Within 15 seconds!)")
+                .build();
+    }
 }
