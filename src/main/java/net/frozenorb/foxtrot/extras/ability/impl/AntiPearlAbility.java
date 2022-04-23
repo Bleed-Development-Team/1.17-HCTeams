@@ -55,6 +55,7 @@ public class AntiPearlAbility extends Ability implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onDamage(EntityDamageByEntityEvent event) {
         if (event.isCancelled()) return;
+
         Player victim = (Player) event.getEntity();
         Player damager = (Player) event.getDamager();
         if (!isSimilarTo(damager.getItemInHand(), Items.getAntiPearl())) return;
@@ -74,11 +75,8 @@ public class AntiPearlAbility extends Ability implements Listener {
         Foxtrot.getInstance().getServer().getPluginManager().callEvent(appliedEvent);
 
         EnderpearlCooldownHandler.getEnderpearlCooldown().put(victim.getName(), System.currentTimeMillis() + appliedEvent.getTimeToApply());
-        applyOther(damager, victim);
 
         applyOther(damager, victim);
-
-
     }
 
     @EventHandler

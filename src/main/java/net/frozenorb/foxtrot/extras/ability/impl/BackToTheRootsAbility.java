@@ -100,7 +100,7 @@ public class BackToTheRootsAbility extends Ability implements Listener {
             if (!isSimilarTo(player.getItemInHand(), Items.getBackToTheRoots())) return;
 
             if (isOnCooldown(player)){
-                player.sendMessage(CC.translate("&cYou are on the " + getName() + "&6's cooldown for another &c&l" + getCooldownFormatted(player) + "&c."));
+                player.sendMessage(CC.translate("&cYou are on the " + getName() + "&c's cooldown for another &c&l" + getCooldownFormatted(player) + "&c."));
             }
         } if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             if (!isSimilarTo(player.getItemInHand(), Items.getBackToTheRoots())) return;
