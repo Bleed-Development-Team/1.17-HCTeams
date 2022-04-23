@@ -22,6 +22,9 @@ public class AbilityPackageHandler implements Listener {
 
     @EventHandler
     public void onAbilityPackage(PlayerInteractEvent event) {
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK){
+            event.setCancelled(true);
+        }
         Player player = event.getPlayer();
         System.out.println("I reached first if statement");
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {

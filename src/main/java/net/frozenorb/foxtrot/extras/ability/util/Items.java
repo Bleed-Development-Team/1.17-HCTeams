@@ -142,7 +142,7 @@ public class Items {
     public static ItemStack getNinjaStar() {
         return ItemBuilder.of(Material.NETHER_STAR)
                 .name("&b&lNinja Star")
-                .addToLore("Teleports you to the last person who hit you (Within 15 seconds!)")
+                .addToLore("&7Teleports you to the last person who hit you (Within 15 seconds!)")
                 .build();
     }
 }
