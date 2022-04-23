@@ -54,7 +54,7 @@ public class NinjaStarAbility extends Ability implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onRightClick(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getAction() != Action.RIGHT_CLICK_AIR) return;
         if (!isSimilarTo(player.getItemInHand(), Items.getNinjaStar())) return;
         if (!canUse(player)) return;
 
@@ -86,7 +86,7 @@ public class NinjaStarAbility extends Ability implements Listener {
         }, 20L * 3);
 
         getLastHits().remove(player.getUniqueId());
-        
+
 
     }
 
@@ -97,10 +97,12 @@ public class NinjaStarAbility extends Ability implements Listener {
         Player victim = (Player) event.getEntity();
 
         if (getLastHits().containsKey(victim.getUniqueId())) {
+            System.out.println("contains");
             getLastHits().remove(victim.getUniqueId());
             getLastHits().put(victim.getUniqueId(), player.getUniqueId());
             return;
         }
+        System.out.println("does not contain");
         getLastHits().put(victim.getUniqueId(), player.getUniqueId());
     }
     public float getSpawnTagScore(Player player) {
