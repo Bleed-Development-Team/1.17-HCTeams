@@ -81,6 +81,8 @@ public class RocketAbility extends Ability implements Listener {
                 useItem(player);
             }
 
+            rockets.add(player.getUniqueId()    );
+
             Bukkit.getScheduler().runTaskLater(Foxtrot.getInstance(), () -> {
                 if (!rockets.contains(player.getUniqueId())) return;
 

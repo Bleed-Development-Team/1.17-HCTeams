@@ -3,6 +3,7 @@ package net.frozenorb.foxtrot.extras.ability.impl;
 import lombok.Getter;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.extras.ability.Ability;
+import net.frozenorb.foxtrot.extras.ability.util.Items;
 import net.frozenorb.foxtrot.server.SpawnTagHandler;
 import net.frozenorb.foxtrot.util.CC;
 import org.bukkit.Bukkit;
@@ -47,7 +48,7 @@ public class NinjaStarAbility extends Ability implements Listener {
 
     @Override
     public ItemStack getItemStack() {
-        return null;
+        return Items.getNinjaStar();
     }
 
     @EventHandler

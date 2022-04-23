@@ -1,6 +1,7 @@
 package net.frozenorb.foxtrot.extras.ability.util;
 
 import net.frozenorb.foxtrot.util.ItemBuilder;
+import net.minecraft.world.item.ItemBanner;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -119,7 +120,6 @@ public class Items {
         return ItemBuilder.of(Material.FEATHER)
                 .name("&a&lJump VII")
                 .addToLore("&7Right click to receive Jump for 5 seconds.")
-                .enchant(Enchantment.DURABILITY, 1)
                 .build();
     }
 
@@ -130,6 +130,15 @@ public class Items {
                 .enchant(Enchantment.DURABILITY, 1)
                 .build();
     }
+
+    public static ItemStack getTimeWarp(){
+        return ItemBuilder.of(Material.FEATHER)
+                .name("&e&lTime-Warp")
+                .addToLore("&7Right click to warp yourself", "&7to your last thrown pearl.")
+                .enchant(Enchantment.DURABILITY, 1)
+                .build();
+    }
+
     public static ItemStack getNinjaStar() {
         return ItemBuilder.of(Material.NETHER_STAR)
                 .name("&b&lNinja Star")
