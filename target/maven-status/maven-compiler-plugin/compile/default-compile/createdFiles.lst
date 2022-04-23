@@ -131,6 +131,7 @@ net\frozenorb\foxtrot\persist\maps\KDRMap.class
 net\frozenorb\foxtrot\util\EffectSnapshot.class
 net\frozenorb\foxtrot\commands\EOTWCommand.class
 net\frozenorb\foxtrot\util\DamageUtil.class
+net\frozenorb\foxtrot\extras\ability\impl\LuckyModeAbility.class
 net\frozenorb\foxtrot\team\commands\team\TeamCommands$9.class
 net\frozenorb\foxtrot\events\koth\events\EventControlTickEvent.class
 net\frozenorb\foxtrot\uuid\impl\RedisUUIDCache.class

@@ -75,4 +75,12 @@ public class Items {
                 .build();
     }
 
+    public static ItemStack getLuckyMode(){
+        return ItemBuilder.of(Material.GOLD_INGOT)
+                .name("&e&lLucky Mode")
+                .addToLore("&7Right click to have a chance of ", "&7either getting Strength II or Weakness II.")
+                .enchant(Enchantment.DURABILITY, 1)
+                .build();
+    }
+
 }

@@ -8,6 +8,8 @@ import co.aikar.commands.annotation.Flags;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.economy.FrozenEconomyHandler;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 @CommandAlias("addbal|addbalance")
 @CommandPermission("foxtrot.setbal")
@@ -25,7 +27,6 @@ public class AddBalanceCommand extends BaseCommand {
             sender.sendMessage("§cWhy are you trying to do that?");
             return;
         }
-
 
         if (amount > 250000 && sender != null) {
             sender.sendMessage("§cWhat the fuck are you trying to do?");
