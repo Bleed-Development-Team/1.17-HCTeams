@@ -11,9 +11,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +61,7 @@ public class AbilityPackageHandler implements Listener {
             FireworkMeta data = firework.getFireworkMeta();
             data.addEffects(FireworkEffect.builder().withColor(Color.PURPLE).with(FireworkEffect.Type.BALL_LARGE).withFlicker().build());
             data.setPower(1);
+            firework.setMetadata("nodamage",  new FixedMetadataValue(Foxtrot.getInstance(), true));
             firework.setFireworkMeta(data);
 
             player.sendMessage(CC.translate("&4&lBleed &7| &fYou have received 3x " + Foxtrot.getInstance().getAbilityHandler().getAbilities().get(p).getName() + "&r&f's."));
@@ -67,6 +70,15 @@ public class AbilityPackageHandler implements Listener {
         }
     }
 
+    @EventHandler
+    public void antiFireworkDamage(EntityDamageByEntityEvent e) {
+        if (e.getDamager() instanceof Firework) {
+            Firework fw = (Firework) e.getDamager();
+            if (fw.hasMetadata("nodamage")) {
+                e.setCancelled(true);
+            }
+        }
+    }
 
 
     private boolean isSimilarTo(ItemStack item, ItemStack compareTo){
