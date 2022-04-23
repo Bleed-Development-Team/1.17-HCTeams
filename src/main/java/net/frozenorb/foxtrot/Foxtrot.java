@@ -39,6 +39,7 @@ import net.frozenorb.foxtrot.extras.ability.AbilityHandler;
 import net.frozenorb.foxtrot.extras.ability.commands.AbilityCommand;
 import net.frozenorb.foxtrot.extras.ability.commands.AbiltiesCommand;
 import net.frozenorb.foxtrot.extras.ability.packages.AbilityPackage;
+import net.frozenorb.foxtrot.extras.ability.packages.AbilityPackageHandler;
 import net.frozenorb.foxtrot.extras.ability.packages.commands.PartnerPackageCommand;
 import net.frozenorb.foxtrot.extras.blockshop.command.BlockShopCommand;
 import net.frozenorb.foxtrot.extras.guide.GuideCommand;
@@ -509,6 +510,7 @@ public class Foxtrot extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new WebsiteListener(), this);
 		getServer().getPluginManager().registerEvents(new StatTrakListener(), this);
 		getServer().getPluginManager().registerEvents(new ResourcePack(), this);
+		getServer().getPluginManager().registerEvents(new AbilityPackageHandler(), this);
 
 		if (getServerHandler().isReduceArmorDamage()) {
 			getServer().getPluginManager().registerEvents(new ArmorDamageListener(), this);
