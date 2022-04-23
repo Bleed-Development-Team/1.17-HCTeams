@@ -58,15 +58,7 @@ public class BackToTheRootsAbility extends Ability implements Listener {
 
         if (!isSimilarTo(damager.getItemInHand(), Items.getBackToTheRoots())) return;
 
-        if (isOnGlobalCooldown(damager)){
-            damager.sendMessage(CC.translate("&cYou are still on cooldown for &d&lPartner &cfor another &c&l" + Cooldown.getCooldownString(damager,"partner") + "&c."));
-            return;
-        }
-
-        if (isOnCooldown(damager)){
-            damager.sendMessage(CC.translate("&cYou are on cooldown for &f&lBack to the Roots &cfor another &c&l" + getCooldownFormatted(damager) + "&c."));
-            return;
-        }
+        if (!canUse(damager)) return;
 
         if (victim.hasMetadata("backtotheroots")) {
             damager.sendMessage(CC.translate("&cThat player is already under the back to the roots effect."));

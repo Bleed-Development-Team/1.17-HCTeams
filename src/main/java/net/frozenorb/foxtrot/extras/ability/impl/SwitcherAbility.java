@@ -51,16 +51,13 @@ public class SwitcherAbility extends Ability implements Listener {
 
     @EventHandler
     public void entity(EntityDamageByEntityEvent event){
+        if (!(event.getEntity() instanceof Player)) return;
         Player victim = (Player) event.getEntity();
 
         if (event.getDamager() instanceof Snowball){
             Snowball snowball = (Snowball) event.getDamager();
 
             if (snowball.getShooter() instanceof Player){
-
-                if (event.isCancelled()) return;
-
-                if (!canUse((Player) snowball.getShooter())) return;
 
                 if (((Player) snowball.getShooter()).getLocation().distance(victim.getLocation()) > 8){
                     ((Player) snowball.getShooter()).sendMessage(CC.translate("&cYou cannot switcher people from more than 8 blocks away!"));
@@ -79,17 +76,18 @@ public class SwitcherAbility extends Ability implements Listener {
     }
 
     @EventHandler
-    public void interact(ProjectileLaunchEvent event){
-        Player player = event.getEntity().getShooter() instanceof Player ? (Player) event.getEntity().getShooter() : null;
+    public void interact(PlayerInteractEvent event){
+        if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK){
+            Player player = event.getPlayer();
 
-        if (event.getEntity() instanceof Snowball){
-            if (!isSimilarTo(((Snowball) event.getEntity()).getItem(), Items.getSnowball())) return;
+            if (!isSimilarTo(player.getItemInHand(), Items.getSnowball())) return;
 
             if (!canUse(player)){
                 event.setCancelled(true);
-                player.getInventory().addItem(Items.getSnowball());
-
+                return;
             }
+
+            giveCooldowns(player);
         }
     }
 

@@ -53,15 +53,8 @@ public class PotionCounterAbility extends Ability implements Listener {
         Player damager = (Player) event.getDamager();
 
         if (!isSimilarTo(damager.getItemInHand(), Items.getPotionCounter())) return;
+        if (!canUse(damager)) return;
 
-        if (isOnGlobalCooldown(damager)){
-            damager.sendMessage(CC.translate("&cYou are still on cooldown for &d&lPartner &cfor another &c&l" + Cooldown.getCooldownString(damager,"partner") + "&c."));
-            return;
-        }
-        if (isOnCooldown(damager)){
-            damager.sendMessage(CC.translate("&cYou are on cooldown for the " + getName() + " &cfor another &c&l" + getCooldownFormatted(damager) + "&c."));
-            return;
-        }
 
         int potions = 0;
 

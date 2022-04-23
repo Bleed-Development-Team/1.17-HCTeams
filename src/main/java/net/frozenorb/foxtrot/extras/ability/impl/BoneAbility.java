@@ -65,15 +65,7 @@ public class BoneAbility extends Ability implements Listener {
 
         if (!isSimilarTo(damager.getItemInHand(), Items.getBoneAbility())) return;
 
-        if (isOnGlobalCooldown(damager)){
-            damager.sendMessage(CC.translate("&cYou are still on cooldown for &d&lPartner &cfor another &c&l" + Cooldown.getCooldownString(damager,"partner") + "&c."));
-            return;
-        }
-
-        if (isOnCooldown(damager)){
-            damager.sendMessage(CC.translate("&cYou are on cooldown for the &6&lAnti-Build Stick &cfor another &c&l" + getCooldownFormatted(damager) + "&c."));
-            return;
-        }
+        if (!canUse(damager)) return;
 
         int hits;
 

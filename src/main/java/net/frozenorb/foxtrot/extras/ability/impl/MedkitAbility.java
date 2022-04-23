@@ -52,16 +52,7 @@ public class MedkitAbility extends Ability implements Listener {
 
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             if (!isSimilarTo(player.getItemInHand(), Items.getMedkit())) return;
-
-            if (isOnGlobalCooldown(player)){
-                player.sendMessage(CC.translate("&cYou are still on cooldown for &d&lPartner &cfor another &c&l" + Cooldown.getCooldownString(player,"partner") + "&c."));
-                return;
-            }
-
-            if (isOnCooldown(player)){
-                player.sendMessage(CC.translate("&cYou are on cooldown for the &6&lMedKit &r&cfor another &c&l" + getCooldownFormatted(player) + "&c."));
-                return;
-            }
+            if (!canUse(player)) return;
 
             player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 4, 2));
             player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 4, 2));

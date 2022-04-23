@@ -61,19 +61,9 @@ public class RocketAbility extends Ability implements Listener {
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR){
             if (!isSimilarTo(player.getItemInHand(), Items.getRocket())) return;
+            if (!canUse(player)) return;
 
-            if (isOnGlobalCooldown(player)){
-                player.sendMessage(CC.translate("&cYou are still on cooldown for &d&lPartner &cfor another &c&l" + Cooldown.getCooldownString(player,"partner") + "&c."));
-                event.setCancelled(true);
-                return;
-            }
 
-            if (isOnCooldown(player)){
-                player.sendMessage(CC.translate("&cYou are on cooldown for the &b&lRocket &cfor another &c&l" + getCooldownFormatted(player) + "&c."));
-                event.setCancelled(true);
-                return;
-            }
-//TODO ayo this crashes the server
             player.setVelocity(player.getLocation().getDirection().multiply(3));
             applySelf(player);
 
@@ -95,13 +85,6 @@ public class RocketAbility extends Ability implements Listener {
             if (isOnCooldown(player)){
                 player.sendMessage(CC.translate("&cYou are on the " + getName() + "&c's cooldown for another &c&l" + getCooldownFormatted(player) + "&c."));
             }
-        }
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR && isOnGlobalCooldown(player) || isOnCooldown(player)){
-            //if (!isSimilarTo(player.getInventory().getItemInMainHand(), Items.getRocket())) return;
-            //if (!isSimilarTo(player.getInventory().getItemInOffHand(), Items.getRocket())) return;
-            //I think its already above but ima leave it here for testing yk
-            //event.setCancelled(true);
-
         }
     }
 

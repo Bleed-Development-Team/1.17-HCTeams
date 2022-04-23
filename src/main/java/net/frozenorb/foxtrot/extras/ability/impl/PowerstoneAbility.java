@@ -55,18 +55,7 @@ public class PowerstoneAbility extends Ability implements Listener {
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
             if (isSimilarTo(player.getItemInHand(), Items.getPowerstone())) {
-                if (isOnGlobalCooldown(player)){
-                    player.sendMessage(CC.translate("&cYou are still on cooldown for &d&lPartner &cfor another &c&l" + Cooldown.getCooldownString(player,"partner") + "&c."));
-                    //event.setCancelled(true);
-                    return;
-                }
-
-                if (isOnCooldown(player)){
-                    player.sendMessage(CC.translate("&cYou are on cooldown for the &5&lPowerstone &cfor another &c&l" + getCooldownFormatted(player) + "&c."));
-                    //event.setCancelled(true);
-                    return;
-                }
-
+                if (!canUse(player)) return;
 
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 5, 2));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20 * 5, 1));

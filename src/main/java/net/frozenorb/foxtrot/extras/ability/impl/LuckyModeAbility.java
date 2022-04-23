@@ -51,8 +51,8 @@ public class LuckyModeAbility extends Ability implements Listener {
         Player player = event.getPlayer();
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
+            if (!isSimilarTo(player.getItemInHand(), Items.getLuckyMode())) return;
             if (!canUse(player)) return;
-            if (!isSimilarTo(player.getItemInHand(), getItemStack())) return;
 
             int chance = Foxtrot.RANDOM.nextInt(1, 2);
 
