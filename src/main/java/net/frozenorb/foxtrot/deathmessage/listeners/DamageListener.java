@@ -160,11 +160,9 @@ public class DamageListener implements Listener {
         
         Team killerTeam = killer == null ? null : Foxtrot.getInstance().getTeamHandler().getTeam(killer);
         Team deadTeam = Foxtrot.getInstance().getTeamHandler().getTeam(event.getEntity());
+        StatsEntry killerStats = killer == null ? null : Foxtrot.getInstance().getMapHandler().getStatsHandler().getStats(killer);
 
-
-        StatsEntry killerStats = Foxtrot.getInstance().getMapHandler().getStatsHandler().getStats(killer);
-
-        if (killer instanceof Player){
+        if (killer != null){
             killerStats.addKill();
         }
 
