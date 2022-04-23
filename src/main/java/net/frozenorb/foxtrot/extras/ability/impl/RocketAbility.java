@@ -56,28 +56,33 @@ public class RocketAbility extends Ability implements Listener {
     }
 
     @EventHandler
-    public void onInteraction(PlayerInteractEvent event){
+    public void onInteraction(PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR){
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
             if (!isSimilarTo(player.getItemInHand(), Items.getRocket())) return;
-            if (!canUse(player)) return;
-
-            if (isOnGlobalCooldown(player)){
-                player.sendMessage(CC.translate("&cYou are still on cooldown for &d&lPartner &cfor another &c&l" + Cooldown.getCooldownString(player,"partner") + "&c."));
+            if (!canUse(player)){
                 event.setCancelled(true);
-                Bukkit.broadcastMessage(CC.translate(getName() + " has been canceled globally."));
                 return;
             }
 
             player.setVelocity(player.getLocation().getDirection().multiply(3));
-            applySelf(player);
+
+            Cooldown.addCooldown("rocket", player, 60 * 2);
+            Cooldown.addCooldown("partner", player, 10);
+
+            player.sendMessage(CC.translate(""));
+            player.sendMessage(CC.translate("&c❤ &6You have used the &fRocket" + " &6ability&6!"));
+            player.sendMessage(CC.translate("&c❤ &6Right click to launch yourself up into the air."));
+            player.sendMessage(CC.translate("&c❤ &6You are now on cooldown for &f" + getCooldownFormatted(player) + "&6."));
+            player.sendMessage(CC.translate(""));
 
             Bukkit.getScheduler().runTaskLater(Foxtrot.getInstance(), () -> {
                 if (!rockets.contains(player.getUniqueId())) return;
 
                 rockets.remove(player.getUniqueId());
             }, 20L * 15L);
+
         }
     }
 

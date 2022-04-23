@@ -64,6 +64,7 @@ public class AntiPearlAbility extends Ability implements Listener {
 
         if (!isSimilarTo(damager.getItemInHand(), Items.getAntiPearl())) return;
         if (!canUse(damager)) return;
+        if (!victimCheck(damager, victim)) return;
 
         if (isOnGlobalCooldown(damager)) {
             damager.sendMessage(CC.translate("&cYou are still on cooldown for &d&lPartner &cfor another &c&l" + Cooldown.getCooldownString(damager, "partner") + "&c."));

@@ -83,4 +83,37 @@ public class Items {
                 .build();
     }
 
+    public static ItemStack getStrength(){
+        return ItemBuilder.of(Material.BLAZE_POWDER)
+                .name("&c&lStrength II")
+                .addToLore("&7Right click to receive Strength II for 3 seconds.")
+                .enchant(Enchantment.DURABILITY, 1)
+                .build();
+    }
+
+    public static ItemStack getResistance(){
+        return ItemBuilder.of(Material.IRON_INGOT)
+                .name("&e&lResistance III")
+                .addToLore("&7Right click to receive Resistance III for 3 seconds.")
+                .enchant(Enchantment.DURABILITY, 1)
+                .build();
+    }
+
+    public static ItemStack getInvis(){
+        return ItemBuilder.of(Material.INK_SAC)
+                .name("&b&lInvisibility")
+                .addToLore("&7Right click to receive Invisibility for 43 seconds.")
+                .enchant(Enchantment.DURABILITY, 1)
+                .build();
+    }
+
+    public static ItemStack getRegen(){
+        return ItemBuilder.of(Material.GHAST_TEAR)
+                .name("&d&lRegeneration III")
+                .addToLore("&7Right click to receive Regeneration for 3 seconds.")
+                .enchant(Enchantment.DURABILITY, 1)
+                .build();
+    }
+
+
 }

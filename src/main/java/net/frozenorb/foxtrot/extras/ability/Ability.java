@@ -1,5 +1,6 @@
 package net.frozenorb.foxtrot.extras.ability;
 
+import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.Cooldown;
@@ -56,6 +57,15 @@ public abstract class Ability implements Listener {
         return Cooldown.getCooldownString(player, getCooldownID());
     }
 
+    public void useItem(Player player){
+        if (player.getItemInHand().getAmount() > 1) {
+            int amount = player.getItemInHand().getAmount() - 1;
+            player.getItemInHand().setAmount(amount);
+        } else {
+            player.setItemInHand(null);
+        }
+    }
+
     public void giveCooldowns(Player player){
         Cooldown.addCooldown(getCooldownID(), player, getCooldown());
         Cooldown.addCooldown("partner", player, 10);
@@ -80,6 +90,25 @@ public abstract class Ability implements Listener {
             return false;
         } else if (DTRBitmask.SAFE_ZONE.appliesAt(player.getLocation())){
             player.sendMessage(CC.translate("&cYou cannot use abilities in a &a&lSafe-Zone&c."));
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean victimCheck(Player damager, Player victim){
+        if (DTRBitmask.SAFE_ZONE.appliesAt(victim.getLocation())){
+            damager.sendMessage(CC.translate("&cThat player is in a &a&lSafe-Zone&c."));
+            return false;
+        } else if (DTRBitmask.CITADEL.appliesAt(victim.getLocation())){
+            damager.sendMessage(CC.translate("&cThat player is in a &5&lCitadel&c."));
+            return false;
+        } else if (DTRBitmask.KOTH.appliesAt(victim.getLocation())){
+            damager.sendMessage(CC.translate("&cThat player is in a &b&lKOTH&c."));
+            return false;
+        }
+        if (Foxtrot.getInstance().getPvPTimerMap().hasTimer(victim.getUniqueId())) {
+            damager.sendMessage(CC.translate("&cThat player is on &e&lPvP Timer&c."));
             return false;
         }
 
@@ -112,12 +141,7 @@ public abstract class Ability implements Listener {
         player.sendMessage(CC.translate("&c❤ &6You are now on cooldown for &f" + getCooldownFormatted(player) + "&6."));
         player.sendMessage(CC.translate(""));
 
-        if (player.getItemInHand().getAmount() > 1) {
-            int amount = player.getItemInHand().getAmount() - 1;
-            player.getItemInHand().setAmount(amount);
-        } else {
-            player.setItemInHand(null);
-        }
+        useItem(player);
     }
 
     public void applyOther(Player player, Player victim){
@@ -132,11 +156,6 @@ public abstract class Ability implements Listener {
 
         victim.sendMessage(CC.translate("&c❤ &6You have been hit by &f" + player.getName() + " &6with the &f" + getName() + " &6ability&6!"));
 
-        if (player.getItemInHand().getAmount() > 1) {
-            int amount = player.getItemInHand().getAmount() - 1;
-            player.getItemInHand().setAmount(amount);
-        } else {
-            player.setItemInHand(null);
-        }
+        useItem(player);
     }
 }

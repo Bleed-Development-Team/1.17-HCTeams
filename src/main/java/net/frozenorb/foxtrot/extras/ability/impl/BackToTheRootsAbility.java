@@ -57,8 +57,8 @@ public class BackToTheRootsAbility extends Ability implements Listener {
         Player damager = (Player) event.getDamager();
 
         if (!isSimilarTo(damager.getItemInHand(), Items.getBackToTheRoots())) return;
-
         if (!canUse(damager)) return;
+        if (!victimCheck(damager, victim)) return;
 
         if (victim.hasMetadata("backtotheroots")) {
             damager.sendMessage(CC.translate("&cThat player is already under the back to the roots effect."));

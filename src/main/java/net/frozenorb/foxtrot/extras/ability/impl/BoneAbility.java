@@ -2,6 +2,7 @@ package net.frozenorb.foxtrot.extras.ability.impl;
 
 import net.frozenorb.foxtrot.extras.ability.Ability;
 import net.frozenorb.foxtrot.extras.ability.util.Items;
+import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.Cooldown;
 import net.frozenorb.foxtrot.util.TimeUtils;
@@ -58,15 +59,19 @@ public class BoneAbility extends Ability implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void hit(EntityDamageByEntityEvent event){
-        if (event.isCancelled()) return;
         Player victim = event.getEntity() instanceof Player ? (Player) event.getEntity() : null;
         Player damager = event.getDamager() instanceof Player ? (Player) event.getDamager() : null;
 
         if (damager == null || victim == null) return;
 
         if (!isSimilarTo(damager.getItemInHand(), Items.getBoneAbility())) return;
-
         if (!canUse(damager)) return;
+        if (!victimCheck(damager, victim)) return;
+
+        if (DTRBitmask.SAFE_ZONE.appliesAt(victim.getLocation())){
+            damager.sendMessage(CC.translate("&cThat player is inside of safe-zone."));
+            return;
+        }
 
         int hits;
 
@@ -106,7 +111,6 @@ public class BoneAbility extends Ability implements Listener {
 
         if (Cooldown.isOnCooldown("bone-eff", player)){
             event.setCancelled(true);
-            Bukkit.broadcastMessage(CC.translate(getName() + " has been line 116."));
 
             player.sendMessage(CC.translate("&cYou cannot place blocks for another &c&l" + Cooldown.getCooldownString(player, "bone-eff") + "&c."));
         }
@@ -117,7 +121,6 @@ public class BoneAbility extends Ability implements Listener {
         Player player = event.getPlayer();
 
         if (Cooldown.isOnCooldown("bone-eff", player)){
-            Bukkit.broadcastMessage(CC.translate(getName() + " has been line 138."));
 
             event.setCancelled(true);
             player.sendMessage(CC.translate("&cYou cannot block blocks for another &c&l" + Cooldown.getCooldownString(player, "bone-eff") + "&c."));
@@ -131,8 +134,8 @@ public class BoneAbility extends Ability implements Listener {
         if (event.getAction().name().contains("RIGHT") && !event.getAction().name().contains("AIR")) {
            if (event.getClickedBlock().getType() == Material.OAK_FENCE_GATE || event.getClickedBlock().getType() == Material.SPRUCE_FENCE_GATE || event.getClickedBlock().getType() == Material.BIRCH_FENCE_GATE || event.getClickedBlock().getType() == Material.JUNGLE_FENCE_GATE || event.getClickedBlock().getType() == Material.DARK_OAK_FENCE_GATE || event.getClickedBlock().getType() == Material.ACACIA_FENCE_GATE || event.getClickedBlock().getType() == Material.OAK_DOOR) {
                if (Cooldown.isOnCooldown("bone-eff", player)){
-                   Bukkit.broadcastMessage(CC.translate(getName() + " has been line 140."));
                    event.setCancelled(true);
+
                    player.sendMessage(CC.translate("&cYou cannot interact with blocks for another &c&l" + Cooldown.getCooldownString(player, "bone-eff") + "&c."));
                }
            }

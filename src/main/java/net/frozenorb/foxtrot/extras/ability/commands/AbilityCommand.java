@@ -5,6 +5,8 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Name;
 import co.aikar.commands.annotation.Subcommand;
+import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.extras.ability.Ability;
 import net.frozenorb.foxtrot.extras.ability.util.Items;
 import net.frozenorb.foxtrot.util.CC;
 import org.bukkit.entity.Player;
@@ -15,16 +17,13 @@ public class AbilityCommand extends BaseCommand {
 
     @Subcommand("give")
     public void onAbilityCommand(Player player) {
-        player.getInventory().addItem(Items.getBoneAbility());
-        player.getInventory().addItem(Items.getMedkit());
-        player.getInventory().addItem(Items.getPowerstone());
-        player.getInventory().addItem(Items.getComboAbility());
-        player.getInventory().addItem(Items.getSnowball());
-        player.getInventory().addItem(Items.getPotionCounter());
-        player.getInventory().addItem(Items.getAntiPearl());
-        player.getInventory().addItem(Items.getRocket());
-        player.getInventory().addItem(Items.getBackToTheRoots());
-        player.getInventory().addItem(Items.getLuckyMode());
+        for (Ability ability : Foxtrot.getInstance().getAbilityHandler().getAbilities()){
+            player.getInventory().addItem(ability.getItemStack());
+        }
+    }
 
+    @Subcommand("reset")
+    public void reset(Player player){
+        player.sendMessage(CC.translate("&csadly, this does not work yet :("));
     }
 }

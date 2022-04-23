@@ -54,6 +54,7 @@ public class PotionCounterAbility extends Ability implements Listener {
 
         if (!isSimilarTo(damager.getItemInHand(), Items.getPotionCounter())) return;
         if (!canUse(damager)) return;
+        if (!victimCheck(damager, victim)) return;
 
 
         int potions = 0;

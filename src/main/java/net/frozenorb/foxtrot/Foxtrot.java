@@ -413,6 +413,7 @@ public class Foxtrot extends JavaPlugin {
 		setupHourEvents();
 
 		abilityHandler = new AbilityHandler();
+		abilityPackage = new AbilityPackage();
 
 		new LunarClientHandler();
 

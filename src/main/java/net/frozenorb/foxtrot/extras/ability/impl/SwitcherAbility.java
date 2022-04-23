@@ -59,6 +59,7 @@ public class SwitcherAbility extends Ability implements Listener {
             Snowball snowball = (Snowball) event.getDamager();
 
             if (snowball.getShooter() instanceof Player){
+                if (!victimCheck((Player) snowball.getShooter(), victim)) return;
 
                 if (((Player) snowball.getShooter()).getLocation().distance(victim.getLocation()) > 8){
                     ((Player) snowball.getShooter()).sendMessage(CC.translate("&cYou cannot switcher people from more than 8 blocks away!"));
@@ -84,7 +85,6 @@ public class SwitcherAbility extends Ability implements Listener {
             if (!isSimilarTo(player.getItemInHand(), Items.getSnowball())) return;
 
             if (!canUse(player)){
-                Bukkit.broadcastMessage(CC.translate(getName() + " has been line 90."));
                 event.setCancelled(true);
                 return;
             }

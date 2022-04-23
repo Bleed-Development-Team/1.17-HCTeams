@@ -9,7 +9,5 @@ public class AbilityPackage {
 
     public ItemStack getPackage() {
         return ItemBuilder.of(Material.ENDER_CHEST).name(CC.translate("&c&lAbility Package")).addToLore(CC.translate("&7Right click to receive 3x random partner items from /abilities")).build();
-
-
     }
 }

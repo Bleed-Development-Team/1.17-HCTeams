@@ -3,6 +3,7 @@ package net.frozenorb.foxtrot.extras.ability.impl;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.extras.ability.Ability;
 import net.frozenorb.foxtrot.extras.ability.util.Items;
+import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.Cooldown;
 import org.bukkit.Bukkit;
@@ -79,13 +80,18 @@ public class ComboAbility extends Ability implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void hitPlayer(EntityDamageByEntityEvent event){
-        if (event.isCancelled()) return;
+        if (!(event.getEntity() instanceof Player) || (!(event.getDamager() instanceof Player))) return;
+
         Player damager = (Player) event.getDamager();
-        if (event.isCancelled()) return;
+        Player victim = (Player) event.getEntity();
+
         if (Cooldown.isOnCooldown("combo-eff", damager)){
-            if (combos.get(damager.getUniqueId()) < 10){
+            if (combos.containsKey(damager.getUniqueId()) && combos.get(damager.getUniqueId()) < 10){
+                if (DTRBitmask.SAFE_ZONE.appliesAt(victim.getLocation())) return;
+                if (Foxtrot.getInstance().getPvPTimerMap().hasTimer(victim.getUniqueId())) return;
+
                 combos.put(damager.getUniqueId(), combos.get(damager.getUniqueId()) + 1);
             }
         }
