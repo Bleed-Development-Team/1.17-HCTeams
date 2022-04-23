@@ -38,6 +38,7 @@ import net.frozenorb.foxtrot.events.region.glowmtn.commands.GlowCommand;
 import net.frozenorb.foxtrot.extras.ability.AbilityHandler;
 import net.frozenorb.foxtrot.extras.ability.commands.AbilityCommand;
 import net.frozenorb.foxtrot.extras.ability.commands.AbiltiesCommand;
+import net.frozenorb.foxtrot.extras.ability.packages.AbilityPackage;
 import net.frozenorb.foxtrot.extras.blockshop.command.BlockShopCommand;
 import net.frozenorb.foxtrot.extras.guide.GuideCommand;
 import net.frozenorb.foxtrot.extras.lunar.LunarClientHandler;
@@ -115,6 +116,7 @@ public class Foxtrot extends JavaPlugin {
 	@Getter private EventHandler eventHandler;
 	@Getter private ConquestHandler conquestHandler;
 	@Getter private CavernHandler cavernHandler;
+	@Getter private AbilityPackage abilityPackage;
 	@Getter private GlowHandler glowHandler;
 	@Getter private CrateHandler crateHandler;
 	@Getter private AbilityHandler abilityHandler;

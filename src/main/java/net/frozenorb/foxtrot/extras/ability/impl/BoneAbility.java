@@ -5,6 +5,7 @@ import net.frozenorb.foxtrot.extras.ability.util.Items;
 import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.Cooldown;
 import net.frozenorb.foxtrot.util.TimeUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -105,6 +106,8 @@ public class BoneAbility extends Ability implements Listener {
 
         if (Cooldown.isOnCooldown("bone-eff", player)){
             event.setCancelled(true);
+            Bukkit.broadcastMessage(CC.translate(getName() + " has been line 116."));
+
             player.sendMessage(CC.translate("&cYou cannot place blocks for another &c&l" + Cooldown.getCooldownString(player, "bone-eff") + "&c."));
         }
     }
@@ -114,6 +117,8 @@ public class BoneAbility extends Ability implements Listener {
         Player player = event.getPlayer();
 
         if (Cooldown.isOnCooldown("bone-eff", player)){
+            Bukkit.broadcastMessage(CC.translate(getName() + " has been line 138."));
+
             event.setCancelled(true);
             player.sendMessage(CC.translate("&cYou cannot block blocks for another &c&l" + Cooldown.getCooldownString(player, "bone-eff") + "&c."));
         }
@@ -126,6 +131,7 @@ public class BoneAbility extends Ability implements Listener {
         if (event.getAction().name().contains("RIGHT") && !event.getAction().name().contains("AIR")) {
            if (event.getClickedBlock().getType() == Material.OAK_FENCE_GATE || event.getClickedBlock().getType() == Material.SPRUCE_FENCE_GATE || event.getClickedBlock().getType() == Material.BIRCH_FENCE_GATE || event.getClickedBlock().getType() == Material.JUNGLE_FENCE_GATE || event.getClickedBlock().getType() == Material.DARK_OAK_FENCE_GATE || event.getClickedBlock().getType() == Material.ACACIA_FENCE_GATE || event.getClickedBlock().getType() == Material.OAK_DOOR) {
                if (Cooldown.isOnCooldown("bone-eff", player)){
+                   Bukkit.broadcastMessage(CC.translate(getName() + " has been line 140."));
                    event.setCancelled(true);
                    player.sendMessage(CC.translate("&cYou cannot interact with blocks for another &c&l" + Cooldown.getCooldownString(player, "bone-eff") + "&c."));
                }

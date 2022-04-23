@@ -8,6 +8,7 @@ import net.frozenorb.foxtrot.server.event.EnderpearlCooldownAppliedEvent;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.Cooldown;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -97,6 +98,7 @@ public class AntiPearlAbility extends Ability implements Listener {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
             if (!isSimilarTo(player.getInventory().getItemInMainHand(), Items.getAntiPearl())) return;
             if (!isSimilarTo(player.getInventory().getItemInOffHand(), Items.getAntiPearl())) return;
+            Bukkit.broadcastMessage(CC.translate(getName() + " has been line 103."));
 
             event.setCancelled(true);
 

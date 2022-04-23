@@ -96,6 +96,7 @@ public class BackToTheRootsAbility extends Ability implements Listener {
             }
         } if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             if (!isSimilarTo(player.getItemInHand(), Items.getBackToTheRoots())) return;
+            Bukkit.broadcastMessage(CC.translate(getName() + " has been line 110."));
 
             event.setCancelled(true);
 

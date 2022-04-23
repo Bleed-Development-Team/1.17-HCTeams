@@ -5,6 +5,7 @@ import net.frozenorb.foxtrot.extras.ability.util.Items;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.Cooldown;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
@@ -83,6 +84,7 @@ public class SwitcherAbility extends Ability implements Listener {
             if (!isSimilarTo(player.getItemInHand(), Items.getSnowball())) return;
 
             if (!canUse(player)){
+                Bukkit.broadcastMessage(CC.translate(getName() + " has been line 90."));
                 event.setCancelled(true);
                 return;
             }
