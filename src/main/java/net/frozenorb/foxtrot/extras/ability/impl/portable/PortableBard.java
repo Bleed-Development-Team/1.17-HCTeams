@@ -51,7 +51,7 @@ public class PortableBard extends Ability implements Listener {
         Player player = event.getPlayer();
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
-            if (!isSimilarTo(player.getItemInHand(), Items.getPortableBard())) return;
+            if (!isSimilarTo(player.getItemInHand(), Items.getJump())) return;
             if (!canUse(player)) return;
 
             new PortableMenu(player).updateMenu();

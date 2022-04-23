@@ -43,6 +43,6 @@ public class NinjaStar extends Ability implements Listener {
         return null;
     }
 
-    @EventHandler
-    public void addToList(EntityDamageByEntityEvent event)
+    //@EventHandler
+    //public void addToList(EntityDamageByEntityEvent event)
 }

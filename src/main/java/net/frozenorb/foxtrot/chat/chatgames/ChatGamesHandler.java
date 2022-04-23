@@ -35,8 +35,8 @@ public class ChatGamesHandler {
         questions.add("What map is it?");
 
         // Answers - We make these lowercase for when we handle them in the chat.
-        answers.add("embry_");
-        answers.add("saturday");
+        answers.add("alebab");
+        answers.add("friday");
         answers.add("24h");
         answers.add("bleedhcf");
         answers.add("map 1");
