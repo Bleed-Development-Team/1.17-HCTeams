@@ -24,43 +24,44 @@ public class AbilityPackageHandler implements Listener {
     public void onAbilityPackage(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         System.out.println("I reached first if statement");
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getAction() != Action.RIGHT_CLICK_AIR) return;
-        System.out.println("I reached second if statement");
+        if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            System.out.println("I reached second if statement");
 
-        if (!isSimilarTo(player.getItemInHand(), Foxtrot.getInstance().getAbilityPackage().getPackage()))  return;
-        System.out.println("I reached 3rd if statement");
+            if (!isSimilarTo(player.getItemInHand(), Foxtrot.getInstance().getAbilityPackage().getPackage())) return;
+            System.out.println("I reached 3rd if statement");
 
-        if (player.getItemInHand().getAmount() > 1) {
-            int amount = player.getItemInHand().getAmount() - 1;
-            player.getItemInHand().setAmount(amount);
-        } else {
-            System.out.println("I reached else statement");
+            if (player.getItemInHand().getAmount() > 1) {
+                int amount = player.getItemInHand().getAmount() - 1;
+                player.getItemInHand().setAmount(amount);
+            } else {
+                System.out.println("I reached else statement");
 
-            player.setItemInHand(null);
+                player.setItemInHand(null);
+            }
+            System.out.println("I reached last if statement");
+
+
+            int p = Foxtrot.RANDOM.nextInt(0, Foxtrot.getInstance().getAbilityHandler().getAbilities().size());
+            int pp = Foxtrot.RANDOM.nextInt(0, Foxtrot.getInstance().getAbilityHandler().getAbilities().size());
+            int ppp = Foxtrot.RANDOM.nextInt(0, Foxtrot.getInstance().getAbilityHandler().getAbilities().size());
+            System.out.println("I reached loop statement");
+
+            for (int i = 0; i <= 3; i++) {
+                player.getInventory().addItem(Foxtrot.getInstance().getAbilityHandler().getAbilities().get(pp).getItemStack());
+                player.getInventory().addItem(Foxtrot.getInstance().getAbilityHandler().getAbilities().get(ppp).getItemStack());
+                player.getInventory().addItem(Foxtrot.getInstance().getAbilityHandler().getAbilities().get(p).getItemStack());
+            }
+
+            Firework firework = player.getWorld().spawn(player.getLocation(), Firework.class);
+            FireworkMeta data = firework.getFireworkMeta();
+            data.addEffects(FireworkEffect.builder().withColor(Color.PURPLE).with(FireworkEffect.Type.BALL_LARGE).withFlicker().build());
+            data.setPower(1);
+            firework.setFireworkMeta(data);
+
+            player.sendMessage(CC.translate("&4&lBleed &7| &fYou have received 3x " + Foxtrot.getInstance().getAbilityHandler().getAbilities().get(p).getName() + "&r&f's."));
+            player.sendMessage(CC.translate("&4&lBleed &7| &fYou have received 3x " + Foxtrot.getInstance().getAbilityHandler().getAbilities().get(pp).getName() + "&r&f's."));
+            player.sendMessage(CC.translate("&4&lBleed &7| &fYou have received 3x " + Foxtrot.getInstance().getAbilityHandler().getAbilities().get(ppp).getName() + "&r&f's."));
         }
-        System.out.println("I reached last if statement");
-
-
-        int p = Foxtrot.RANDOM.nextInt(0, Foxtrot.getInstance().getAbilityHandler().getAbilities().size());
-        int pp = Foxtrot.RANDOM.nextInt(0, Foxtrot.getInstance().getAbilityHandler().getAbilities().size());
-        int ppp = Foxtrot.RANDOM.nextInt(0, Foxtrot.getInstance().getAbilityHandler().getAbilities().size());
-        System.out.println("I reached loop statement");
-
-        for (int i = 0; i <= 3; i++) {
-            player.getInventory().addItem(Foxtrot.getInstance().getAbilityHandler().getAbilities().get(pp).getItemStack());
-            player.getInventory().addItem(Foxtrot.getInstance().getAbilityHandler().getAbilities().get(ppp).getItemStack());
-            player.getInventory().addItem(Foxtrot.getInstance().getAbilityHandler().getAbilities().get(p).getItemStack());
-        }
-
-        Firework firework = player.getWorld().spawn(player.getLocation(), Firework.class);
-        FireworkMeta data = firework.getFireworkMeta();
-        data.addEffects(FireworkEffect.builder().withColor(Color.PURPLE).with(FireworkEffect.Type.BALL_LARGE).withFlicker().build());
-        data.setPower(1);
-        firework.setFireworkMeta(data);
-
-        player.sendMessage(CC.translate("&4&lBleed &7| &fYou have received 3x " + Foxtrot.getInstance().getAbilityHandler().getAbilities().get(p).getName() + "&r&f's."));
-        player.sendMessage(CC.translate("&4&lBleed &7| &fYou have received 3x " + Foxtrot.getInstance().getAbilityHandler().getAbilities().get(pp).getName() + "&r&f's."));
-        player.sendMessage(CC.translate("&4&lBleed &7| &fYou have received 3x " + Foxtrot.getInstance().getAbilityHandler().getAbilities().get(ppp).getName() + "&r&f's."));
     }
 
 
