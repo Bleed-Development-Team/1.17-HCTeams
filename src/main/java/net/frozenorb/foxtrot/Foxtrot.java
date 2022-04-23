@@ -39,6 +39,7 @@ import net.frozenorb.foxtrot.extras.ability.AbilityHandler;
 import net.frozenorb.foxtrot.extras.ability.commands.AbilityCommand;
 import net.frozenorb.foxtrot.extras.ability.commands.AbiltiesCommand;
 import net.frozenorb.foxtrot.extras.ability.packages.AbilityPackage;
+import net.frozenorb.foxtrot.extras.ability.packages.commands.PartnerPackageCommand;
 import net.frozenorb.foxtrot.extras.blockshop.command.BlockShopCommand;
 import net.frozenorb.foxtrot.extras.guide.GuideCommand;
 import net.frozenorb.foxtrot.extras.lunar.LunarClientHandler;
@@ -306,6 +307,7 @@ public class Foxtrot extends JavaPlugin {
 		m.registerCommand(new RegenCommand());
 		m.registerCommand(new ReviveCommand());
 		m.registerCommand(new SetBalCommand());
+		m.registerCommand(new PartnerPackageCommand());
 		m.registerCommand(new SetEndExitCommand());
 		m.registerCommand(new RenameCommand());
 		m.registerCommand(new SetNetherBufferCommand());

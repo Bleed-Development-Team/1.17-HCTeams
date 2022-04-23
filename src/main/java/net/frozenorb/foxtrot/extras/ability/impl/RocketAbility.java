@@ -63,15 +63,12 @@ public class RocketAbility extends Ability implements Listener {
             if (!isSimilarTo(player.getItemInHand(), Items.getRocket())) return;
             if (!canUse(player)) return;
 
-<<<<<<< Updated upstream
-=======
             if (isOnGlobalCooldown(player)){
                 player.sendMessage(CC.translate("&cYou are still on cooldown for &d&lPartner &cfor another &c&l" + Cooldown.getCooldownString(player,"partner") + "&c."));
                 event.setCancelled(true);
                 Bukkit.broadcastMessage(CC.translate(getName() + " has been canceled globally."));
                 return;
             }
->>>>>>> Stashed changes
 
             player.setVelocity(player.getLocation().getDirection().multiply(3));
             applySelf(player);
