@@ -94,5 +94,12 @@ public class AntiPearlAbility extends Ability implements Listener {
                 player.sendMessage(CC.translate("&cYou are not on cooldown for this item."));
             }
         }
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
+            if (!isSimilarTo(player.getInventory().getItemInMainHand(), Items.getAntiPearl())) return;
+            if (!isSimilarTo(player.getInventory().getItemInOffHand(), Items.getAntiPearl())) return;
+
+            event.setCancelled(true);
+
+        }
     }
 }
