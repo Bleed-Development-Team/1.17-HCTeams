@@ -15,12 +15,15 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AbilityPackageHandler implements Listener {
     @EventHandler
     public void onAbilityPackage(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if (!event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
-        if (!player.getInventory().getItemInMainHand().equals(Foxtrot.getInstance().getAbilityPackage().getPackage()) || player.getInventory().getItemInOffHand().equals(Foxtrot.getInstance().getAbilityPackage().getPackage()))  return;
+        if (!event.getAction().equals(Action.RIGHT_CLICK_AIR) || !event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
+        if (isSimilarTo(player.getItemInHand(), Foxtrot.getInstance().getAbilityPackage().getPackage()))  return;
         ItemStack partnerPackage = null;
         for (ItemStack item : player.getInventory().getContents()) {
             if (item.equals(Foxtrot.getInstance().getAbilityPackage().getPackage())) {
@@ -63,6 +66,38 @@ public class AbilityPackageHandler implements Listener {
         player.sendMessage(CC.translate("&4&lBleed &7| &fYou have received 3x " + Foxtrot.getInstance().getAbilityHandler().getAbilities().get(p).getName() + "&r&f's."));
         player.sendMessage(CC.translate("&4&lBleed &7| &fYou have received 3x " + Foxtrot.getInstance().getAbilityHandler().getAbilities().get(pp).getName() + "&r&f's."));
         player.sendMessage(CC.translate("&4&lBleed &7| &fYou have received 3x " + Foxtrot.getInstance().getAbilityHandler().getAbilities().get(ppp).getName() + "&r&f's."));
+    }
+
+
+    private boolean isSimilarTo(ItemStack item, ItemStack compareTo){
+
+        boolean hasItemMeta = item.hasItemMeta();
+        boolean compareToHasItemMeta = compareTo.hasItemMeta();
+
+        boolean itemHasDisplayName = false;
+        boolean compareToHasDisplayName = false;
+
+        String itemDisplayName = "";
+
+        String compareToDisplayName = "";
+
+        List<String> itemLore = new ArrayList<>();
+        List<String> compareToLore = new ArrayList<>();
+
+        if(hasItemMeta && compareToHasItemMeta){
+            itemHasDisplayName = item.getItemMeta().hasDisplayName();
+            compareToHasDisplayName = item.getItemMeta().hasDisplayName();
+            if(itemHasDisplayName) itemDisplayName = item.getItemMeta().getDisplayName();
+            if(compareToHasDisplayName) compareToDisplayName = compareTo.getItemMeta().getDisplayName();
+            if(item.getItemMeta().hasLore()) itemLore = item.getItemMeta().getLore();
+            if(compareTo.getItemMeta().hasLore()) compareToLore = compareTo.getItemMeta().getLore();
+        }
+
+        return item.getType() == compareTo.getType() &&
+                hasItemMeta &&
+                itemHasDisplayName &&
+                compareToHasDisplayName &&
+                itemDisplayName.equals(compareToDisplayName) && itemLore.containsAll(compareToLore);
     }
 
 }
