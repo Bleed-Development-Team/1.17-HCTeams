@@ -1,14 +1,11 @@
 package net.frozenorb.foxtrot.extras.ability;
 
-import lombok.Getter;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.extras.ability.impl.*;
 import net.frozenorb.foxtrot.extras.ability.impl.portable.*;
 import net.frozenorb.foxtrot.util.Cooldown;
 import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockPlaceEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +35,7 @@ public class AbilityHandler implements Listener {
         abilities.put("invis", new InvisibilityAbility());
         abilities.put("jump", new JumpAbility());
         abilities.put("portable-bard", new PortableBard());
+        abilities.put("ninja-star", new NinjaStarAbility());
 
         for (Ability ability : abilities.values()){
             Bukkit.getServer().getPluginManager().registerEvents(ability, Foxtrot.getInstance());
@@ -64,7 +62,7 @@ public class AbilityHandler implements Listener {
 
         Cooldown.createCooldown("rocket");
         Cooldown.createCooldown("backtotheroots");
-
+        Cooldown.createCooldown("ninja");
         Cooldown.createCooldown("lucky");
         Cooldown.createCooldown("portable");
     }

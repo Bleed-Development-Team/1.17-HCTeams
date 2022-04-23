@@ -31,7 +31,7 @@ public class AbilityPackageHandler implements Listener {
                 break;
             }
         }
-        if (partnerPackage == null) return;
+        ///if (partnerPackage == null) return;
 
         int inventorySize = 0;
         for (ItemStack item : player.getInventory().getContents()) {
