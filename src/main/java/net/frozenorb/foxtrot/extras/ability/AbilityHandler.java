@@ -37,6 +37,7 @@ public class AbilityHandler implements Listener {
         abilities.put("regen", new RegenerationAbility());
         abilities.put("invis", new InvisibilityAbility());
         abilities.put("jump", new JumpAbility());
+        abilities.put("portable-bard", new PortableBard());
 
         for (Ability ability : abilities.values()){
             Bukkit.getServer().getPluginManager().registerEvents(ability, Foxtrot.getInstance());
