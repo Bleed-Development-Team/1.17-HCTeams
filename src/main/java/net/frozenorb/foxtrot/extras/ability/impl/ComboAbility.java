@@ -64,13 +64,13 @@ public class ComboAbility extends Ability implements Listener {
             if (isSimilarTo(player.getItemInHand(), Items.getComboAbility())){
                 if (isOnGlobalCooldown(player)){
                     player.sendMessage(CC.translate("&cYou are still on cooldown for &d&lPartner &cfor another &c&l" + Cooldown.getCooldownString(player,"partner") + "&c."));
-                    event.setCancelled(true);
+                    //event.setCancelled(true);
                     return;
                 }
 
                 if (isOnCooldown(player)){
                     player.sendMessage(CC.translate("&cYou are on cooldown for the &6&lCombo Ability &cfor another &c&l" + getCooldownFormatted(player) + "&c."));
-                    event.setCancelled(true);
+                    //event.setCancelled(true);
                     return;
                 }
 

@@ -2,6 +2,7 @@ package net.frozenorb.foxtrot.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
+import co.aikar.commands.annotation.HelpCommand;
 import lombok.Getter;
 import lombok.Setter;
 import net.frozenorb.foxtrot.Foxtrot;
@@ -230,6 +231,8 @@ public class EOTWCommand extends BaseCommand {
         Conversation con = factory.buildConversation(sender);
         sender.beginConversation(con);
     }
+
+
 
     public static boolean realFFAStarted() {
         return ffaEnabled && ffaActiveAt < System.currentTimeMillis();

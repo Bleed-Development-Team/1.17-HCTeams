@@ -93,12 +93,3 @@ public class AntiPearlAbility extends Ability implements Listener {
             }
         }
     }
-
-    @EventHandler
-    public void onBlockPlace(PlayerInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if (!isSimilarTo(event.getPlayer().getItemInHand(), Items.getAntiPearl())) return;
-        event.setCancelled(true);
-
-    }
-}

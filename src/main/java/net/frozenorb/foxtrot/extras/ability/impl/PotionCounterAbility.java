@@ -97,12 +97,4 @@ public class PotionCounterAbility extends Ability implements Listener {
             }
         }
     }
-
-    @EventHandler
-    public void onBlockPlace(PlayerInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if (!isSimilarTo(event.getPlayer().getItemInHand(), Items.getPotionCounter())) return;
-        event.setCancelled(true);
-
-    }
 }
