@@ -93,7 +93,7 @@ public class ComboAbility extends Ability implements Listener {
     public void hitPlayer(EntityDamageByEntityEvent event){
         if (event.isCancelled()) return;
         Player damager = (Player) event.getDamager();
-
+        if (event.isCancelled()) return;
         if (Cooldown.isOnCooldown("combo-eff", damager)){
             if (combos.get(damager.getUniqueId()) < 10){
                 combos.put(damager.getUniqueId(), combos.get(damager.getUniqueId()) + 1);
@@ -114,12 +114,5 @@ public class ComboAbility extends Ability implements Listener {
                 player.sendMessage(CC.translate("&cYou are not on cooldown for this item."));
             }
         }
-    }
-    @EventHandler
-    public void onBlockPlace(PlayerInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if (!isSimilarTo(event.getPlayer().getItemInHand(), Items.getComboAbility()) || !isSimilarTo(event.getPlayer().getInventory().getItemInOffHand(), Items.getComboAbility())) return;
-        event.setCancelled(true);
-
     }
 }

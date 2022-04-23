@@ -64,16 +64,16 @@ public class RocketAbility extends Ability implements Listener {
 
             if (isOnGlobalCooldown(player)){
                 player.sendMessage(CC.translate("&cYou are still on cooldown for &d&lPartner &cfor another &c&l" + Cooldown.getCooldownString(player,"partner") + "&c."));
-                event.setCancelled(true);
+                //event.setCancelled(true);
                 return;
             }
 
             if (isOnCooldown(player)){
                 player.sendMessage(CC.translate("&cYou are on cooldown for the &c&lRocket &cfor another &c&l" + getCooldownFormatted(player) + "&c."));
-                event.setCancelled(true);
+                //event.setCancelled(true);
                 return;
             }
-
+//TODO ayo this crashes the server
             player.setVelocity(player.getLocation().getDirection().multiply(3));
             applySelf(player);
 

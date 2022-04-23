@@ -57,6 +57,7 @@ public class BoneAbility extends Ability implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void hit(EntityDamageByEntityEvent event){
+        if (event.isCancelled()) return;
         Player victim = event.getEntity() instanceof Player ? (Player) event.getEntity() : null;
         Player damager = event.getDamager() instanceof Player ? (Player) event.getDamager() : null;
 

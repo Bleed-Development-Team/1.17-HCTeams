@@ -68,7 +68,7 @@ public abstract class Ability implements Listener {
         }
 
         if (isOnCooldown(player)){
-            player.sendMessage(CC.translate("&cYou are on cooldown for the " + getName() + " &cfor another &c&l" + getCooldownFormatted(player) + "&c."));
+            player.sendMessage(CC.translate("&cYou are on cooldown for the " + getName() + " &r&cfor another &c&l" + getCooldownFormatted(player) + "&c."));
             return false;
         }
 

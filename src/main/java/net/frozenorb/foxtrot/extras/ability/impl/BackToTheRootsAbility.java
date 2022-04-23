@@ -50,6 +50,7 @@ public class BackToTheRootsAbility extends Ability implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onDamage(EntityDamageByEntityEvent event) {
+        if (event.isCancelled()) return;
         if (!(event.getDamager() instanceof Player) || !(event.getEntity() instanceof Player)) return;
 
         Player victim = (Player) event.getEntity();

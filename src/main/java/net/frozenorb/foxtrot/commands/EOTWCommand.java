@@ -167,7 +167,7 @@ public class EOTWCommand extends BaseCommand {
                     Bukkit.broadcastMessage(CC.translate("&6The border will be reduced to &f" + newAmount + " &6in &f" + SecondsToCountDown + "&6 seconds."));
                 }
                 if (SecondsToCountDown <= 0) {
-                    Bukkit.broadcastMessage(CC.translate("&6The border has been reduced to &f" + sender.getWorld().getWorldBorder() + "&6."));
+                    Bukkit.broadcastMessage(CC.translate("&6The border has been reduced to &f" + sender.getWorld().getWorldBorder().getSize() + "&6."));
                     sender.getWorld().getWorldBorder().setSize(newAmount);
                     cancel();
                 }

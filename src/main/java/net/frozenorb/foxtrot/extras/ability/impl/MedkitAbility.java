@@ -59,7 +59,7 @@ public class MedkitAbility extends Ability implements Listener {
             }
 
             if (isOnCooldown(player)){
-                player.sendMessage(CC.translate("&cYou are on cooldown for the &6&MedKit &cfor another &c&l" + getCooldownFormatted(player) + "&c."));
+                player.sendMessage(CC.translate("&cYou are on cooldown for the &6&lMedKit &r&cfor another &c&l" + getCooldownFormatted(player) + "&c."));
                 return;
             }
 
@@ -78,7 +78,7 @@ public class MedkitAbility extends Ability implements Listener {
             if (!isSimilarTo(player.getItemInHand(), Items.getMedkit())) return;
 
             if (isOnCooldown(player)){
-                player.sendMessage(CC.translate("&cYou are on the " + getName() + "&6's cooldown for another &c&l" + getCooldownFormatted(player) + "&c."));
+                player.sendMessage(CC.translate("&cYou are on the " + getName() + "&c's cooldown for another &c&l" + getCooldownFormatted(player) + "&c."));
             } else {
                 player.sendMessage(CC.translate("&cYou are not on cooldown for this item."));
             }

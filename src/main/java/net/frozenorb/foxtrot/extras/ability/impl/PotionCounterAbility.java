@@ -48,6 +48,7 @@ public class PotionCounterAbility extends Ability implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onDamage(EntityDamageByEntityEvent event) {
+        if (event.isCancelled()) return;
         Player victim = (Player) event.getEntity();
         Player damager = (Player) event.getDamager();
 

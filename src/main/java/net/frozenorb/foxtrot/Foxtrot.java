@@ -305,6 +305,7 @@ public class Foxtrot extends JavaPlugin {
 		m.registerCommand(new ReviveCommand());
 		m.registerCommand(new SetBalCommand());
 		m.registerCommand(new SetEndExitCommand());
+		m.registerCommand(new RenameCommand());
 		m.registerCommand(new SetNetherBufferCommand());
 		m.registerCommand(new SetWorldBorderCommand());
 		m.registerCommand(new SetWorldBufferCommand());
