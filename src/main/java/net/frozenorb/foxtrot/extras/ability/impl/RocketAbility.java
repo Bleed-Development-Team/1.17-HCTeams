@@ -77,6 +77,10 @@ public class RocketAbility extends Ability implements Listener {
             player.sendMessage(CC.translate("&c❤ &6You are now on cooldown for &f" + getCooldownFormatted(player) + "&6."));
             player.sendMessage(CC.translate(""));
 
+            if (event.getAction() == Action.RIGHT_CLICK_AIR){
+                useItem(player);
+            }
+
             Bukkit.getScheduler().runTaskLater(Foxtrot.getInstance(), () -> {
                 if (!rockets.contains(player.getUniqueId())) return;
 

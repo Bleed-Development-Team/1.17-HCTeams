@@ -29,23 +29,34 @@ public class PortableMenu extends Menu {
         switch (item) {
             case "strength" -> {
                 remove();
-                player.getInventory().addItem(Items.getStrength());
+                for (int i = 0; i < 3; i++) {
+                    player.getInventory().addItem(Items.getStrength());
+                }
             }
             case "resistance" -> {
                 remove();
-                player.getInventory().addItem(Items.getResistance());
+                for (int i = 0; i < 3; i++) {
+                    player.getInventory().addItem(Items.getResistance());
+                }
             }
             case "regen" -> {
                 remove();
-                player.getInventory().addItem(Items.getRegen());
+                for (int i = 0; i < 3; i++) {
+                    player.getInventory().addItem(Items.getRegen());
+                }
             }
             case "jump" -> {
                 remove();
-                player.getInventory().addItem(Items.getJump());
+                for (int i = 0; i < 3; i++) {
+                    player.getInventory().addItem(Items.getJump());
+                }
             }
             case "invis" -> {
                 remove();
-                player.getInventory().addItem(Items.getInvis());
+
+                for (int i = 0; i < 3; i++) {
+                    player.getInventory().addItem(Items.getInvis());
+                }
             }
             default -> {
                 player.sendMessage(CC.translate("&cAn error has occurred."));
@@ -62,5 +73,6 @@ public class PortableMenu extends Menu {
         } else {
             player.setItemInHand(null);
         }
+        player.closeInventory();
     }
 }

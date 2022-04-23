@@ -1,6 +1,7 @@
 package net.frozenorb.foxtrot.extras.ability;
 
 import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.Cooldown;
@@ -86,6 +87,11 @@ public abstract class Ability implements Listener {
             return false;
         }
 
+        if (Foxtrot.getInstance().getPvPTimerMap().hasTimer(player.getUniqueId())){
+            player.sendMessage(CC.translate("&cYou are currently on &a&lPvP Timer&c."));
+            return false;
+        }
+
         if (DTRBitmask.CITADEL.appliesAt(player.getLocation())){
             player.sendMessage(CC.translate("&cYou cannot use abilities in &5&lCitadel&c."));
             return false;
@@ -101,6 +107,8 @@ public abstract class Ability implements Listener {
     }
 
     public boolean victimCheck(Player damager, Player victim){
+        if (damager == victim) return false;
+
         if (DTRBitmask.SAFE_ZONE.appliesAt(victim.getLocation())){
             damager.sendMessage(CC.translate("&cThat player is in a &a&lSafe-Zone&c."));
             return false;
@@ -112,8 +120,14 @@ public abstract class Ability implements Listener {
             return false;
         }
         if (Foxtrot.getInstance().getPvPTimerMap().hasTimer(victim.getUniqueId())) {
-            damager.sendMessage(CC.translate("&cThat player is on &e&lPvP Timer&c."));
+            damager.sendMessage(CC.translate("&cThat player is currently on &a&lPvP Timer&c."));
             return false;
+        }
+
+        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(damager.getUniqueId());
+
+        if (team != null){
+            return !team.isMember(victim.getUniqueId());
         }
 
         return true;
