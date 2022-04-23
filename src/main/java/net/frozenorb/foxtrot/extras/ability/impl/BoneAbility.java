@@ -57,6 +57,7 @@ public class BoneAbility extends Ability implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void hit(EntityDamageByEntityEvent event){
+        if (event.isCancelled()) return;
         Player victim = event.getEntity() instanceof Player ? (Player) event.getEntity() : null;
         Player damager = event.getDamager() instanceof Player ? (Player) event.getDamager() : null;
 
@@ -153,12 +154,5 @@ public class BoneAbility extends Ability implements Listener {
                 player.sendMessage(CC.translate("&cYou are not on cooldown for this item."));
             }
         }
-    }
-    @EventHandler
-    public void onBlockPlace(PlayerInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if (!isSimilarTo(event.getPlayer().getItemInHand(), Items.getBoneAbility())) return;
-        event.setCancelled(true);
-
     }
 }

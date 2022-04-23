@@ -2,6 +2,7 @@ package net.frozenorb.foxtrot.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
+import co.aikar.commands.annotation.HelpCommand;
 import lombok.Getter;
 import lombok.Setter;
 import net.frozenorb.foxtrot.Foxtrot;
@@ -166,7 +167,7 @@ public class EOTWCommand extends BaseCommand {
                     Bukkit.broadcastMessage(CC.translate("&6The border will be reduced to &f" + newAmount + " &6in &f" + SecondsToCountDown + "&6 seconds."));
                 }
                 if (SecondsToCountDown <= 0) {
-                    Bukkit.broadcastMessage(CC.translate("&6The border has been reduced to &f" + sender.getWorld().getWorldBorder() + "&6."));
+                    Bukkit.broadcastMessage(CC.translate("&6The border has been reduced to &f" + sender.getWorld().getWorldBorder().getSize() + "&6."));
                     sender.getWorld().getWorldBorder().setSize(newAmount);
                     cancel();
                 }
@@ -230,6 +231,8 @@ public class EOTWCommand extends BaseCommand {
         Conversation con = factory.buildConversation(sender);
         sender.beginConversation(con);
     }
+
+
 
     public static boolean realFFAStarted() {
         return ffaEnabled && ffaActiveAt < System.currentTimeMillis();

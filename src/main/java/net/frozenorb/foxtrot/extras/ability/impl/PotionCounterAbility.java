@@ -48,6 +48,7 @@ public class PotionCounterAbility extends Ability implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onDamage(EntityDamageByEntityEvent event) {
+        if (event.isCancelled()) return;
         Player victim = (Player) event.getEntity();
         Player damager = (Player) event.getDamager();
 
@@ -96,13 +97,5 @@ public class PotionCounterAbility extends Ability implements Listener {
                 player.sendMessage(CC.translate("&cYou are not on cooldown for this item."));
             }
         }
-    }
-
-    @EventHandler
-    public void onBlockPlace(PlayerInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if (!isSimilarTo(event.getPlayer().getItemInHand(), Items.getPotionCounter())) return;
-        event.setCancelled(true);
-
     }
 }

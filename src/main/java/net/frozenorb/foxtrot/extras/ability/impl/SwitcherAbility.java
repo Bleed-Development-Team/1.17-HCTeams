@@ -60,14 +60,13 @@ public class SwitcherAbility extends Ability implements Listener {
                 if (event.isCancelled()) return;
 
                 if (isOnGlobalCooldown(((Player) snowball.getShooter()))){
-                    event.setCancelled(true);
 
                     ((Player) snowball.getShooter()).sendMessage(CC.translate("&cYou are still on cooldown for &d&lPartner &cfor another &c&l" + Cooldown.getCooldownString(((Player) snowball.getShooter()),"partner") + "&c."));
                     return;
                 }
 
                 if (isOnCooldown(((Player) snowball.getShooter()))){
-                    event.setCancelled(true);
+                    //event.setCancelled(true);
 
                     ((Player) snowball.getShooter()).getInventory().addItem(Items.getSnowball());
                     ((Player) snowball.getShooter()).updateInventory();
@@ -117,20 +116,20 @@ public class SwitcherAbility extends Ability implements Listener {
         if (event.getEntity() instanceof Snowball && event.getEntity() == Items.getSnowball()){
 
             if (isOnGlobalCooldown(player)){
-                event.setCancelled(true);
+                //event.setCancelled(true);
                 player.updateInventory();
 
                 player.sendMessage(CC.translate("&cYou are still on cooldown for &d&lPartner &cfor another &c&l" + Cooldown.getCooldownString(player,"partner") + "&c."));
-                event.setCancelled(true);
+                //event.setCancelled(true);
                 return;
             }
 
             if (isOnCooldown(player)){
-                event.setCancelled(true);
+                //event.setCancelled(true);
                 player.updateInventory();
 
                 player.sendMessage(CC.translate("&cYou are on cooldown for the &f&lSwitcher &cfor another &c&l" + getCooldownFormatted(player) + "&c."));
-                event.setCancelled(true);
+                //event.setCancelled(true);
                 return;
             }
         }

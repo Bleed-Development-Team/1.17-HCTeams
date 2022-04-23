@@ -130,6 +130,7 @@ public class TeamListener implements Listener {
 
     @EventHandler(priority=EventPriority.HIGH, ignoreCancelled=true)
     public void onBlockPlace(BlockPlaceEvent event) {
+
         if (Foxtrot.getInstance().getServerHandler().isAdminOverride(event.getPlayer()) || Foxtrot.getInstance().getServerHandler().isUnclaimedOrRaidable(event.getBlock().getLocation())) {
             return;
         }
@@ -188,6 +189,7 @@ public class TeamListener implements Listener {
 
     @EventHandler(ignoreCancelled=true) // normal priority
     public void onBlockBreak(BlockBreakEvent event) {
+
         if (Foxtrot.getInstance().getServerHandler().isAdminOverride(event.getPlayer()) || Foxtrot.getInstance().getServerHandler().isUnclaimedOrRaidable(event.getBlock().getLocation())) {
             return;
         }
@@ -413,6 +415,8 @@ public class TeamListener implements Listener {
 
     @EventHandler
     public void onBucketEmpty(PlayerBucketEmptyEvent event) {
+        if (Foxtrot.getInstance().getServerHandler().isEOTW()) return;
+
         Location checkLocation = event.getBlockClicked().getRelative(event.getBlockFace()).getLocation();
 
         if (Foxtrot.getInstance().getServerHandler().isAdminOverride(event.getPlayer()) || Foxtrot.getInstance().getServerHandler().isUnclaimedOrRaidable(checkLocation)) {
@@ -442,6 +446,8 @@ public class TeamListener implements Listener {
 
     @EventHandler
     public void onBucketFill(PlayerBucketFillEvent event) {
+        if (Foxtrot.getInstance().getServerHandler().isEOTW()) return;
+
         Location checkLocation = event.getBlockClicked().getRelative(event.getBlockFace()).getLocation();
 
         if (Foxtrot.getInstance().getServerHandler().isAdminOverride(event.getPlayer()) || Foxtrot.getInstance().getServerHandler().isUnclaimedOrRaidable(checkLocation)) {

@@ -32,12 +32,14 @@ public class ChatGamesHandler {
         questions.add("What day is SOTW hosted on?");
         questions.add("How long are kit cooldowns?");
         questions.add("What is the name of the server you're currently playing?");
+        questions.add("What map is it?");
 
         // Answers - We make these lowercase for when we handle them in the chat.
         answers.add("alebab");
         answers.add("friday");
         answers.add("24h");
         answers.add("bleedhcf");
+        answers.add("map 1");
 
         // Listeners
         Bukkit.getPluginManager().registerEvents(new ChatGamesListener(), Foxtrot.getInstance());

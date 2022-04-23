@@ -37,9 +37,9 @@ public class ClientCommandPacketAdaper extends PacketAdapter {
                         event.getPlayer().kickPlayer(ChatColor.YELLOW + "Come back tomorrow for SOTW!");
                     } else {
                         if (Foxtrot.getInstance().getFriendLivesMap().getLives(event.getPlayer().getUniqueId()) > 0) {
-                            Foxtrot.getInstance().getFriendLivesMap().setLives(event.getPlayer().getUniqueId(), Foxtrot.getInstance().getFriendLivesMap().getLives(event.getPlayer().getUniqueId()) - 1);
+                            //Foxtrot.getInstance().getFriendLivesMap().setLives(event.getPlayer().getUniqueId(), Foxtrot.getInstance().getFriendLivesMap().getLives(event.getPlayer().getUniqueId()) - 1);
                         } else {
-                            event.getPlayer().kickPlayer(ChatColor.YELLOW + "Come back in " + time + "!");
+                            //event.getPlayer().kickPlayer(ChatColor.YELLOW + "Come back in " + time + "!");
                         }
                     }
                 }

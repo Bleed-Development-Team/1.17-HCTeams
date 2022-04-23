@@ -54,12 +54,13 @@ public class AntiPearlAbility extends Ability implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onDamage(EntityDamageByEntityEvent event) {
+        if (event.isCancelled()) return;
         Player victim = (Player) event.getEntity();
         Player damager = (Player) event.getDamager();
         if (!isSimilarTo(damager.getItemInHand(), Items.getAntiPearl())) return;
 
-        if (isOnGlobalCooldown(damager)){
-            damager.sendMessage(CC.translate("&cYou are still on cooldown for &d&lPartner &cfor another &c&l" + Cooldown.getCooldownString(damager,"partner") + "&c."));
+        if (isOnGlobalCooldown(damager)) {
+            damager.sendMessage(CC.translate("&cYou are still on cooldown for &d&lPartner &cfor another &c&l" + Cooldown.getCooldownString(damager, "partner") + "&c."));
             return;
         }
         if (isOnCooldown(damager)) {
@@ -72,7 +73,8 @@ public class AntiPearlAbility extends Ability implements Listener {
         EnderpearlCooldownAppliedEvent appliedEvent = new EnderpearlCooldownAppliedEvent(victim, timeToApply);
         Foxtrot.getInstance().getServer().getPluginManager().callEvent(appliedEvent);
 
-        EnderpearlCooldownHandler.getEnderpearlCooldown().put(victim.getName(), System.currentTimeMillis() + appliedEvent.getTimeToApply());        applyOther(damager, victim);
+        EnderpearlCooldownHandler.getEnderpearlCooldown().put(victim.getName(), System.currentTimeMillis() + appliedEvent.getTimeToApply());
+        applyOther(damager, victim);
 
         applyOther(damager, victim);
 
@@ -80,25 +82,17 @@ public class AntiPearlAbility extends Ability implements Listener {
     }
 
     @EventHandler
-    public void cooldownCheck(PlayerInteractEvent event){
+    public void cooldownCheck(PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
-        if (event.getAction() == Action.LEFT_CLICK_BLOCK){
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
             if (!isSimilarTo(player.getItemInHand(), Items.getAntiPearl())) return;
 
-            if (isOnCooldown(player)){
+            if (isOnCooldown(player)) {
                 player.sendMessage(CC.translate("&cYou are on the " + getName() + "&6's cooldown for another &c&l" + getCooldownFormatted(player) + "&c."));
             } else {
                 player.sendMessage(CC.translate("&cYou are not on cooldown for this item."));
             }
         }
-    }
-
-    @EventHandler
-    public void onBlockPlace(PlayerInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if (!isSimilarTo(event.getPlayer().getItemInHand(), Items.getAntiPearl())) return;
-        event.setCancelled(true);
-
     }
 }

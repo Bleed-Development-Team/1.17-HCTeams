@@ -50,6 +50,7 @@ public class BackToTheRootsAbility extends Ability implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onDamage(EntityDamageByEntityEvent event) {
+        if (event.isCancelled()) return;
         if (!(event.getDamager() instanceof Player) || !(event.getEntity() instanceof Player)) return;
 
         Player victim = (Player) event.getEntity();
@@ -104,12 +105,5 @@ public class BackToTheRootsAbility extends Ability implements Listener {
                 player.sendMessage(CC.translate("&cYou are not on cooldown for this item."));
             }
         }
-    }
-    @EventHandler
-    public void onBlockPlace(PlayerInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if (!isSimilarTo(event.getPlayer().getItemInHand(), Items.getBackToTheRoots())) return;
-        event.setCancelled(true);
-
     }
 }
