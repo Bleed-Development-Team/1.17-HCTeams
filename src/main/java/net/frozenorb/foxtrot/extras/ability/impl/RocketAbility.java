@@ -54,6 +54,7 @@ public class RocketAbility extends Ability implements Listener {
     public ItemStack getItemStack() {
         return Items.getRocket();
     }
+
     @EventHandler
     public void onInteraction(PlayerInteractEvent event){
         Player player = event.getPlayer();
@@ -73,7 +74,7 @@ public class RocketAbility extends Ability implements Listener {
                 return;
             }
 
-            player.setVelocity(player.getLocation().getDirection().multiply(4));
+            player.setVelocity(player.getLocation().getDirection().multiply(3));
             applySelf(player);
 
             Bukkit.getScheduler().runTaskLater(Foxtrot.getInstance(), () -> {

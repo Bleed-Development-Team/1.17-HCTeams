@@ -125,6 +125,7 @@ net\frozenorb\foxtrot\commands\CrowbarCommand.class
 net\frozenorb\foxtrot\map\killstreaks\Killstreak.class
 net\frozenorb\foxtrot\economy\FrozenEconomyHandler.class
 net\frozenorb\foxtrot\packetborder\PacketBorderThread.class
+net\frozenorb\foxtrot\extras\ability\menu\AbilitiesMenu.class
 net\frozenorb\foxtrot\listener\AntiGlitchListener$1.class
 net\frozenorb\foxtrot\persist\maps\KDRMap.class
 net\frozenorb\foxtrot\util\EffectSnapshot.class
@@ -465,6 +466,7 @@ net\frozenorb\foxtrot\deathmessage\trackers\VoidTracker.class
 net\frozenorb\foxtrot\map\stats\command\KillstreaksCommand.class
 net\frozenorb\foxtrot\util\DamageUtil$1.class
 net\frozenorb\foxtrot\extras\ability\impl\RocketAbility.class
+net\frozenorb\foxtrot\commands\EOTWCommand$4.class
 net\frozenorb\foxtrot\persist\StringPersistMap.class
 mkremins\fanciful\TextualComponent$ArbitraryTextTypeComponent$1.class
 net\frozenorb\foxtrot\extras\blockshop\button\BlockShopButton.class
@@ -491,3 +493,4 @@ net\frozenorb\foxtrot\map\stats\command\ClearAllStatsCommand.class
 net\frozenorb\foxtrot\pvpclasses\pvpclasses\RogueClass.class
 net\frozenorb\foxtrot\server\RegionType$1.class
 net\frozenorb\foxtrot\extras\sell\SellMenu.class
+net\frozenorb\foxtrot\commands\EOTWCommand$3.class

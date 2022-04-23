@@ -4,17 +4,21 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Subcommand;
 import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.listener.EndListener;
+import net.frozenorb.foxtrot.util.CC;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
 @CommandAlias("PreEOTW")
 @CommandPermission("foxtrot.eotw")
 public class PreEOTWCommand extends BaseCommand {
 
-    @Default
+    @Subcommand("forcestart")
     public static void preeotw(Player sender) {
         if (sender.getGameMode() != GameMode.CREATIVE) {
             sender.sendMessage(ChatColor.RED + "This command must be ran in creative.");
@@ -39,6 +43,28 @@ public class PreEOTWCommand extends BaseCommand {
             Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "███████");
         } else {
             sender.sendMessage(ChatColor.RED + "The server is no longer in Pre-EOTW mode.");
+        }
+    }
+
+    @Subcommand("stop")
+    public static void eotwStop(Player sender) {
+        BukkitTask eotwRunnable = EOTWCommand.preEotwRunnable;
+        if (sender.getGameMode() != GameMode.CREATIVE) {
+            sender.sendMessage(ChatColor.RED + "This command must be ran in creative.");
+            return;
+        }
+
+        if (eotwRunnable != null){
+            eotwRunnable.cancel();
+        }
+
+
+        Foxtrot.getInstance().getServerHandler().setPreEOTW(false);
+
+
+        sender.sendMessage(CC.translate("&cYou have cancelled the PreEOTW timer."));
+        if (eotwRunnable != null){
+            eotwRunnable.cancel();
         }
     }
 }

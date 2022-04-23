@@ -1,10 +1,7 @@
 package net.frozenorb.foxtrot.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.*;
 import lombok.Getter;
 import lombok.Setter;
 import net.frozenorb.foxtrot.Foxtrot;
@@ -12,6 +9,7 @@ import net.frozenorb.foxtrot.listener.EndListener;
 import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import net.frozenorb.foxtrot.util.CC;
+import net.frozenorb.foxtrot.util.TimeUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -32,40 +30,109 @@ public class EOTWCommand extends BaseCommand {
     @Getter @Setter private static long ffaActiveAt = -1L;
     public static int SecondsToCountDown = 10;
 
-    @Default
-    public static void eotw(Player sender) {
+    public static BukkitTask eotwRunnable;
+    public static BukkitTask preEotwRunnable;
+
+    @Subcommand("start")
+    public static void eotw(Player sender, @Name(value = "time") String time) {
         if (sender.getGameMode() != GameMode.CREATIVE) {
             sender.sendMessage(ChatColor.RED + "This command must be ran in creative.");
             return;
         }
 
-        Foxtrot.getInstance().getServerHandler().setEOTW(!Foxtrot.getInstance().getServerHandler().isEOTW());
-
-        EndListener.endActive = !Foxtrot.getInstance().getServerHandler().isEOTW();
-
         if (Foxtrot.getInstance().getServerHandler().isEOTW()) {
-            for (Player player : Foxtrot.getInstance().getServer().getOnlinePlayers()) {
-                player.playSound(player.getLocation(), Sound.ENTITY_WITHER_SPAWN, 1F, 1F);
-            }
-
-            for (Team team : Foxtrot.getInstance().getTeamHandler().getTeams()){
-                if (team.hasDTRBitmask(DTRBitmask.CITADEL) || team.getName().equalsIgnoreCase("Spawn") || team.getName().equalsIgnoreCase("EOTW") || team.getName().equalsIgnoreCase("Buffer") || team.hasDTRBitmask(DTRBitmask.KOTH) || team.hasDTRBitmask(DTRBitmask.ROAD)) continue;
-
-                team.disband();
-            }
-
-            Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "███████");
-            Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "█" + ChatColor.DARK_RED + "█████" + ChatColor.RED + "█");
-            Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "█" + ChatColor.DARK_RED + "█" + ChatColor.RED + "█████" + " " + ChatColor.DARK_RED + "[EOTW]");
-            Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "█" + ChatColor.DARK_RED + "████" + ChatColor.RED + "██" + " " + ChatColor.RED.toString() + ChatColor.BOLD + "EOTW has commenced.");
-            Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "█" + ChatColor.DARK_RED + "█" + ChatColor.RED + "█████" + " " + ChatColor.RED + "All SafeZones are now Deathban.");
-            Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "█" + ChatColor.DARK_RED + "█████" + ChatColor.RED + "█");
-            Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "███████");
-        } else {
-            sender.sendMessage(ChatColor.RED + "The server is no longer in EOTW mode.");
+            sender.sendMessage(ChatColor.RED + "EOTW is already active.");
+            return;
         }
+
+        int seconds = TimeUtils.parseTime(time);
+
+        if (seconds < 4){
+            sender.sendMessage(ChatColor.RED + "Invalid time.");
+            return;
+        }
+
+        CustomTimerCreateCommand.customTimers.put("&4&lEOTW In", System.currentTimeMillis() + (seconds * 1000L));
+
+        preEotwRunnable = new BukkitRunnable() {
+            @Override
+            public void run() {
+
+                Foxtrot.getInstance().getServerHandler().setPreEOTW(!Foxtrot.getInstance().getServerHandler().isPreEOTW());
+
+                Foxtrot.getInstance().getDeathbanMap().wipeDeathbans();
+
+                for (Player player : Foxtrot.getInstance().getServer().getOnlinePlayers()) {
+                    player.playSound(player.getLocation(), Sound.ENTITY_WITHER_SPAWN, 1F, 1F);
+                }
+
+                Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "███████");
+                Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "█" + ChatColor.DARK_RED + "█████" + ChatColor.RED + "█" + " " + ChatColor.DARK_RED + "[Pre-EOTW]");
+                Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "█" + ChatColor.DARK_RED + "█" + ChatColor.RED + "█████" + " " + ChatColor.RED.toString() + ChatColor.BOLD + "EOTW is about to commence.");
+                Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "█" + ChatColor.DARK_RED + "████" + ChatColor.RED + "██" + " " + ChatColor.RED + "PvP Protection is disabled.");
+                Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "█" + ChatColor.DARK_RED + "█" + ChatColor.RED + "█████" + " " + ChatColor.RED + "All players have been un-deathbanned.");
+                Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "█" + ChatColor.DARK_RED + "█████" + ChatColor.RED + "█" + " " + ChatColor.RED + "All deathbans are now permanent.");
+                Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "███████");
+            }
+        }.runTaskLater(Foxtrot.getInstance(), (seconds - 2) * 20L);
+
+        eotwRunnable = new BukkitRunnable(){
+            @Override
+            public void run() {
+
+                Foxtrot.getInstance().getServerHandler().setEOTW(!Foxtrot.getInstance().getServerHandler().isEOTW());
+
+                EndListener.endActive = !Foxtrot.getInstance().getServerHandler().isEOTW();
+
+                for (Player player : Foxtrot.getInstance().getServer().getOnlinePlayers()) {
+                    player.playSound(player.getLocation(), Sound.ENTITY_WITHER_SPAWN, 1F, 1F);
+                }
+
+                for (Team team : Foxtrot.getInstance().getTeamHandler().getTeams()){
+                    if (team.hasDTRBitmask(DTRBitmask.CITADEL) || team.getName().equalsIgnoreCase("Spawn") || team.getName().equalsIgnoreCase("EOTW") || team.getName().equalsIgnoreCase("Buffer") || team.hasDTRBitmask(DTRBitmask.KOTH) || team.hasDTRBitmask(DTRBitmask.ROAD)) continue;
+
+                    team.disband();
+                }
+
+                Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "███████");
+                Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "█" + ChatColor.DARK_RED + "█████" + ChatColor.RED + "█");
+                Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "█" + ChatColor.DARK_RED + "█" + ChatColor.RED + "█████" + " " + ChatColor.DARK_RED + "[EOTW]");
+                Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "█" + ChatColor.DARK_RED + "████" + ChatColor.RED + "██" + " " + ChatColor.RED.toString() + ChatColor.BOLD + "EOTW has commenced.");
+                Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "█" + ChatColor.DARK_RED + "█" + ChatColor.RED + "█████" + " " + ChatColor.RED + "All SafeZones are now Deathban.");
+                Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "█" + ChatColor.DARK_RED + "█████" + ChatColor.RED + "█");
+                Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "███████");
+
+            }
+        }.runTaskLater(Foxtrot.getInstance(), seconds * 20L);
     }
 
+    @Subcommand("stop")
+    public static void eotwStop(Player sender) {
+        if (sender.getGameMode() != GameMode.CREATIVE) {
+            sender.sendMessage(ChatColor.RED + "This command must be ran in creative.");
+            return;
+        }
+
+        if (eotwRunnable != null){
+            eotwRunnable.cancel();
+        }
+
+        if (CustomTimerCreateCommand.customTimers.containsKey("&4&lEOTW In")) {
+            CustomTimerCreateCommand.customTimers.remove("&4&lEOTW In");
+        }
+
+        Foxtrot.getInstance().getServerHandler().setEOTW(false);
+
+        EndListener.endActive = true;
+
+        sender.sendMessage(CC.translate("&cYou have cancelled the EOTW timer."));
+        if (eotwRunnable != null){
+            eotwRunnable.cancel();
+        }
+        if (preEotwRunnable != null){
+            preEotwRunnable.cancel();
+        }
+    }
 
     @Subcommand("tpall")
     public static void eotwTpAll(Player sender) {
@@ -88,7 +155,7 @@ public class EOTWCommand extends BaseCommand {
 
     @Subcommand("reduce")
     public void onReduceCommand(Player sender, int amount) {
-        Double newAmount = Bukkit.getServer().getWorld("world").getWorldBorder().getSize() - amount;
+        double newAmount = Bukkit.getServer().getWorld("world").getWorldBorder().getSize() - amount;
         Bukkit.broadcastMessage(CC.translate("&6The border will be reduced to &f" + newAmount + " &6in &f10 &6seconds."));
         SecondsToCountDown = 10;
         new BukkitRunnable(){

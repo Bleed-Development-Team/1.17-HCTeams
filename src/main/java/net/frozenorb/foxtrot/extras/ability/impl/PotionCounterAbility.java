@@ -42,8 +42,8 @@ public class PotionCounterAbility extends Ability implements Listener {
     }
 
     @Override
-    public Material getMaterial() {
-        return Material.STICK;
+    public ItemStack getItemStack() {
+        return Items.getPotionCounter();
     }
 
     @EventHandler(ignoreCancelled = true)
