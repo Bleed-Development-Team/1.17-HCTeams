@@ -24,32 +24,25 @@ public class AbilityPackageHandler implements Listener {
 
     @EventHandler
     public void onAbilityPackage(PlayerInteractEvent event) {
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK){
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK && isSimilarTo(event.getPlayer().getItemInHand(), Foxtrot.getInstance().getAbilityPackage().getPackage()) || isSimilarTo(event.getPlayer().getInventory().getItemInOffHand(), Foxtrot.getInstance().getAbilityPackage().getPackage())) {
             event.setCancelled(true);
         }
         Player player = event.getPlayer();
-        System.out.println("I reached first if statement");
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            System.out.println("I reached second if statement");
 
             if (!isSimilarTo(player.getItemInHand(), Foxtrot.getInstance().getAbilityPackage().getPackage())) return;
-            System.out.println("I reached 3rd if statement");
 
             if (player.getItemInHand().getAmount() > 1) {
                 int amount = player.getItemInHand().getAmount() - 1;
                 player.getItemInHand().setAmount(amount);
             } else {
-                System.out.println("I reached else statement");
-
                 player.setItemInHand(null);
             }
-            System.out.println("I reached last if statement");
 
 
             int p = Foxtrot.RANDOM.nextInt(0, Foxtrot.getInstance().getAbilityHandler().getAbilities().size());
             int pp = Foxtrot.RANDOM.nextInt(0, Foxtrot.getInstance().getAbilityHandler().getAbilities().size());
             int ppp = Foxtrot.RANDOM.nextInt(0, Foxtrot.getInstance().getAbilityHandler().getAbilities().size());
-            System.out.println("I reached loop statement");
 
             for (int i = 0; i <= 3; i++) {
                 player.getInventory().addItem(Foxtrot.getInstance().getAbilityHandler().getAbilities().get(pp).getItemStack());
