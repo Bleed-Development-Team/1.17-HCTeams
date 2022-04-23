@@ -29,15 +29,22 @@ public class AbilityPackageHandler implements Listener {
             }
         }
         if (partnerPackage == null) return;
-        partnerPackage.setAmount(partnerPackage.getAmount() - 1);
 
         int inventorySize = 0;
         for (ItemStack item : player.getInventory().getContents()) {
             inventorySize++;
         }
-        if (inventorySize >= 33) {
-            player.sendMessage("§cYou do not have enough inventory space to open the package.");
-            return;
+        //if (inventorySize >= 33) {
+            //player.sendMessage("§cYou do not have enough inventory space to open the package.");
+            //return;
+        //}        partnerPackage.setAmount(partnerPackage.getAmount() - 1);
+{
+        if (player.getItemInHand().getAmount() > 1) {
+            int amount = player.getItemInHand().getAmount() - 1;
+            player.getItemInHand().setAmount(amount);
+            } else {
+                player.setItemInHand(null);
+            }
         }
         int p = Foxtrot.RANDOM.nextInt(0, Foxtrot.getInstance().getAbilityHandler().getAbilities().size());
         int pp = Foxtrot.RANDOM.nextInt(0, Foxtrot.getInstance().getAbilityHandler().getAbilities().size());
@@ -47,6 +54,7 @@ public class AbilityPackageHandler implements Listener {
             player.getInventory().addItem(Foxtrot.getInstance().getAbilityHandler().getAbilities().get(ppp).getItemStack());
             player.getInventory().addItem(Foxtrot.getInstance().getAbilityHandler().getAbilities().get(p).getItemStack());
         }
+
         Firework firework = (Firework)player.getWorld().spawn(player.getLocation(), Firework.class);
         FireworkMeta data = firework.getFireworkMeta();
         data.addEffects(FireworkEffect.builder().withColor(Color.PURPLE).with(FireworkEffect.Type.BALL_LARGE).withFlicker().build());
