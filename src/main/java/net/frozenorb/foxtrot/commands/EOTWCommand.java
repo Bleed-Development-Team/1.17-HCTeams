@@ -48,7 +48,7 @@ public class EOTWCommand extends BaseCommand {
 
         int seconds = TimeUtils.parseTime(time);
 
-        if (seconds < 4){
+        if (seconds < 10){
             sender.sendMessage(ChatColor.RED + "Invalid time.");
             return;
         }
@@ -75,7 +75,7 @@ public class EOTWCommand extends BaseCommand {
                 Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "█" + ChatColor.DARK_RED + "█████" + ChatColor.RED + "█" + " " + ChatColor.RED + "All deathbans are now permanent.");
                 Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "███████");
             }
-        }.runTaskLater(Foxtrot.getInstance(), (seconds - 2) * 20L);
+        }.runTaskLater(Foxtrot.getInstance(), (seconds - 5) * 20L);
 
         eotwRunnable = new BukkitRunnable(){
             @Override

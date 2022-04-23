@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class AbilityHandler implements Listener {
 
-    @Getter private final Map<String, Ability> abilities = new HashMap<>();
+    private final Map<String, Ability> abilities = new HashMap<>();
 
     public AbilityHandler(){
         registerTimers();
@@ -30,6 +30,7 @@ public class AbilityHandler implements Listener {
         abilities.put("medkit", new MedkitAbility());
         abilities.put("backtotheroots", new BackToTheRootsAbility());
         abilities.put("rocket", new RocketAbility());
+        abilities.put("lucky-mode", new LuckyModeAbility());
 
         for (Ability ability : abilities.values()){
             Bukkit.getServer().getPluginManager().registerEvents(ability, Foxtrot.getInstance());
@@ -56,6 +57,8 @@ public class AbilityHandler implements Listener {
 
         Cooldown.createCooldown("rocket");
         Cooldown.createCooldown("backtotheroots");
+
+        Cooldown.createCooldown("lucky");
     }
 
     public List<Ability> getAbilities(){
