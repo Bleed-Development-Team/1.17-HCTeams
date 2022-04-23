@@ -19,8 +19,7 @@ public class AbilitiesMenu extends Menu {
     public void tick() {
         int i = 0;
         for (Ability ability : Foxtrot.getInstance().getAbilityHandler().getAbilities()) {
-            buttons[i] = new Button(ability.getItemStack());
-            i++;
+            buttons[i++] = new Button(ability.getItemStack());
         }
     }
 }

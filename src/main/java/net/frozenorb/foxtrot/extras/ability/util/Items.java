@@ -115,5 +115,19 @@ public class Items {
                 .build();
     }
 
+    public static ItemStack getJump(){
+        return ItemBuilder.of(Material.FEATHER)
+                .name("&a&lJump VII")
+                .addToLore("&7Right click to receive Jump for 5 seconds.")
+                .enchant(Enchantment.DURABILITY, 1)
+                .build();
+    }
 
+    public static ItemStack getPortableBard(){
+        return ItemBuilder.of(Material.ORANGE_DYE)
+                .name("&6&lPortable Bard")
+                .addToLore("&7Right click to view different effects.")
+                .enchant(Enchantment.DURABILITY, 1)
+                .build();
+    }
 }

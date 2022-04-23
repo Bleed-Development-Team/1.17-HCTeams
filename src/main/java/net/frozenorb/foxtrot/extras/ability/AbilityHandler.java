@@ -3,6 +3,7 @@ package net.frozenorb.foxtrot.extras.ability;
 import lombok.Getter;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.extras.ability.impl.*;
+import net.frozenorb.foxtrot.extras.ability.impl.portable.*;
 import net.frozenorb.foxtrot.util.Cooldown;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -31,6 +32,11 @@ public class AbilityHandler implements Listener {
         abilities.put("backtotheroots", new BackToTheRootsAbility());
         abilities.put("rocket", new RocketAbility());
         abilities.put("lucky-mode", new LuckyModeAbility());
+        abilities.put("strength", new StrengthTwoAbility());
+        abilities.put("resistance", new ResistanceTwoAbility());
+        abilities.put("regen", new RegenerationAbility());
+        abilities.put("invis", new InvisibilityAbility());
+        abilities.put("jump", new JumpAbility());
 
         for (Ability ability : abilities.values()){
             Bukkit.getServer().getPluginManager().registerEvents(ability, Foxtrot.getInstance());
@@ -59,6 +65,7 @@ public class AbilityHandler implements Listener {
         Cooldown.createCooldown("backtotheroots");
 
         Cooldown.createCooldown("lucky");
+        Cooldown.createCooldown("portable");
     }
 
     public List<Ability> getAbilities(){

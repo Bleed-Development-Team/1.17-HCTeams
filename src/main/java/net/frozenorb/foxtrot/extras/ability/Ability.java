@@ -71,6 +71,10 @@ public abstract class Ability implements Listener {
         Cooldown.addCooldown("partner", player, 10);
     }
 
+    public void addIndeCooldown(Player player){
+        Cooldown.addCooldown(getCooldownID(), player, getCooldown());
+    }
+
     public boolean canUse(Player player){
         if (isOnGlobalCooldown(player)){
             player.sendMessage(CC.translate("&cYou are still on cooldown for &d&lPartner &cfor another &c&l" + Cooldown.getCooldownString(player,"partner") + "&c."));

@@ -20,17 +20,17 @@ import java.util.List;
 public class JumpAbility extends Ability {
     @Override
     public String getName() {
-        return "&a&lJump II";
+        return "&a&lJump VII";
     }
 
     @Override
     public String getUncoloredName() {
-        return "Regeneration III";
+        return "Jump";
     }
 
     @Override
     public String getDescription() {
-        return "Right click to receive 3 seconds of Regeneration III.";
+        return "Right click to receive 5 seconds of Jump VII.";
     }
 
     @Override
@@ -45,7 +45,7 @@ public class JumpAbility extends Ability {
 
     @Override
     public ItemStack getItemStack() {
-        return Items.getRegen();
+        return Items.getJump();
     }
 
     @EventHandler
@@ -53,21 +53,21 @@ public class JumpAbility extends Ability {
         Player player = event.getPlayer();
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
-            if (!isSimilarTo(player.getItemInHand(), Items.getRegen())) return;
+            if (!isSimilarTo(player.getItemInHand(), Items.getJump())) return;
             if (!canUse(player)) return;
 
             int i = 0;
             for (Player friendly : getNearbyPlayers(player, true)) {
-                friendly.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 3, 2));
+                friendly.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 20 * 5, 6));
                 i++;
             }
 
-            player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 3, 2));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 20 * 5, 6));
 
             giveCooldowns(player);
             useItem(player);
 
-            player.sendMessage(CC.translate("&c❤ &6You have gave " + (i == 0 ? "yourself" : "&f" + i + " &6player" + (i == 1 ? "" : "s")) + "  &fRegeneration III&6."));
+            player.sendMessage(CC.translate("&c❤ &6You have gave " + (i == 0 ? "yourself" : "&f" + i + " &6player" + (i == 1 ? "" : "s")) + "  &fJump VII&6."));
         }
     }
 
