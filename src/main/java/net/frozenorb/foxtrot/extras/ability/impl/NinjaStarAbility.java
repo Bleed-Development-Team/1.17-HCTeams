@@ -54,7 +54,7 @@ public class NinjaStarAbility extends Ability implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onRightClick(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) return;
         if (!isSimilarTo(player.getItemInHand(), Items.getNinjaStar())) return;
         if (!canUse(player)) return;
 
@@ -86,6 +86,7 @@ public class NinjaStarAbility extends Ability implements Listener {
         }, 20L * 3);
 
         getLastHits().remove(player.getUniqueId());
+        
 
     }
 
