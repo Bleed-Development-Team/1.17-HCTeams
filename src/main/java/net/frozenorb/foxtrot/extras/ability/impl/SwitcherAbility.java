@@ -116,21 +116,20 @@ public class SwitcherAbility extends Ability implements Listener {
         if (event.getEntity() instanceof Snowball && event.getEntity() == Items.getSnowball()){
 
             if (isOnGlobalCooldown(player)){
-                //event.setCancelled(true);
+                event.setCancelled(true);
+                assert player != null;
                 player.updateInventory();
 
                 player.sendMessage(CC.translate("&cYou are still on cooldown for &d&lPartner &cfor another &c&l" + Cooldown.getCooldownString(player,"partner") + "&c."));
-                //event.setCancelled(true);
+                event.setCancelled(true);
                 return;
             }
 
             if (isOnCooldown(player)){
-                //event.setCancelled(true);
+                event.setCancelled(true);
                 player.updateInventory();
 
                 player.sendMessage(CC.translate("&cYou are on cooldown for the &f&lSwitcher &cfor another &c&l" + getCooldownFormatted(player) + "&c."));
-                //event.setCancelled(true);
-                return;
             }
         }
     }
@@ -144,8 +143,6 @@ public class SwitcherAbility extends Ability implements Listener {
 
             if (isOnCooldown(player)){
                 player.sendMessage(CC.translate("&cYou are on the " + getName() + "&6's cooldown for another &c&l" + getCooldownFormatted(player) + "&c."));
-            } else {
-                player.sendMessage(CC.translate("&cYou are not on cooldown for this item."));
             }
         }
     }

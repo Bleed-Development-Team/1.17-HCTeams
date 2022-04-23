@@ -46,7 +46,7 @@ public class MedkitAbility extends Ability implements Listener {
         return Items.getMedkit();
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void interaction(PlayerInteractEvent event){
         Player player = event.getPlayer();
 
@@ -79,8 +79,6 @@ public class MedkitAbility extends Ability implements Listener {
 
             if (isOnCooldown(player)){
                 player.sendMessage(CC.translate("&cYou are on the " + getName() + "&c's cooldown for another &c&l" + getCooldownFormatted(player) + "&c."));
-            } else {
-                player.sendMessage(CC.translate("&cYou are not on cooldown for this item."));
             }
         }
     }

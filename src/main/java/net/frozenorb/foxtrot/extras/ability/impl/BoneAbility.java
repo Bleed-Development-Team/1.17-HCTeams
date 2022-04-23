@@ -150,8 +150,6 @@ public class BoneAbility extends Ability implements Listener {
 
             if (isOnCooldown(player)){
                 player.sendMessage(CC.translate("&cYou are on the " + getName() + "&6's cooldown for another &c&l" + getCooldownFormatted(player) + "&c."));
-            } else {
-                player.sendMessage(CC.translate("&cYou are not on cooldown for this item."));
             }
         }
     }
