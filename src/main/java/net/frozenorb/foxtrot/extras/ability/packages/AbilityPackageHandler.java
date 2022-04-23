@@ -2,7 +2,10 @@ package net.frozenorb.foxtrot.extras.ability.packages;
 
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.util.CC;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
 import org.bukkit.Sound;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Fox;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.FireworkMeta;
 
 public class AbilityPackageHandler implements Listener {
     @EventHandler
@@ -43,8 +47,11 @@ public class AbilityPackageHandler implements Listener {
             player.getInventory().addItem(Foxtrot.getInstance().getAbilityHandler().getAbilities().get(ppp).getItemStack());
             player.getInventory().addItem(Foxtrot.getInstance().getAbilityHandler().getAbilities().get(p).getItemStack());
         }
-
-
+        Firework firework = (Firework)player.getWorld().spawn(player.getLocation(), Firework.class);
+        FireworkMeta data = firework.getFireworkMeta();
+        data.addEffects(FireworkEffect.builder().withColor(Color.PURPLE).with(FireworkEffect.Type.BALL_LARGE).withFlicker().build());
+        data.setPower(1);
+        firework.setFireworkMeta(data);
         player.sendMessage(CC.translate("&4&lBleed &7| &fYou have received 3x " + Foxtrot.getInstance().getAbilityHandler().getAbilities().get(p).getName() + "&r&f's."));
         player.sendMessage(CC.translate("&4&lBleed &7| &fYou have received 3x " + Foxtrot.getInstance().getAbilityHandler().getAbilities().get(pp).getName() + "&r&f's."));
         player.sendMessage(CC.translate("&4&lBleed &7| &fYou have received 3x " + Foxtrot.getInstance().getAbilityHandler().getAbilities().get(ppp).getName() + "&r&f's."));
