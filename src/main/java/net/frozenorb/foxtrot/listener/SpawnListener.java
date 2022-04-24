@@ -191,8 +191,9 @@ public class  SpawnListener implements Listener {
 
             final Block waterBlock = event.getBlockClicked().getRelative(event.getBlockFace());
 
+
             if (waterBlock.getRelative(BlockFace.NORTH).isLiquid() || waterBlock.getRelative(BlockFace.SOUTH).isLiquid() || waterBlock.getRelative(BlockFace.EAST).isLiquid() || waterBlock.getRelative(BlockFace.WEST).isLiquid()) {
-                event.setCancelled(true);
+                //event.setCancelled(true);
                 return;
             }
 

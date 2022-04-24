@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -68,14 +69,13 @@ public class TimeWarpAbility extends Ability implements Listener {
             }
             player.sendMessage(CC.translate("&c❤ &6Teleporting to last pearl in &f3 &6seconds!"));
 
+            player.sendMessage(CC.translate("&c❤ &6Teleporting to last pearl in &f3 &6seconds!"));
 
             new BukkitRunnable(){
                 int i = 0;
                 @Override
                 public void run() {
-                    if (i == 0){
-                        player.sendMessage(CC.translate("&c❤ &6Teleporting to last pearl in &f3 &6seconds!"));
-                    } else if (i == 1){
+                    if (i == 1){
                         player.sendMessage(CC.translate("&c❤ &6Teleporting to last pearl in &f2 &6seconds!"));
                     } else if (i == 2){
                         player.sendMessage(CC.translate("&c❤ &6Teleporting to last pearl in &f1 &6second!"));
@@ -88,7 +88,7 @@ public class TimeWarpAbility extends Ability implements Listener {
                     }
                     i++;
                 }
-            }.runTaskLater(Foxtrot.getInstance(), 20L);
+            }.runTaskTimer(Foxtrot.getInstance(), 20L, 20L);
 
         }
     }
@@ -104,5 +104,10 @@ public class TimeWarpAbility extends Ability implements Listener {
                timewarp.remove(player.getUniqueId());
             }, 20L * 13L);
         }
+    }
+
+    @EventHandler
+    public void quit(PlayerQuitEvent event){
+        if (timewarp.get(event.getPlayer().getUniqueId()) != null) timewarp.remove(event.getPlayer().getUniqueId());
     }
 }

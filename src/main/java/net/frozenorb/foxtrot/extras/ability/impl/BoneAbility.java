@@ -92,7 +92,7 @@ public class BoneAbility extends Ability implements Listener {
 
         hitMap.remove(damager.getUniqueId());
 
-        Cooldown.addCooldown("bone-eff", damager, 15);
+        Cooldown.addCooldown("bone-eff", victim, 15);
 
         if (damager.getItemInHand().getAmount() > 1) {
             int amount = damager.getItemInHand().getAmount() - 1;
@@ -100,7 +100,6 @@ public class BoneAbility extends Ability implements Listener {
         } else {
             damager.setItemInHand(null);
         }
-
 
         applyOther(damager, victim);
     }
