@@ -52,7 +52,8 @@ public class AbilityPackageHandler implements Listener {
 
             Firework firework = player.getWorld().spawn(player.getLocation(), Firework.class);
             FireworkMeta data = firework.getFireworkMeta();
-            data.addEffects(FireworkEffect.builder().withColor(Color.PURPLE).with(FireworkEffect.Type.BALL_LARGE).withFlicker().build());
+
+            data.addEffects(FireworkEffect.builder().withColor(Color.RED).with(FireworkEffect.Type.BALL_LARGE).withFlicker().build());
             data.setPower(1);
             firework.setMetadata("nodamage",  new FixedMetadataValue(Foxtrot.getInstance(), true));
             firework.setFireworkMeta(data);

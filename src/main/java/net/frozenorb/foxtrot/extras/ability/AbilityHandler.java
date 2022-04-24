@@ -37,6 +37,7 @@ public class AbilityHandler implements Listener {
         abilities.put("portable-bard", new PortableBard());
         abilities.put("ninja-star", new NinjaStarAbility());
         abilities.put("time-warp", new TimeWarpAbility());
+        abilities.put("tpbow", new TPBowAbility());
 
         for (Ability ability : abilities.values()){
             Bukkit.getServer().getPluginManager().registerEvents(ability, Foxtrot.getInstance());
@@ -67,6 +68,8 @@ public class AbilityHandler implements Listener {
         Cooldown.createCooldown("lucky");
         Cooldown.createCooldown("portable");
         Cooldown.createCooldown("warp");
+
+        Cooldown.createCooldown("tpbow");
     }
 
     public List<Ability> getAbilities(){

@@ -20,7 +20,7 @@ import java.util.List;
 public class InvisibilityAbility extends Ability {
     @Override
     public String getName() {
-        return "&7Invisibility";
+        return "&b&lInvisibility I";
     }
 
     @Override
@@ -61,7 +61,21 @@ public class InvisibilityAbility extends Ability {
             giveCooldowns(player);
             useItem(player);
 
-            player.sendMessage(CC.translate("&c❤ &6You have gave yourself &fStrength II&6."));
+            player.sendMessage(CC.translate("&c❤ &6You have gave yourself &fInvisibility I&6."));
         }
     }
+
+    @EventHandler
+    public void cooldownCheck(PlayerInteractEvent event){
+        Player player = event.getPlayer();
+
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK){
+            if (!isSimilarTo(player.getItemInHand(), Items.getInvis())) return;
+
+            if (isOnCooldown(player)){
+                player.sendMessage(CC.translate("&cYou are on the " + getName() + "&c's cooldown for another &c&l" + getCooldownFormatted(player) + "&c."));
+            }
+        }
+    }
+
 }

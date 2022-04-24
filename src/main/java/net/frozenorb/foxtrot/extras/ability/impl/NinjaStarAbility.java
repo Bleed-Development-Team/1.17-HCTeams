@@ -64,20 +64,16 @@ public class NinjaStarAbility extends Ability implements Listener {
             if (!isSimilarTo(player.getItemInHand(), Items.getNinjaStar())) return;
             if (!canUse(player)) return;
 
-            if (!hits.containsKey(player.getUniqueId())) {
-                player.sendMessage("&c❤ &6Failed to use: &fNo last hit.");
-                return;
-            }
-
-            if (!SpawnTagHandler.isTagged(player) || SpawnTagHandler.getTag(player) < 15) {
+            if (!hits.containsKey(player.getUniqueId()) || !SpawnTagHandler.isTagged(player) || SpawnTagHandler.getTag(player) < 15) {
                 hits.remove(player.getUniqueId());
 
-                player.sendMessage("&c❤ &6Failed to use: &fNo last hit.");
+                player.sendMessage(CC.translate("&c❤ &6Failed to use: &fNo last hit."));
                 return;
             }
 
             Player victim = Bukkit.getPlayer(hits.get(player.getUniqueId()));
 
+            giveCooldowns(player);
             if (victim.isOnline()){
 
                 new BukkitRunnable(){
@@ -109,26 +105,40 @@ public class NinjaStarAbility extends Ability implements Listener {
                             victim.playSound(victim.getLocation(), Sound.BLOCK_DISPENSER_DISPENSE, 1F, 1F);
 
                             cancel();
+                            return;
                         }
 
                         i++;
                     }
-                }.runTaskTimer(Foxtrot.getInstance(), 20L, 20L);
+                }.runTaskTimer(Foxtrot.getInstance(), 0L, 20L);
             }
         }
     }
 
     @EventHandler
     public void damage(EntityDamageByEntityEvent event){
-        if (event.getDamager() instanceof Player player){
+        if (event.getDamager() instanceof Player){
 
-            if (hits.containsKey(player.getUniqueId())) return;
-
-            hits.put(player.getUniqueId(), player.getUniqueId());
+            hits.remove(event.getDamager().getUniqueId());
+            hits.put(event.getDamager().getUniqueId(), event.getEntity().getUniqueId());
 
             Bukkit.getScheduler().runTaskLater(Foxtrot.getInstance(), () -> {
-                hits.remove(player.getUniqueId());
+                hits.remove(event.getDamager().getUniqueId());
             }, 20L * 15L);
         }
     }
+
+    @EventHandler
+    public void cooldownCheck(PlayerInteractEvent event){
+        Player player = event.getPlayer();
+
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK){
+            if (!isSimilarTo(player.getItemInHand(), Items.getNinjaStar())) return;
+
+            if (isOnCooldown(player)){
+                player.sendMessage(CC.translate("&cYou are on the " + getName() + "&c's cooldown for another &c&l" + getCooldownFormatted(player) + "&c."));
+            }
+        }
+    }
+
 }

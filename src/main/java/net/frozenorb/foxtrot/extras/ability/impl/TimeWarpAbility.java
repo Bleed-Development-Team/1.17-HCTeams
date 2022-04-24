@@ -110,4 +110,18 @@ public class TimeWarpAbility extends Ability implements Listener {
     public void quit(PlayerQuitEvent event){
         if (timewarp.get(event.getPlayer().getUniqueId()) != null) timewarp.remove(event.getPlayer().getUniqueId());
     }
+
+    @EventHandler
+    public void cooldownCheck(PlayerInteractEvent event){
+        Player player = event.getPlayer();
+
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK){
+            if (!isSimilarTo(player.getItemInHand(), Items.getTimeWarp())) return;
+
+            if (isOnCooldown(player)){
+                player.sendMessage(CC.translate("&cYou are on the " + getName() + "&c's cooldown for another &c&l" + getCooldownFormatted(player) + "&c."));
+            }
+        }
+    }
+
 }

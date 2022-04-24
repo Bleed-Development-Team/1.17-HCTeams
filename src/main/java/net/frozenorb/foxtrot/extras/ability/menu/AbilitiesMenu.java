@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 public class AbilitiesMenu extends Menu {
 
     public AbilitiesMenu(Player player) {
-        super(player, CC.translate("&3&lAbilities"), 27);
+        super(player, CC.translate("Abilities"), 27);
     }
 
 

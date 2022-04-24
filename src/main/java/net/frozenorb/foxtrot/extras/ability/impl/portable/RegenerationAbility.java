@@ -106,4 +106,19 @@ public class RegenerationAbility extends Ability {
         valid.add(player);
         return (valid);
     }
+
+
+    @EventHandler
+    public void cooldownCheck(PlayerInteractEvent event){
+        Player player = event.getPlayer();
+
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK){
+            if (!isSimilarTo(player.getItemInHand(), Items.getRegen())) return;
+
+            if (isOnCooldown(player)){
+                player.sendMessage(CC.translate("&cYou are on the " + getName() + "&c's cooldown for another &c&l" + getCooldownFormatted(player) + "&c."));
+            }
+        }
+    }
+
 }

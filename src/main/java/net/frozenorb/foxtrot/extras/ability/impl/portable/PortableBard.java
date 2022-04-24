@@ -57,4 +57,18 @@ public class PortableBard extends Ability implements Listener {
             new PortableMenu(player).updateMenu();
         }
     }
+
+    @EventHandler
+    public void cooldownCheck(PlayerInteractEvent event){
+        Player player = event.getPlayer();
+
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK){
+            if (!isSimilarTo(player.getItemInHand(), Items.getPortableBard())) return;
+
+            if (isOnCooldown(player)){
+                player.sendMessage(CC.translate("&cYou are on the " + getName() + "&c's cooldown for another &c&l" + getCooldownFormatted(player) + "&c."));
+            }
+        }
+    }
+
 }
