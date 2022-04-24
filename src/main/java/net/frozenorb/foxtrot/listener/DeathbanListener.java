@@ -48,9 +48,9 @@ public class DeathbanListener implements Listener {
                     if (Foxtrot.getInstance().getFriendLivesMap().getLives(event.getEntity().getPlayer().getUniqueId()) > 0) {
                         Foxtrot.getInstance().getFriendLivesMap().setLives(event.getEntity().getPlayer().getUniqueId(), Foxtrot.getInstance().getFriendLivesMap().getLives(event.getEntity().getPlayer().getUniqueId()) - 1);
                     } else {
-                        Foxtrot.getInstance().getDeathbanMap().deathban(event.getEntity().getUniqueId(), seconds);
+                        //Foxtrot.getInstance().getDeathbanMap().deathban(event.getEntity().getUniqueId(), seconds);
 
-                        event.getEntity().getPlayer().kickPlayer(ChatColor.YELLOW + "Come back in " + time + "!");
+                        //event.getEntity().getPlayer().kickPlayer(ChatColor.YELLOW + "Come back in " + time + "!");
                     }
                 }
             }
