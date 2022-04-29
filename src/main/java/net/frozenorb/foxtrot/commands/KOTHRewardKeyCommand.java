@@ -1,10 +1,7 @@
 package net.frozenorb.foxtrot.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Flags;
+import co.aikar.commands.annotation.*;
 import net.frozenorb.foxtrot.util.InventoryUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -19,7 +16,7 @@ public class KOTHRewardKeyCommand extends BaseCommand {
 
 
     @Default
-    public static void kothRewardKey(Player sender, @Flags("other") Player player, String koth, int amount , int tier) {
+    public static void kothRewardKey(Player sender, @Flags("other") @Name("target") Player player, @Name("koth") String koth, @Name("amount") int amount , @Name("tier")int tier) {
         if (sender.getGameMode() != GameMode.CREATIVE) {
             sender.sendMessage(ChatColor.RED + "This command must be ran in creative.");
             return;

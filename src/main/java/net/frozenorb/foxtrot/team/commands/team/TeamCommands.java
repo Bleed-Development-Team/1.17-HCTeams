@@ -73,7 +73,7 @@ public class TeamCommands extends BaseCommand implements Listener {
 
     @Subcommand("a|accept|join|j")
     @Description("Accepts a team invitation")
-    public static void teamAccept(Player sender, Team team) {
+    public static void teamAccept(Player sender, @Name("team") Team team) {
         if (team.getInvitations().contains(sender.getUniqueId())) {
             if (Foxtrot.getInstance().getTeamHandler().getTeam(sender.getUniqueId()) != null) {
                 sender.sendMessage(ChatColor.RED + "You are already on a team!");
@@ -148,7 +148,7 @@ public class TeamCommands extends BaseCommand implements Listener {
 
     @CommandAlias("ally")
     @Description("Allies a team with another team")
-    public static void teamAlly(Player sender, Team team) {
+    public static void teamAlly(Player sender, @Name("team") Team team) {
         Team senderTeam = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
 
         if (senderTeam == null) {
@@ -222,7 +222,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     }
     @Subcommand("announcement|announcement")
     @Description("Announce a message to all teams.")
-    public static void teamAnnouncement(Player sender, String newAnnouncement) {//TODO Check if string will work
+    public static void teamAnnouncement(Player sender, @Name("announcement") String newAnnouncement) {//TODO Check if string will work
         Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
 
         if (team == null) {
@@ -246,7 +246,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     }
     @Subcommand("captain add|mod add")
     @Description("Add a player to the mod team.")
-    public static void captainAdd(Player sender, OfflinePlayer promote) {
+    public static void captainAdd(Player sender, @Name("target") OfflinePlayer promote) {
         Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender.getUniqueId());
         if( team == null ) {
             sender.sendMessage(net.md_5.bungee.api.ChatColor.RED + "You must be in a team to execute this command.");
@@ -274,7 +274,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     }
     @Subcommand("captain remove|captain demote| mod remove|mod demote")
     @Description("Demote a player to a member.")
-    public static void captainRemove(Player sender, OfflinePlayer demote) {
+    public static void captainRemove(Player sender, @Name("target") OfflinePlayer demote) {
         Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender.getUniqueId());
         if( team == null ) {
             sender.sendMessage(net.md_5.bungee.api.ChatColor.RED + "You must be in a team to execute this command.");
@@ -368,7 +368,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     }
     @Subcommand("create")
     @Description("Create a team")
-    public static void teamCreate(Player sender, String team) {
+    public static void teamCreate(Player sender, @Name("name") String team) {
         if (Foxtrot.getInstance().getTeamHandler().getTeam(sender) != null) {
             sender.sendMessage(ChatColor.GRAY + "You're already in a team!");
             return;
@@ -437,7 +437,7 @@ public class TeamCommands extends BaseCommand implements Listener {
 
     @Subcommand("demote")
     @Description("Demote a player from team.")
-    public static void teamDemote(Player sender, OfflinePlayer player) {
+    public static void teamDemote(Player sender, @Name("target") OfflinePlayer player) {
         Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
 
         if (team == null) {
@@ -475,7 +475,7 @@ public class TeamCommands extends BaseCommand implements Listener {
 
     @Subcommand("deposit|d")
     @Description("Deposit money to your team.")
-    public static void teamDeposit(Player sender, Float amount) {
+    public static void teamDeposit(Player sender, @Name("amount") Float amount) {
         Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
 
         if (team == null) {
@@ -582,7 +582,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     }
     @Subcommand("focus")
     @Description("Focus on a team.")
-    public static void focus(Player player, Team team){
+    public static void focus(Player player, @Name("team") Team team){
         Team playerTeam = Foxtrot.getInstance().getTeamHandler().getTeam(player.getUniqueId());
 
         if (playerTeam == null){
@@ -653,7 +653,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     }
     @Subcommand("forceinvite")
     @Description("Force a player to join your team.")
-    public static void teamForceInvite(Player sender, OfflinePlayer player) {
+    public static void teamForceInvite(Player sender, @Name("target") OfflinePlayer player) {
         if (!Foxtrot.getInstance().getServerHandler().isForceInvitesEnabled()) {
             sender.sendMessage(ChatColor.RED + "Force-invites are not enabled on this server.");
             return;
@@ -1212,7 +1212,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     }
     @Subcommand("newleader|leader")
     @Description("Set a new team leader")
-    public static void teamLeader(Player sender, @Flags("other") Player player) {
+    public static void teamLeader(Player sender, @Flags("other") @Name("target")Player player) {
         Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
 
         if (team == null) {
@@ -1404,7 +1404,7 @@ public class TeamCommands extends BaseCommand implements Listener {
 
     @Subcommand("lives add|lives deposit|lives d")
     @Description("Add or deposit lives")
-    public static void livesAdd(Player sender, int lives) {
+    public static void livesAdd(Player sender, @Name("amount") int lives) {
         Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
         if( team == null ) {
             sender.sendMessage(net.md_5.bungee.api.ChatColor.RED + "You need a team to use this command.");
@@ -1429,7 +1429,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     }
     @Subcommand("revive")
     @Description("Revive a player")
-    public static void livesRevive(Player sender, @Flags("other") Player whom) {
+    public static void livesRevive(Player sender, @Flags("other") @Name("target") Player whom) {
         Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
         if( team == null ) {
             sender.sendMessage(net.md_5.bungee.api.ChatColor.RED + "You need a team to use this command.");
@@ -1483,7 +1483,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("mute")
     @Description("Mute a player")
     @CommandPermission("foxtrot.mute")
-    public static void teamMute( Player sender, final Team team, int time,  String reason) {//TODO Reason should be a connected string
+    public static void teamMute( Player sender, @Name("team") final Team team, @Name("time") int time, @Name("reason")  String reason) {
         int timeSeconds = time * 60;
 
         for (UUID player : team.getMembers()) {
@@ -1575,7 +1575,7 @@ public class TeamCommands extends BaseCommand implements Listener {
 
     @Subcommand("promote")
     @Description("Promote a player in a team.")
-    public static void teamPromote(Player sender, OfflinePlayer player) {
+    public static void teamPromote(Player sender, @Name("target") OfflinePlayer player) {
         Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender.getUniqueId());
 
         if (team == null) {
@@ -1677,7 +1677,7 @@ public class TeamCommands extends BaseCommand implements Listener {
 
     @Subcommand("rename")
     @Description("Renames your team.")
-    public static void teamRename(Player sender, String newName) {
+    public static void teamRename(Player sender, @Name("newName") String newName) {
         Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
 
         if (team == null) {
@@ -2008,7 +2008,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("tpall")
     @Description("Teleports all players to the nearest safe location")
     @CommandPermission("foxtrot.tpall")
-    public static void teamTP(Player sender, Team team) {
+    public static void teamTP(Player sender, @Name("team") Team team) {
         ConversationFactory factory = new ConversationFactory(Foxtrot.getInstance()).withModality(true).withPrefix(new NullConversationPrefix()).withFirstPrompt(new StringPrompt() {
 
             public @NotNull String getPromptText(@NotNull ConversationContext context) {
@@ -2121,7 +2121,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("tp")
     @Description("Teleport to a team")
     @CommandPermission("foxtrot.team.tp")
-    public static void teamTPFaction(Player sender, Team team) {
+    public static void teamTPFaction(Player sender, @Name("team") Team team) {
         if (team.getHQ() != null) {
             sender.sendMessage(ChatColor.YELLOW + "Teleported to " + ChatColor.LIGHT_PURPLE + team.getName() + ChatColor.YELLOW + "'s HQ.");
             sender.teleport(team.getHQ());
@@ -2135,7 +2135,7 @@ public class TeamCommands extends BaseCommand implements Listener {
 
     @Subcommand("unally")
     @Description("Unally a team.")
-    public static void teamUnally(Player sender, Team team) {
+    public static void teamUnally(Player sender, @Name("team") Team team) {
         Team senderTeam = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
 
         if (senderTeam == null) {
@@ -2328,7 +2328,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("unmute")
     @Description("Unmute a player from your team.")
     @CommandPermission("foxtrot.team.unmute")
-    public static void teamUnMute(Player sender, Team team) {
+    public static void teamUnMute(Player sender, @Name("team") Team team) {
         TeamActionTracker.logActionAsync(team, TeamActionType.TEAM_MUTE_EXPIRED, ImmutableMap.of(
                 "shadowMute", "false"
         ));
@@ -2837,6 +2837,14 @@ public class TeamCommands extends BaseCommand implements Listener {
         }
     }
 
+    @Subcommand("pointbr|pbr|")
+    public static void teamPointBreakDown(Player player, @Optional final Team team) {
+        player.sendMessage(ChatColor.GOLD + "Point Breakdown of " + team.getName());
+
+        for (String info : team.getPointBreakDown()) {
+            player.sendMessage(info);
+        }
+    }
 
     @Default
     @HelpCommand

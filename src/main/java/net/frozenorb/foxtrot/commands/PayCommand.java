@@ -4,6 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Flags;
+import co.aikar.commands.annotation.Name;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.economy.FrozenEconomyHandler;
 import org.bukkit.Bukkit;
@@ -16,7 +17,7 @@ import java.text.NumberFormat;
 public class PayCommand extends BaseCommand {
 
     @Default
-    public static void pay(Player sender, @Flags("other") Player player, float amount) {
+    public static void pay(Player sender, @Flags("other") @Name("target") Player player, @Name("amount") float amount) {
         double balance = FrozenEconomyHandler.getBalance(sender.getUniqueId());
         Player bukkitPlayer = Foxtrot.getInstance().getServer().getPlayer(player.getUniqueId());
 

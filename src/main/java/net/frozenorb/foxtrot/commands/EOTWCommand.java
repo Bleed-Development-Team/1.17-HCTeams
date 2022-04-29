@@ -35,7 +35,7 @@ public class EOTWCommand extends BaseCommand {
     public static BukkitTask preEotwRunnable;
 
     @Subcommand("start")
-    public static void eotw(Player sender, @Name(value = "time") String time) {
+    public static void eotw(Player sender, @Name("time") String time) {
         if (sender.getGameMode() != GameMode.CREATIVE) {
             sender.sendMessage(ChatColor.RED + "This command must be ran in creative.");
             return;
@@ -155,7 +155,7 @@ public class EOTWCommand extends BaseCommand {
     }
 
     @Subcommand("reduce")
-    public void onReduceCommand(Player sender, int amount) {
+    public void onReduceCommand(Player sender, @Name("amount")int amount) {
         double newAmount = Bukkit.getServer().getWorld("world").getWorldBorder().getSize() - amount;
         Bukkit.broadcastMessage(CC.translate("&6The border will be reduced to &f" + newAmount + " &6in &f10 &6seconds."));
         SecondsToCountDown = 10;

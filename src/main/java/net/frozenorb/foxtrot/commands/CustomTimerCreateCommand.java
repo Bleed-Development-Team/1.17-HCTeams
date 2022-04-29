@@ -3,6 +3,7 @@ package net.frozenorb.foxtrot.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Name;
 import co.aikar.commands.annotation.Subcommand;
 import com.google.common.collect.Sets;
 import lombok.Getter;
@@ -22,7 +23,7 @@ public class CustomTimerCreateCommand extends BaseCommand {
     public static Set<UUID> sotwEnabled = Sets.newHashSet();
 
     @Subcommand("create")
-    public static void customTimerCreate(CommandSender sender, String time, String title) {
+    public static void customTimerCreate(CommandSender sender, @Name("time") String time, @Name("title") String title) {
         int newTime = TimeUtils.parseTime(time);
         if (newTime == 0) {
             customTimers.remove(title);
@@ -33,7 +34,7 @@ public class CustomTimerCreateCommand extends BaseCommand {
 
 
     @Subcommand("delete")
-    public static void customTimerDelete(Player sender, String title) {
+    public static void customTimerDelete(Player sender, @Name("title") String title) {
         if (customTimers.containsKey(title)) {
             customTimers.remove(title);
         } else {

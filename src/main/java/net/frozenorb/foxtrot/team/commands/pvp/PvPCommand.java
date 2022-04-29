@@ -20,7 +20,7 @@ public class PvPCommand extends BaseCommand {
     @Subcommand("addlives")
     @Description("Adds lives to a player")
     @CommandPermission("foxtrot.pvp.addlives")
-    public static void pvpSetLives(CommandSender sender, Player fakePlayer, String lifeType, int amount) {
+    public static void pvpSetLives(CommandSender sender, @Name("target") Player fakePlayer, @Name("lifeType") String lifeType, @Name("amount") int amount) {
         UUID player = fakePlayer.getUniqueId();
         if (lifeType.equalsIgnoreCase("soulbound")) {
             Foxtrot.getInstance().getSoulboundLivesMap().setLives(player, Foxtrot.getInstance().getSoulboundLivesMap().getLives(player) + amount);

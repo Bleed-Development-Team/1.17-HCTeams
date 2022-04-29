@@ -32,7 +32,7 @@ public class LivesCommand extends BaseCommand {
 
     @Subcommand("add")
     @CommandPermission("lives.add")
-    public void onAddCommand(Player sender, @Flags("other") Player target, int amount) {
+    public void onAddCommand(Player sender, @Flags("other") @Name("target") Player target, @Name("amount") int amount) {
         Foxtrot.getInstance().getFriendLivesMap().setLives(target.getUniqueId(), Foxtrot.getInstance().getFriendLivesMap().getLives(target.getUniqueId()) + amount);
         sender.sendMessage(ChatColor.YELLOW + "Added " + amount + " lives to " + target.getName() + "'s account.");
     }

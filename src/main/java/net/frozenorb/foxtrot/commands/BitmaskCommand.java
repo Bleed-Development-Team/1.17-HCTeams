@@ -1,10 +1,7 @@
 package net.frozenorb.foxtrot.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandCompletion;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.*;
 import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import org.bukkit.ChatColor;
@@ -25,7 +22,7 @@ public class BitmaskCommand extends BaseCommand {
 
     @Subcommand("info")
     @CommandCompletion("@team")
-    public static void bitmaskInfo(Player sender, Team team) {
+    public static void bitmaskInfo(Player sender, @Name("team") Team team) {
         if (team.getOwner() != null) {
             sender.sendMessage(ChatColor.RED + "Bitmask flags cannot be applied to teams without a null leader.");
             return;
@@ -46,7 +43,7 @@ public class BitmaskCommand extends BaseCommand {
 
 
     @Subcommand("add")
-    public static void bitmaskAdd(Player sender, Team team, DTRBitmask bitmask) {
+    public static void bitmaskAdd(Player sender, @Name("team") Team team, @Name("bitmask")DTRBitmask bitmask) {
         if (team.getOwner() != null) {
             sender.sendMessage(ChatColor.RED + "Bitmask flags cannot be applied to teams without a null leader.");
             return;
@@ -67,7 +64,7 @@ public class BitmaskCommand extends BaseCommand {
 
 
     @Subcommand("remove")
-    public void bitmaskRemove(Player sender, Team team, DTRBitmask bitmask) {
+    public void bitmaskRemove(Player sender, @Name("team") Team team, @Name("bitmask") DTRBitmask bitmask) {
         if (team.getOwner() != null) {
             sender.sendMessage(ChatColor.RED + "Bitmask flags cannot be applied to teams without a null leader.");
             return;

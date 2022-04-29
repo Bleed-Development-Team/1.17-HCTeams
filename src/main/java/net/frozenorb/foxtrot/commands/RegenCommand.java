@@ -3,6 +3,7 @@ package net.frozenorb.foxtrot.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Name;
 import co.aikar.commands.annotation.Optional;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.team.Team;
@@ -14,7 +15,7 @@ import org.bukkit.entity.Player;
 public class RegenCommand extends BaseCommand {
 
     @Default
-    public static void regen(Player sender, @Optional Team team) {
+    public static void regen(Player sender, @Optional @Name("team") Team team) {
         if (!sender.isOp()) {
             team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
         }

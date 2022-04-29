@@ -18,7 +18,7 @@ public class CrateCommand extends BaseCommand {
 
 
     @Default
-    public static void onGive(Player sender, String kit) {
+    public static void onGive(Player sender, @Name("kit") String kit) {
         ItemStack enderChest = new ItemStack(Material.ENDER_CHEST, 1);
         ItemMeta itemMeta = enderChest.getItemMeta();
 
@@ -38,7 +38,7 @@ public class CrateCommand extends BaseCommand {
     
 
     @Subcommand("give")
-    public static void onGive(Player sender, String kit, @Flags("other") Player target) {
+    public static void onGive(Player sender, @Name("kit") String kit, @Flags("other") @Name("target") Player target) {
         ItemStack enderChest = new ItemStack(Material.ENDER_CHEST, 1);
         ItemMeta itemMeta = enderChest.getItemMeta();
 
@@ -59,7 +59,7 @@ public class CrateCommand extends BaseCommand {
 
 
     @Subcommand("create")
-    public static void onCreate(Player player, String kit) {
+    public static void onCreate(Player player, @Name("kit") String kit) {
         Crate crate = new Crate(kit);
 
         Foxtrot.getInstance().getCrateHandler().getCrates().put(kit.toLowerCase(), crate);
@@ -67,7 +67,7 @@ public class CrateCommand extends BaseCommand {
     }
 
     @Subcommand("edit")
-    public static void onEdit(Player player, String kit) {
+    public static void onEdit(Player player, @Name("kit") String kit) {
         Crate crate = Foxtrot.getInstance().getCrateHandler().getCrates().get(kit.toLowerCase());
 
         if (crate == null) {
