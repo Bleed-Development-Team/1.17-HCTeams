@@ -11,6 +11,7 @@ import net.frozenorb.foxtrot.events.koth.KOTH;
 import net.frozenorb.foxtrot.util.TimeUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.text.DateFormat;

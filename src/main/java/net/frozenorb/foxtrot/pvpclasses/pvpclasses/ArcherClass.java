@@ -176,7 +176,6 @@ public class ArcherClass extends PvPClass {
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
 		if (event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
-
 			if (isMarked(player)) {
 				Player damager = null;
 				if (event.getDamager() instanceof Player) {
