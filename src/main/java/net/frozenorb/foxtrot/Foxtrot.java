@@ -203,7 +203,7 @@ public class Foxtrot extends JavaPlugin {
 		}
 
 		try {
-			this.localJedisPool = new JedisPool(new JedisPoolConfig(), "redis-15427.c258.us-east-1-4.ec2.cloud.redislabs.com", 15427, 20000, "qhOnjp9unEsi1JDiQsdQ8QN7Roc0YSnF");
+			this.localJedisPool = new JedisPool(new JedisPoolConfig(), "127.0.0.1");
 			System.out.println("Connected to the local Jedis pool.");
 
 		} catch (Exception e) {
@@ -212,7 +212,7 @@ public class Foxtrot extends JavaPlugin {
 		}
 
 		try {
-			this.backboneJedisPool = new JedisPool(new JedisPoolConfig(), "redis-15427.c258.us-east-1-4.ec2.cloud.redislabs.com", 15427, 20000, "qhOnjp9unEsi1JDiQsdQ8QN7Roc0YSnF");
+			this.backboneJedisPool = new JedisPool(new JedisPoolConfig(), "127.0.0.1");
 			System.out.println("Connected to the Backbone Jedis pool.");
 		} catch (Exception e) {
 			this.backboneJedisPool = null;
