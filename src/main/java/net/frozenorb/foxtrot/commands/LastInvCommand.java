@@ -1,10 +1,7 @@
 package net.frozenorb.foxtrot.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Flags;
+import co.aikar.commands.annotation.*;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.uuid.FrozenUUIDCache;
 import org.bukkit.ChatColor;
@@ -21,7 +18,7 @@ public class LastInvCommand extends BaseCommand {
 
 
     @Default
-    public static void lastInv(Player sender, @Flags("other") Player target) {
+    public static void lastInv(Player sender, @Flags("other") @Name("target")Player target) {
         Foxtrot.getInstance().getServer().getScheduler().runTaskAsynchronously(Foxtrot.getInstance(), () -> {
             Foxtrot.getInstance().runRedisCommand((redis) -> {
                 if (!redis.exists("lastInv:contents:" + target.toString())) {

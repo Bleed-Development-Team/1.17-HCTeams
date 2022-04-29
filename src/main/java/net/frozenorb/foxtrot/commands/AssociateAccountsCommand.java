@@ -1,10 +1,7 @@
 package net.frozenorb.foxtrot.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Flags;
+import co.aikar.commands.annotation.*;
 import net.frozenorb.foxtrot.Foxtrot;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -18,7 +15,7 @@ public class AssociateAccountsCommand extends BaseCommand {
 
 
     @Default
-    public void associate(Player sender, @Flags("other") Player target, @Flags("other") Player associate) {
+    public void associate(Player sender, @Flags("other") @Name("target") Player target, @Flags("other") @Name("associate") Player associate) {
         if(Foxtrot.getInstance().getWhitelistedIPMap().contains(target.getUniqueId())) {
             UUID other = Foxtrot.getInstance().getWhitelistedIPMap().get(target.getUniqueId());
             Foxtrot.getInstance().getWhitelistedIPMap().add(associate.getUniqueId(), other);

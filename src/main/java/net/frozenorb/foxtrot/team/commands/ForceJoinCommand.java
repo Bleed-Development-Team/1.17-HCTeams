@@ -16,7 +16,7 @@ public class ForceJoinCommand extends BaseCommand {
 
     @Default
     @Description("Force a player to join a team")
-    public static void forceJoin(Player sender, Team team, @Optional Player player) {
+    public static void forceJoin(Player sender, @Name("team") Team team, @Optional Player player) {
         if (Foxtrot.getInstance().getTeamHandler().getTeam(player) != null) {
             if (player == sender) {
                 sender.sendMessage(ChatColor.RED + "Leave your current team before attempting to forcejoin.");

@@ -1,5 +1,5 @@
 Mongo:
-  URI: "mongodb+srv://Foxes:FoxesAreCool@hydrogenapi.hg5wo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+  URI: "mongodb+srv://127.0.0.1"
 
 jedis:
   host: "redis-19823.c258.us-east-1-4.ec2.cloud.redislabs.com"
@@ -7,9 +7,9 @@ jedis:
   user: "FrozenHCF"
   pass: "yQ4evkvAStkc3eXTjDX4rFeMKFTr2zZg"
 
-serverName: FrozenHCF
-networkWebsite: frozenhcf.net
-statsRoot: frozenhcf.net/teams
+serverName: FoxHCF
+networkWebsite: foxhcf.net
+statsRoot: foxhcf.net/teams
 tab:
   serverName: '&6&lHCTeams'
   sectionColor: '&5'

@@ -1,10 +1,7 @@
 package net.frozenorb.foxtrot.team.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Description;
+import co.aikar.commands.annotation.*;
 import com.lunarclient.bukkitapi.LunarClientAPI;
 import com.lunarclient.bukkitapi.object.LCWaypoint;
 import net.frozenorb.foxtrot.Foxtrot;
@@ -20,7 +17,7 @@ public class ForceKickCommand extends BaseCommand {
 
     @Default
     @Description("Force a player to leave your team")
-    public static void forceKick(Player sender, Player player) {
+    public static void forceKick(Player sender, @Name("target") Player player) {
         Team team = Foxtrot.getInstance().getTeamHandler().getTeam(player.getUniqueId());
 
         if (team == null) {

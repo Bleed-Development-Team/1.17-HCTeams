@@ -4,6 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Name;
 import com.google.common.io.Files;
 import net.frozenorb.foxtrot.Foxtrot;
 import org.bukkit.ChatColor;
@@ -21,7 +22,7 @@ public class ReviveCommand extends BaseCommand {
 
 
     @Default
-    public static void revive(Player sender, OfflinePlayer player, String reason) {
+    public static void revive(Player sender, @Name("target") OfflinePlayer player, @Name("reason") String reason) {
         if (reason.equals(".")) {
             sender.sendMessage(ChatColor.RED + ". is not a good reason...");
             return;
