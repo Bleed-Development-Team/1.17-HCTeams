@@ -65,7 +65,8 @@ public class NinjaStarAbility extends Ability implements Listener {
             if (!canUse(player)) return;
 
             if (!hits.containsKey(player.getUniqueId()) || !SpawnTagHandler.isTagged(player) || SpawnTagHandler.getTag(player) < 15) {
-                hits.remove(player.getUniqueId());
+                //hits.remove(player.getUniqueId());
+                Bukkit.broadcastMessage(hits.get(player.getUniqueId()) == null ? "null" : "not null ");
                 player.sendMessage(CC.translate("&c❤ &6Failed to use: &fNo last hit."));
                 return;
             }
@@ -116,15 +117,19 @@ public class NinjaStarAbility extends Ability implements Listener {
 
     @EventHandler
     public void damage(EntityDamageByEntityEvent event){
-        if (event.getDamager() instanceof Player && event.getEntity() instanceof Player){
-
-            hits.remove(event.getDamager().getUniqueId());
-            hits.put(event.getDamager().getUniqueId(), event.getEntity().getUniqueId());
-
-            Bukkit.getScheduler().runTaskLater(Foxtrot.getInstance(), () -> {
-                hits.remove(event.getDamager().getUniqueId());
-            }, 20L * 15L);
+        if (event.isCancelled()) return;
+        Player victim = (Player) event.getEntity();
+        Player damager = (Player) event.getDamager();
+        if (victim == damager) return;
+        if (!(event.getDamager() instanceof Player) && !(event.getEntity() instanceof Player))return;
+        if (hits.containsKey(damager.getUniqueId())) {
+            System.out.println("contains");
+            hits.remove(damager.getUniqueId());
+            hits.put(damager.getUniqueId(), victim.getUniqueId());
+            return;
         }
+        System.out.println("does not contain");
+        hits.put(damager.getUniqueId(), victim.getUniqueId());
     }
 
     @EventHandler
