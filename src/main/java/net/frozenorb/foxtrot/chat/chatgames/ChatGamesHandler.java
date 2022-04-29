@@ -56,7 +56,7 @@ public class ChatGamesHandler {
         pickRandomQuestion();
 
         Bukkit.broadcastMessage("");
-        Bukkit.broadcastMessage(CC.translate("&4&lChat Games &7| &fStarting"));
+        Bukkit.broadcastMessage(CC.translate("&6&lChat Games"));
         Bukkit.broadcastMessage("");
         Bukkit.broadcastMessage(CC.translate("&fThe question is:"));
         Bukkit.broadcastMessage(CC.translate(question));
@@ -75,7 +75,7 @@ public class ChatGamesHandler {
 
         if (lost){
             Bukkit.broadcastMessage("");
-            Bukkit.broadcastMessage(CC.translate("&4&lChat Games &7| &fEnding"));
+            Bukkit.broadcastMessage(CC.translate("&6&lChat Games"));
             Bukkit.broadcastMessage("");
             Bukkit.broadcastMessage(CC.translate("&fYou ran out of time!"));
             Bukkit.broadcastMessage(CC.translate("&fThe answer was: " + answer.substring(0, 1).toUpperCase() + answer.substring(1).replace("hcf", "HCF")));
@@ -84,7 +84,7 @@ public class ChatGamesHandler {
         } else {
             int keys = Foxtrot.RANDOM.nextInt(1, 2);
             Bukkit.broadcastMessage("");
-            Bukkit.broadcastMessage(CC.translate("&4&lChat Games &7| &fEnding"));
+            Bukkit.broadcastMessage(CC.translate("&6&lChat Games"));
             Bukkit.broadcastMessage("");
             Bukkit.broadcastMessage(CC.translate("&fCongratulations to &c" + player.getName() + " &ffor getting the word correct!"));
             Bukkit.broadcastMessage(CC.translate("&fThe answer was: &c" + answer.substring(0, 1).toUpperCase() + answer.substring(1)));

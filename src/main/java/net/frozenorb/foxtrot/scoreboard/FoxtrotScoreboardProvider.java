@@ -33,7 +33,7 @@ import java.util.*;
 public class FoxtrotScoreboardProvider implements AssembleAdapter {
     @Override
     public String getTitle(Player player) {
-        return CC.translate("&4&lBleed &7" + StringEscapeUtils.unescapeJava("❘") + " &fHCF");
+        return CC.translate("&6&lFox &7" + StringEscapeUtils.unescapeJava("❘") + " &fHCF");
     }
 
     @Override
@@ -69,8 +69,8 @@ public class FoxtrotScoreboardProvider implements AssembleAdapter {
         if (Foxtrot.getInstance().getMapHandler().isKitMap() || Foxtrot.getInstance().getServerHandler().isVeltKitMap()) {
             StatsEntry stats = Foxtrot.getInstance().getMapHandler().getStatsHandler().getStats(player.getUniqueId());
 
-            scores.add("&4&lKills&7: &f" + stats.getKills());
-            scores.add("&4&lDeaths&7: &f" + stats.getDeaths());
+            scores.add("&6&lKills&7: &f" + stats.getKills());
+            scores.add("&6&lDeaths&7: &f" + stats.getDeaths());
         }
 
 
@@ -113,6 +113,8 @@ public class FoxtrotScoreboardProvider implements AssembleAdapter {
 
             if (timer.getKey().equals("&aSOTW")) {
                 scores.add(CC.translate("&aSOTW&7: &f" + getTimerScore(timer)));
+            } else if (timer.getKey().equals("&4&lEOTW In")){
+                scores.add(CC.translate("&4&lEOTW is in &4" + getTimerScore(timer)));
             } else {
                 scores.add(CC.translate(timer.getKey() + "&7: &c" + getTimerScore(timer)));
             }
@@ -171,13 +173,13 @@ public class FoxtrotScoreboardProvider implements AssembleAdapter {
             if (!scores.isEmpty()){
                 scores.add("&3&l&7&m--------------------");
             }
-            scores.add("&4&lTeam&7: &f" + focusedTeam.getName());
+            scores.add("&6&lTeam&7: &f" + focusedTeam.getName());
             if (focusedTeam.getHQ() != null){
-                scores.add("&4&lHQ&7: &f" + Math.round(focusedTeam.getHQ().getX()) + "&7, &f" + Math.round(focusedTeam.getHQ().getZ()));
+                scores.add("&6&lHQ&7: &f" + Math.round(focusedTeam.getHQ().getX()) + "&7, &f" + Math.round(focusedTeam.getHQ().getZ()));
             }
-            scores.add("&4&lDTR&7: &f" + focusedTeam.getFormattedDTR());
+            scores.add("&6&lDTR&7: &f" + focusedTeam.getFormattedDTR());
             if (!focusedTeam.hasDTRBitmask(DTRBitmask.KOTH) || focusedTeam.hasDTRBitmask(DTRBitmask.CITADEL) || focusedTeam.hasDTRBitmask(DTRBitmask.SAFE_ZONE)){
-                scores.add("&4&lOnline&7: &f" + focusedTeam.getOnlineMembers().size());
+                scores.add("&6&lOnline&7: &f" + focusedTeam.getOnlineMembers().size());
             }
         }
 
