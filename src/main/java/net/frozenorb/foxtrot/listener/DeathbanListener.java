@@ -1,14 +1,21 @@
 package net.frozenorb.foxtrot.listener;
 
 import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.commands.ApplyDeathbanKit;
 import net.frozenorb.foxtrot.commands.LastInvCommand;
 import net.frozenorb.foxtrot.server.EnderpearlCooldownHandler;
+import net.frozenorb.foxtrot.util.CC;
+import net.frozenorb.foxtrot.util.DeathbanUtils;
 import net.frozenorb.foxtrot.util.TimeUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class DeathbanListener implements Listener {
@@ -43,20 +50,20 @@ public class DeathbanListener implements Listener {
                 }
 
                 if (Foxtrot.getInstance().getServerHandler().isPreEOTW()) {
-                    event.getEntity().kickPlayer(ChatColor.YELLOW + "Come back tomorrow for SOTW!");
+                    event.getEntity().kickPlayer(CC.translate("&cYou've died on EOTW! Keep an eye out for the next SOTW!"));
                 } else {
                     if (Foxtrot.getInstance().getFriendLivesMap().getLives(event.getEntity().getPlayer().getUniqueId()) > 0) {
                         Foxtrot.getInstance().getFriendLivesMap().setLives(event.getEntity().getPlayer().getUniqueId(), Foxtrot.getInstance().getFriendLivesMap().getLives(event.getEntity().getPlayer().getUniqueId()) - 1);
                     } else {
-                        //Foxtrot.getInstance().getDeathbanMap().deathban(event.getEntity().getUniqueId(), seconds);
+                        event.getEntity().getPlayer().spigot().respawn();
+                        DeathbanUtils.teleportToDeathban(event.getEntity().getPlayer());
 
-                        //event.getEntity().getPlayer().kickPlayer(ChatColor.YELLOW + "Come back in " + time + "!");
+                        Foxtrot.getInstance().getDeathbanMap().deathban(event.getEntity().getPlayer().getUniqueId(), seconds);
                     }
                 }
             }
 
-        }.runTaskLater(Foxtrot.getInstance(), 10 * 20L);
-
+        }.runTaskLater(Foxtrot.getInstance(), 20L);
     }
 
     @EventHandler
@@ -72,4 +79,29 @@ public class DeathbanListener implements Listener {
         }
     }
 
+    /*
+        DEATHBAN ARENA LISTENERS
+     */
+
+    @EventHandler
+    public void join(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+
+        if (Foxtrot.getInstance().getDeathbanMap().isDeathbanned(player.getUniqueId())) {
+            DeathbanUtils.teleportToDeathban(player);
+        }
+    }
+
+
+
+    @EventHandler
+    public void leave(PlayerQuitEvent event){
+        if(ApplyDeathbanKit.people.contains(event.getPlayer().getUniqueId())){
+            event.getPlayer().getInventory().clear();
+            for (PotionEffect effect : event.getPlayer().getActivePotionEffects()) {
+                event.getPlayer().removePotionEffect(effect.getType());
+            }
+        }
+        ApplyDeathbanKit.people.remove(event.getPlayer().getUniqueId());
+    }
 }

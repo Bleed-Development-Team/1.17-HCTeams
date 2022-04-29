@@ -58,6 +58,8 @@ public class RegenerationAbility extends Ability {
 
             int i = 0;
             for (Player friendly : getNearbyPlayers(player, true)) {
+                if (player == friendly) continue;
+
                 friendly.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 3, 2));
                 i++;
             }

@@ -36,6 +36,10 @@ public class DeathbanMap extends PersistMap<Long> {
         return (false);
     }
 
+    public void removeTime(UUID update, long seconds) {
+        updateValueAsync(update, getDeathban(update) - (seconds * 1000));
+    }
+
     public void deathban(UUID update, long seconds) {
         updateValueAsync(update, System.currentTimeMillis() + (seconds * 1000));
     }

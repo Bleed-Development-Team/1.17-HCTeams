@@ -67,14 +67,17 @@ public class TimeWarpAbility extends Ability implements Listener {
                 player.sendMessage(CC.translate("&c❤ &6No last pearl found!"));
                 return;
             }
-            player.sendMessage(CC.translate("&c❤ &6Teleporting to last pearl in &f3 &6seconds!"));
-
+            giveCooldowns(player);
             player.sendMessage(CC.translate("&c❤ &6Teleporting to last pearl in &f3 &6seconds!"));
 
             new BukkitRunnable(){
                 int i = 0;
                 @Override
                 public void run() {
+                    if (timewarp.get(player.getUniqueId()) == null) {
+                        cancel();
+                        return;
+                    }
                     if (i == 1){
                         player.sendMessage(CC.translate("&c❤ &6Teleporting to last pearl in &f2 &6seconds!"));
                     } else if (i == 2){
@@ -109,6 +112,11 @@ public class TimeWarpAbility extends Ability implements Listener {
     @EventHandler
     public void quit(PlayerQuitEvent event){
         if (timewarp.get(event.getPlayer().getUniqueId()) != null) timewarp.remove(event.getPlayer().getUniqueId());
+    }
+
+    @EventHandler
+    public void die(PlayerQuitEvent event){
+
     }
 
     @EventHandler

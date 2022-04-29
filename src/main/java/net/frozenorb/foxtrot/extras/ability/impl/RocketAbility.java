@@ -107,7 +107,7 @@ public class RocketAbility extends Ability implements Listener {
 
     @EventHandler
     public void damage(EntityDamageEvent event){
-        Player victim = (Player) event.getEntity();
+        if (!(event.getEntity() instanceof Player victim)) return;
 
         if (event.getCause() == EntityDamageEvent.DamageCause.FALL){
             if (rockets.contains(victim.getUniqueId())){

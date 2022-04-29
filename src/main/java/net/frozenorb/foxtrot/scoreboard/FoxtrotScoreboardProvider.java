@@ -21,6 +21,7 @@ import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.Cooldown;
 import net.frozenorb.foxtrot.util.Logout;
+import net.frozenorb.foxtrot.util.TimeUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bson.types.ObjectId;
 import org.bukkit.ChatColor;
@@ -39,6 +40,20 @@ public class FoxtrotScoreboardProvider implements AssembleAdapter {
     public List<String> getLines(Player player) {
         LinkedList<String> scores = new LinkedList<>();
 
+        if (Foxtrot.getInstance().getDeathbanMap().isDeathbanned(player.getUniqueId())) {
+            long unbannedOn = Foxtrot.getInstance().getDeathbanMap().getDeathban(player.getUniqueId());
+            long left = unbannedOn - System.currentTimeMillis();
+            final String time = TimeUtils.formatIntoHHMMSS((int) left / 1000);
+
+            scores.add("&4&l&7&m--------------------");
+            scores.add("&c&lDeathban&7: &c" + time);
+            scores.add("&6&lLives&7: &c" + Foxtrot.getInstance().getFriendLivesMap().getLives(player.getUniqueId()));
+            scores.add("&c&7&m--------------------");
+
+
+            return scores;
+        }
+
         String spawnTagScore = getSpawnTagScore(player);
         String enderpearlScore = getEnderpearlScore(player);
         String pvpTimerScore = getPvPTimerScore(player);
@@ -49,7 +64,6 @@ public class FoxtrotScoreboardProvider implements AssembleAdapter {
         String logoutScore = getLogoutScore(player);
         String homeScore = getHomeScore(player);
         String appleScore = getAppleScore(player);
-
 
 
         if (Foxtrot.getInstance().getMapHandler().isKitMap() || Foxtrot.getInstance().getServerHandler().isVeltKitMap()) {

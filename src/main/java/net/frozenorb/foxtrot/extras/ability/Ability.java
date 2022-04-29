@@ -176,4 +176,19 @@ public abstract class Ability implements Listener {
 
         useItem(player);
     }
+
+    public void applyCust(Player player, String custom, boolean cooldown){
+        Cooldown.addCooldown(getCooldownID(), player, getCooldown());
+        Cooldown.addCooldown("partner", player, 10);
+
+        player.sendMessage(CC.translate(""));
+        player.sendMessage(CC.translate("&c❤ &6" + custom));
+        player.sendMessage(CC.translate("&c❤ &6" + getDescription()));
+        if (cooldown){
+            player.sendMessage(CC.translate("&c❤ &6You are now on cooldown for &f" + getCooldownFormatted(player) + "&6."));
+        }
+        player.sendMessage(CC.translate(""));
+
+        useItem(player);
+    }
 }

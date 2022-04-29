@@ -61,7 +61,7 @@ public class InvisibilityAbility extends Ability {
             giveCooldowns(player);
             useItem(player);
 
-            player.sendMessage(CC.translate("&c❤ &6You have gave yourself &fInvisibility I&6."));
+            player.sendMessage(CC.translate("&6You have applied the bard effect &bInvisibility&6."));
         }
     }
 

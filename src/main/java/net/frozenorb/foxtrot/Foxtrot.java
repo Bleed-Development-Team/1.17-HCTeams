@@ -1,6 +1,5 @@
 package net.frozenorb.foxtrot;
 
-import co.aikar.commands.BukkitCommandManager;
 import co.aikar.commands.PaperCommandManager;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -47,7 +46,6 @@ import net.frozenorb.foxtrot.extras.lunar.LunarClientHandler;
 import net.frozenorb.foxtrot.extras.lunar.nametag.ClientNametagProvider;
 import net.frozenorb.foxtrot.extras.quests.QuestsCommand;
 import net.frozenorb.foxtrot.extras.resoucepack.ResourcePack;
-import net.frozenorb.foxtrot.extras.sell.command.SellShopCommand;
 import net.frozenorb.foxtrot.listener.*;
 import net.frozenorb.foxtrot.map.MapHandler;
 import net.frozenorb.foxtrot.map.stats.command.*;
@@ -225,6 +223,7 @@ public class Foxtrot extends JavaPlugin {
 		(new RedisSaveTask()).runTaskTimerAsynchronously(this, 1200L, 1200L);
 		(new PacketBorderThread()).start();
 
+
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new ClientNametagProvider(), 0L, 40L);
 		//Bukkit.getScheduler().scheduleSyncRepeatingTask(this, Webhook.sendKothSchedule(), 0, 72000L);
 
@@ -296,7 +295,6 @@ public class Foxtrot extends JavaPlugin {
 		m.registerCommand(new HelpCommand());
 		m.registerCommand(new KOTHRewardKeyCommand());
 		m.registerCommand(new LastInvCommand());
-		m.registerCommand(new LFFCommand());
 		m.registerCommand(new LivesCommand());
 		m.registerCommand(new LocationCommand());
 		m.registerCommand(new LogoutCommand());
@@ -307,6 +305,7 @@ public class Foxtrot extends JavaPlugin {
 		m.registerCommand(new RecachePlayerTeamsCommand());
 		m.registerCommand(new RegenCommand());
 		m.registerCommand(new ReviveCommand());
+		m.registerCommand(new ApplyDeathbanKit());
 		m.registerCommand(new SetBalCommand());
 		m.registerCommand(new PartnerPackageCommand());
 		m.registerCommand(new SetEndExitCommand());
@@ -332,7 +331,6 @@ public class Foxtrot extends JavaPlugin {
 		m.registerCommand(new KOTHCommand());
 		m.registerCommand(new KothScheduleCommands());
 		m.registerCommand(new BlockShopCommand());
-		m.registerCommand(new SellShopCommand());
 		m.registerCommand(new ChestCommand());
 		m.registerCommand(new ClearAllStatsCommand());
 		m.registerCommand(new ClearLeaderboardsCommand());

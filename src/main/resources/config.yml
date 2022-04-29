@@ -88,6 +88,15 @@ potions:
 
     #redis shit 100% not stolen from qlib :D
 
+deathban-arena:
+  world: "world"
+  x: 0
+  y: 256
+  z: 0
+  yaw: 0
+  pitch: 0
+
+
   #IGNORE THIS STUFF, I'M TESTING
   Redis:
     Host: 'redis-15371.c99.us-east-1-4.ec2.cloud.redislabs.com'

@@ -2,11 +2,13 @@ package net.frozenorb.foxtrot.util;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import lombok.val;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -53,6 +55,34 @@ public final class ItemBuilder {
 
     public ItemBuilder data(short data) {
         this.item.setDurability(data);
+        return this;
+    }
+
+    public ItemBuilder owner(String owner) {
+        SkullMeta playerheadmeta = (SkullMeta) item.getItemMeta();
+        playerheadmeta.setOwner(owner);
+        playerheadmeta.setDisplayName(owner);
+
+        item.setItemMeta(playerheadmeta);
+        return this;
+    }
+
+    public ItemBuilder owner(String owner, String displayName) {
+        SkullMeta playerheadmeta = (SkullMeta) item.getItemMeta();
+        playerheadmeta.setOwner(owner);
+        playerheadmeta.setDisplayName(displayName);
+
+        item.setItemMeta(playerheadmeta);
+        return this;
+    }
+
+    public ItemBuilder flag(ItemFlag flag) {
+        ItemMeta meta = this.item.getItemMeta();
+
+        meta.addItemFlags(flag);
+
+        item.setItemMeta(meta);
+
         return this;
     }
 

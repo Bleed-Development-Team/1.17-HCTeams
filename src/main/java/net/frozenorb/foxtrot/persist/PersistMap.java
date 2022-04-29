@@ -33,21 +33,18 @@ public abstract class PersistMap<T> {
     }
     
     public void loadFromRedis() {
-        Foxtrot.getInstance().runRedisCommand(new RedisCommand<Object>() {
-            @Override
-            public Object execute(Jedis redis) {
-                Map<String, String> results = redis.hgetAll(keyPrefix);
-                
-                for (Map.Entry<String, String> resultEntry : results.entrySet()) {
-                    T object = getJavaObjectSafe(resultEntry.getKey(), resultEntry.getValue());
-                    
-                    if (object != null) {
-                        wrappedMap.put(UUID.fromString(resultEntry.getKey()), object);
-                    }
+        Foxtrot.getInstance().runRedisCommand(redis -> {
+            Map<String, String> results = redis.hgetAll(keyPrefix);
+
+            for (Map.Entry<String, String> resultEntry : results.entrySet()) {
+                T object = getJavaObjectSafe(resultEntry.getKey(), resultEntry.getValue());
+
+                if (object != null) {
+                    wrappedMap.put(UUID.fromString(resultEntry.getKey()), object);
                 }
-                
-                return (null);
             }
+
+            return (null);
         });
     }
     

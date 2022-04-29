@@ -4,6 +4,7 @@ import net.frozenorb.foxtrot.util.ItemBuilder;
 import net.minecraft.world.item.ItemBanner;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 public class Items {
@@ -13,6 +14,7 @@ public class Items {
                 .name("&6&lAnti-Build Stick")
                 .addToLore("&7Hit a player 3 times with this ability", "&7to prevent them from placing and breaking blocks.")
                 .enchant(Enchantment.DURABILITY, 1)
+                .flag(ItemFlag.HIDE_ENCHANTS)
                 .build();
     }
 
@@ -21,6 +23,7 @@ public class Items {
                 .name("&5&lPowerstone")
                 .addToLore("&7Right click to receive 5 seconds", "&7of Strength II, Resistance III, and Speed III.")
                 .enchant(Enchantment.DURABILITY, 1)
+                .flag(ItemFlag.HIDE_ENCHANTS)
                 .build();
     }
 
@@ -49,7 +52,8 @@ public class Items {
         return ItemBuilder.of(Material.PAPER)
                 .name("&6&lMed Kit")
                 .addToLore("&7Right click to receive Resistance III & Regeneration III", "&7for 4 seconds.")
-                .amount(1)
+                .enchant(Enchantment.DURABILITY, 1)
+                .flag(ItemFlag.HIDE_ENCHANTS)
                 .build();
     }
 
@@ -58,7 +62,7 @@ public class Items {
                 .name("&3&lAnti-Pearl")
                 .addToLore("&7Puts a player on ender pearl cooldown.")
                 .enchant(Enchantment.DURABILITY, 1)
-                .amount(1)
+                .flag(ItemFlag.HIDE_ENCHANTS)
                 .build();
     }
 
@@ -81,53 +85,59 @@ public class Items {
                 .name("&e&lLucky Mode")
                 .addToLore("&7Right click to have a chance of ", "&7either getting Strength II or Weakness II.")
                 .enchant(Enchantment.DURABILITY, 1)
+                .flag(ItemFlag.HIDE_ENCHANTS)
                 .build();
     }
 
     public static ItemStack getStrength(){
         return ItemBuilder.of(Material.BLAZE_POWDER)
                 .name("&c&lStrength II")
-                .addToLore("&7Right click to receive Strength II for 3 seconds.")
+                .addToLore("&7&l* &aTeam Members")
                 .enchant(Enchantment.DURABILITY, 1)
+                .flag(ItemFlag.HIDE_ENCHANTS)
                 .build();
     }
 
     public static ItemStack getResistance(){
         return ItemBuilder.of(Material.IRON_INGOT)
                 .name("&e&lResistance III")
-                .addToLore("&7Right click to receive Resistance III for 3 seconds.")
+                .addToLore("&7&l* &aTeam Members")
                 .enchant(Enchantment.DURABILITY, 1)
+                .flag(ItemFlag.HIDE_ENCHANTS)
                 .build();
     }
 
     public static ItemStack getInvis(){
         return ItemBuilder.of(Material.INK_SAC)
                 .name("&b&lInvisibility")
-                .addToLore("&7Right click to receive Invisibility for 43 seconds.")
+                .addToLore("&7&l* &aTeam Members")
                 .enchant(Enchantment.DURABILITY, 1)
+                .flag(ItemFlag.HIDE_ENCHANTS)
                 .build();
     }
 
     public static ItemStack getRegen(){
         return ItemBuilder.of(Material.GHAST_TEAR)
                 .name("&d&lRegeneration III")
-                .addToLore("&7Right click to receive Regeneration for 3 seconds.")
+                .addToLore("&7&l* &aTeam Members")
                 .enchant(Enchantment.DURABILITY, 1)
+                .flag(ItemFlag.HIDE_ENCHANTS)
                 .build();
     }
 
     public static ItemStack getJump(){
         return ItemBuilder.of(Material.FEATHER)
                 .name("&a&lJump VII")
-                .addToLore("&7Right click to receive Jump for 5 seconds.")
+                .addToLore("&7&l* &aTeam Members")
                 .build();
     }
 
     public static ItemStack getPortableBard(){
         return ItemBuilder.of(Material.ORANGE_DYE)
                 .name("&6&lPortable Bard")
-                .addToLore("&7Right click to view different effects.")
+                .addToLore("&7&l* &aTeam Members")
                 .enchant(Enchantment.DURABILITY, 1)
+                .flag(ItemFlag.HIDE_ENCHANTS)
                 .build();
     }
 
@@ -136,6 +146,7 @@ public class Items {
                 .name("&e&lTime-Warp")
                 .addToLore("&7Right click to warp yourself", "&7to your last thrown pearl.")
                 .enchant(Enchantment.DURABILITY, 1)
+                .flag(ItemFlag.HIDE_ENCHANTS)
                 .build();
     }
 
@@ -150,6 +161,15 @@ public class Items {
         return ItemBuilder.of(Material.BOW)
                 .name("&6&lTeleportation Bow")
                 .addToLore("&7Hit someone with this arrow", "&7 to teleport to their location.")
+                .enchant(Enchantment.ARROW_INFINITE, 1)
+                .flag(ItemFlag.HIDE_ENCHANTS)
+                .build();
+    }
+
+    public static ItemStack getGuardian(){
+        return ItemBuilder.of(Material.CLOCK)
+                .name("&6&lGuardian Angel")
+                .addToLore("&7Right click and if you", "&7go under 3 hearts, you'll be healed.")
                 .build();
     }
 }

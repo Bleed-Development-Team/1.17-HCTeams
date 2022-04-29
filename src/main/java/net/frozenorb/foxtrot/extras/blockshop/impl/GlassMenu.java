@@ -1,57 +1,92 @@
 package net.frozenorb.foxtrot.extras.blockshop.impl;
 
 import io.github.nosequel.menu.Menu;
+import io.github.nosequel.menu.buttons.Button;
 import net.frozenorb.foxtrot.economy.FrozenEconomyHandler;
-import net.frozenorb.foxtrot.extras.blockshop.button.BlockShopButton;
+import net.frozenorb.foxtrot.extras.blockshop.BlockShop;
+import net.frozenorb.foxtrot.extras.blockshop.button.BackButton;
+import net.frozenorb.foxtrot.extras.blockshop.button.BuyButton;
 import net.frozenorb.foxtrot.util.CC;
-import net.frozenorb.foxtrot.util.ItemUtils;
+import net.frozenorb.foxtrot.util.ItemBuilder;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 public class GlassMenu extends Menu {
 
-    public GlassMenu(Player player) {
-        super(player, "Glass Shop", 9 * 5);
+    public GlassMenu(Player player){
+        super(player, CC.translate("&6Glass Blocks"), 9 * 6);
 
+        player.updateInventory();
+    }
+
+    private ItemStack glass(){
+        return ItemBuilder.of(Material.RED_STAINED_GLASS_PANE)
+                .name(" ")
+                .enchant(Enchantment.DURABILITY, 1)
+                .flag(ItemFlag.HIDE_ENCHANTS)
+                .build();
     }
 
     @Override
     public void tick() {
-        this.buttons[10] = new BlockShopButton(getPlayer(), Material.GLASS, "Glass", 32, 50).setClickAction(event -> purchaseItem(event.getCurrentItem().getType(), event));
-        this.buttons[11] = new BlockShopButton(getPlayer(), Material.WHITE_STAINED_GLASS, "&f&lWhite Glass", 32, 50).setClickAction(event -> purchaseItem(event.getCurrentItem().getType(), event));
-        this.buttons[12] = new BlockShopButton(getPlayer(), Material.ORANGE_STAINED_GLASS, "&6Orange Glass", 32, 50).setClickAction(event -> purchaseItem(event.getCurrentItem().getType(), event));
-        this.buttons[13] = new BlockShopButton(getPlayer(), Material.MAGENTA_STAINED_GLASS, "&5Magenta Glass", 32, 50).setClickAction(event -> purchaseItem(event.getCurrentItem().getType(), event));
-        this.buttons[14] = new BlockShopButton(getPlayer(), Material.LIGHT_BLUE_STAINED_GLASS, "&bLight Blue Glass", 32, 50).setClickAction(event -> purchaseItem(event.getCurrentItem().getType(), event));
-        this.buttons[15] = new BlockShopButton(getPlayer(), Material.YELLOW_STAINED_GLASS, "&eYellow Glass", 32, 50).setClickAction(event -> purchaseItem(event.getCurrentItem().getType(), event));
-        this.buttons[16] = new BlockShopButton(getPlayer(), Material.RED_STAINED_GLASS, "&cRed Glass", 32, 50).setClickAction(event -> purchaseItem(event.getCurrentItem().getType(), event));
+        this.buttons[0] = new Button(glass());
+        this.buttons[1] = new Button(glass());
+        this.buttons[9] = new Button(glass());
 
-        this.buttons[20] = new BlockShopButton(getPlayer(), Material.BROWN_STAINED_GLASS, "&6Brown Glass", 32, 50).setClickAction(event -> purchaseItem(event.getCurrentItem().getType(), event));
-        this.buttons[21] = new BlockShopButton(getPlayer(), Material.BLUE_STAINED_GLASS, "&9Blue Glass", 32, 50).setClickAction(event -> purchaseItem(event.getCurrentItem().getType(), event));
-        this.buttons[22] = new BlockShopButton(getPlayer(), Material.GRAY_STAINED_GLASS, "&7Gray Glass", 32, 50).setClickAction(event -> purchaseItem(event.getCurrentItem().getType(), event));
-        this.buttons[23] = new BlockShopButton(getPlayer(), Material.TINTED_GLASS, "&8Dark Gray Glass", 32, 50).setClickAction(event -> purchaseItem(event.getCurrentItem().getType(), event));
-        this.buttons[24] = new BlockShopButton(getPlayer(), Material.PINK_STAINED_GLASS, "&dPink Glass", 32, 50).setClickAction(event -> purchaseItem(event.getCurrentItem().getType(), event));
-        this.buttons[31] = new BlockShopButton(getPlayer(), Material.LIME_STAINED_GLASS, "&aGreen Glass", 32, 50).setClickAction(event -> purchaseItem(event.getCurrentItem().getType(), event));
+        this.buttons[7] = new Button(glass());
+        this.buttons[8] = new Button(glass());
+        this.buttons[17] = new Button(glass());
+
+        this.buttons[12] = new BuyButton("Orange Stained Glass", 350, 16, Material.ORANGE_STAINED_GLASS).setClickAction(event -> buy(event, Material.ORANGE_STAINED_GLASS, 350));
+        this.buttons[13] = new BuyButton("Magenta Stained Glass", 350, 16, Material.MAGENTA_STAINED_GLASS).setClickAction(event -> buy(event, Material.MAGENTA_STAINED_GLASS, 350));
+        this.buttons[14] = new BuyButton("Light Blue Stained Glass", 350, 16, Material.LIGHT_BLUE_STAINED_GLASS).setClickAction(event -> buy(event, Material.LIGHT_BLUE_STAINED_GLASS, 350));
+
+        this.buttons[20] = new BuyButton("Lime Stained Glass", 350, 16, Material.LIME_STAINED_GLASS).setClickAction(event -> buy(event, Material.LIME_STAINED_GLASS, 350));
+        this.buttons[21] = new BuyButton("Pink Stained Glass", 350, 16, Material.PINK_STAINED_GLASS).setClickAction(event -> buy(event, Material.PINK_STAINED_GLASS, 350));
+        this.buttons[22] = new BuyButton("Gray Stained Glass", 350, 16, Material.GRAY_STAINED_GLASS).setClickAction(event -> buy(event, Material.GRAY_STAINED_GLASS, 350));
+        this.buttons[23] = new BuyButton("Light Gray Stained Glass", 350, 16, Material.LIGHT_GRAY_STAINED_GLASS).setClickAction(event -> buy(event, Material.LIGHT_GRAY_STAINED_GLASS, 350));
+        this.buttons[24] = new BuyButton("Cyan Stained Glass", 350, 16, Material.CYAN_STAINED_GLASS).setClickAction(event -> buy(event, Material.CYAN_STAINED_GLASS, 350));
+
+        this.buttons[29] = new BuyButton("Purple Stained Glass", 350, 16, Material.PURPLE_STAINED_GLASS).setClickAction(event -> buy(event, Material.PURPLE_STAINED_GLASS, 350));
+        this.buttons[30] = new BuyButton("Blue Stained Glass", 350, 16, Material.BLUE_STAINED_GLASS).setClickAction(event -> buy(event, Material.BLUE_STAINED_GLASS, 350));
+        this.buttons[31] = new BuyButton("Brown Stained Glass", 350, 16, Material.BROWN_STAINED_GLASS).setClickAction(event -> buy(event, Material.BROWN_STAINED_GLASS, 350));
+        this.buttons[32] = new BuyButton("Green Stained Glass", 350, 16, Material.GREEN_STAINED_GLASS).setClickAction(event -> buy(event, Material.GREEN_STAINED_GLASS, 350));
+        this.buttons[33] = new BuyButton("Red Stained Glass", 350, 16, Material.RED_STAINED_GLASS).setClickAction(event -> buy(event, Material.RED_STAINED_GLASS, 350));
+
+        this.buttons[39] = new BuyButton("White Stained Glass", 350, 16, Material.WHITE_STAINED_GLASS).setClickAction(event -> buy(event, Material.WHITE_STAINED_GLASS, 350));
+        this.buttons[40] = new BuyButton("Yellow Stained Glass", 350, 16, Material.YELLOW_STAINED_GLASS).setClickAction(event -> buy(event, Material.YELLOW_STAINED_GLASS, 350));
+        this.buttons[41] = new BuyButton("Black Stained Glass", 350, 16, Material.BLACK_STAINED_GLASS).setClickAction(event -> buy(event, Material.BLACK_STAINED_GLASS, 350));
+
+
+        this.buttons[44] = new Button(glass());
+        this.buttons[36] = new Button(glass());
+        this.buttons[46] = new Button(glass());
+
+        this.buttons[49] = new BackButton().setClickAction(event -> new BlockShop(getPlayer()).updateMenu());
+
+        this.buttons[45] = new Button(glass());
+        this.buttons[52] = new Button(glass());
+        this.buttons[53] = new Button(glass());
+
     }
 
 
-    public void purchaseItem(Material material, InventoryClickEvent event) {
-        if (material == null) return;
+    private void buy(InventoryClickEvent event, Material material, int price) {
         Player player = getPlayer();
+
         event.setCancelled(true);
-        if (FrozenEconomyHandler.getBalance(getPlayer().getUniqueId()) >= 50){
-            ItemStack itemStack = new ItemStack(material);
-            itemStack.setType(material);
-            itemStack.setAmount(32);
 
-            player.getInventory().addItem(itemStack);
+        if (price <= FrozenEconomyHandler.getBalance(player.getUniqueId())) {
+            FrozenEconomyHandler.withdraw(player.getUniqueId(), price);
 
-            player.sendMessage(CC.translate("&aYou have successfully purchased x" + 32 + " of " + ItemUtils.getName(itemStack)));
-            FrozenEconomyHandler.setBalance(player.getUniqueId(), FrozenEconomyHandler.getBalance(player.getUniqueId()) - 50);
-
+            player.getInventory().addItem(new ItemStack(material, 16));
+            player.sendMessage(CC.translate("&aPurchase complete! Your new balance is: $" + FrozenEconomyHandler.getBalance(player.getUniqueId())));
         } else {
-            player.sendMessage(CC.translate("&cYou don't have enough money to purchase this item."));
+            player.sendMessage(CC.translate("&cYou don't have enough money to purchase this item!"));
         }
     }
 

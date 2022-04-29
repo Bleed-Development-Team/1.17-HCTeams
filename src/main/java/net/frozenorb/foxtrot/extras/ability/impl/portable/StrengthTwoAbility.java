@@ -56,10 +56,10 @@ public class StrengthTwoAbility extends Ability {
             if (!isSimilarTo(player.getItemInHand(), Items.getStrength())) return;
             if (!canUse(player)) return;
 
-            int i = 0;
             for (Player friendly : getNearbyPlayers(player, true)) {
+                if (player == friendly) continue;
+
                 friendly.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20 * 3, 1));
-                i++;
             }
 
             player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20 * 3, 1));
@@ -67,7 +67,7 @@ public class StrengthTwoAbility extends Ability {
             giveCooldowns(player);
             useItem(player);
 
-            player.sendMessage(CC.translate("&c❤ &6You have gave " + (i == 0 ? "yourself" : "&f" + i + " &6player" + (i == 1 ? "" : "s")) + "  &fStrength II&6."));
+            player.sendMessage(CC.translate("&6You have applied the bard effect &bStrength II&6."));
         }
     }
 

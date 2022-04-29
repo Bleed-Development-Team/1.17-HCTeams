@@ -31,6 +31,8 @@ public final class BottleCommand extends BaseCommand implements Listener {
     public void bottle(Player sender) {
         ItemStack item = sender.getInventory().getItemInMainHand();
 
+        Foxtrot.getInstance().getFriendLivesMap().setLives(sender.getUniqueId(), 0);
+
         if (item.getType() != Material.GLASS_BOTTLE || item.getAmount() != 1) {
             sender.sendMessage(ChatColor.RED + "You must be holding one glass bottle in your hand.");
             return;

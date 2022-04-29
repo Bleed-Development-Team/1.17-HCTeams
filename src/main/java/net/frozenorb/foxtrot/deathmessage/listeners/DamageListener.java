@@ -2,6 +2,7 @@ package net.frozenorb.foxtrot.deathmessage.listeners;
 
 import com.google.common.collect.Maps;
 import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.commands.ApplyDeathbanKit;
 import net.frozenorb.foxtrot.deathmessage.DeathMessageHandler;
 import net.frozenorb.foxtrot.deathmessage.event.CustomPlayerDamageEvent;
 import net.frozenorb.foxtrot.deathmessage.event.PlayerKilledEvent;
@@ -12,6 +13,7 @@ import net.frozenorb.foxtrot.map.killstreaks.Killstreak;
 import net.frozenorb.foxtrot.map.killstreaks.PersistentKillstreak;
 import net.frozenorb.foxtrot.map.stats.StatsEntry;
 import net.frozenorb.foxtrot.team.Team;
+import net.frozenorb.foxtrot.util.DeathbanUtils;
 import net.frozenorb.foxtrot.util.Players;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -157,10 +159,23 @@ public class DamageListener implements Listener {
         }
         
         Player killer = event.getEntity().getKiller();
+        Player victim = event.getEntity().getPlayer();
         
         Team killerTeam = killer == null ? null : Foxtrot.getInstance().getTeamHandler().getTeam(killer);
         Team deadTeam = Foxtrot.getInstance().getTeamHandler().getTeam(event.getEntity());
         StatsEntry killerStats = killer == null ? null : Foxtrot.getInstance().getMapHandler().getStatsHandler().getStats(killer);
+
+
+        if (killer != null && ApplyDeathbanKit.people.contains(killer.getUniqueId()) && ApplyDeathbanKit.people.contains(killer.getUniqueId()) || victim != null && ApplyDeathbanKit.people.contains(victim.getUniqueId())) {
+            if (Foxtrot.getInstance().getDeathbanMap().getDeathban(killer.getUniqueId()) - 60 * 5 <= 0) {
+                DeathbanUtils.putOutOfDeathban(killer,  "");
+
+                return;
+            }
+
+            Foxtrot.getInstance().getDeathbanMap().removeTime(killer.getUniqueId(), 60 * 5);
+            return;
+        }
 
         if (killer != null){
             killerStats.addKill();
@@ -176,6 +191,8 @@ public class DamageListener implements Listener {
         
         Bukkit.getScheduler().scheduleAsyncDelayedTask(Foxtrot.getInstance(), () -> {
             for (Player player : Bukkit.getOnlinePlayers()) {
+
+
                 if (Foxtrot.getInstance().getToggleDeathMessageMap().areDeathMessagesEnabled(player.getUniqueId())) {
                     player.sendMessage(deathMessage);
                 } else {

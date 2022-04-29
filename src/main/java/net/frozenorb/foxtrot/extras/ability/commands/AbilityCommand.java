@@ -16,6 +16,25 @@ import org.bukkit.entity.Player;
 public class AbilityCommand extends BaseCommand {
 
     @Subcommand("give")
+    public void onAbilityCmd(Player player, @Name("ability") String ability){
+        boolean found = false;
+        Ability object = null;
+
+        for (Ability abilities : Foxtrot.getInstance().getAbilityHandler().getAbilities()){
+            if (!ability.equalsIgnoreCase(abilities.getName())) continue;
+
+            found = true;
+            object = abilities;
+        }
+
+        if (!found){
+            player.sendMessage(CC.translate("&cNo ability with the name " + ability + " found."));
+        } else {
+            player.getInventory().addItem(object.getItemStack());
+        }
+    }
+
+    @Subcommand("giveall")
     public void onAbilityCommand(Player player) {
         for (Ability ability : Foxtrot.getInstance().getAbilityHandler().getAbilities()){
             player.getInventory().addItem(ability.getItemStack());

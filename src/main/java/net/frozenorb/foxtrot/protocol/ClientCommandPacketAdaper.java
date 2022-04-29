@@ -5,6 +5,8 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.util.CC;
+import net.frozenorb.foxtrot.util.DeathbanUtils;
 import net.frozenorb.foxtrot.util.TimeUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -34,12 +36,13 @@ public class ClientCommandPacketAdaper extends PacketAdapter {
                     event.getPlayer().setMetadata("loggedout", new FixedMetadataValue(Foxtrot.getInstance(), true));
 
                     if (Foxtrot.getInstance().getServerHandler().isPreEOTW()) {
-                        event.getPlayer().kickPlayer(ChatColor.YELLOW + "Come back tomorrow for SOTW!");
+                        event.getPlayer().kickPlayer(CC.translate("&cYou've died on EOTW!"));
                     } else {
                         if (Foxtrot.getInstance().getFriendLivesMap().getLives(event.getPlayer().getUniqueId()) > 0) {
                             //Foxtrot.getInstance().getFriendLivesMap().setLives(event.getPlayer().getUniqueId(), Foxtrot.getInstance().getFriendLivesMap().getLives(event.getPlayer().getUniqueId()) - 1);
                         } else {
-                            //event.getPlayer().kickPlayer(ChatColor.YELLOW + "Come back in " + time + "!");
+                            DeathbanUtils.teleportToDeathban(event.getPlayer());
+
                         }
                     }
                 }

@@ -102,9 +102,7 @@ public class BasicPreventionListener implements Listener {
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         if (!Foxtrot.getInstance().getInDuelPredicate().test(event.getPlayer())) {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(Foxtrot.getInstance(), () -> {
-                Foxtrot.getInstance().getPvPTimerMap().createTimer(event.getPlayer().getUniqueId(), 30 * 60);//moved inside here due to occasional CME maybe this will fix?
-            }, 20L);
+
         }
         event.setRespawnLocation(Foxtrot.getInstance().getServerHandler().getSpawnLocation());
     }

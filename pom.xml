@@ -101,6 +101,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>net.luckperms</groupId>
+            <artifactId>api</artifactId>
+            <version>5.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.github.NoSequel</groupId>
             <artifactId>MenuAPI</artifactId>
             <version>a8560f4</version>
