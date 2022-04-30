@@ -1,6 +1,8 @@
 package net.frozenorb.foxtrot.chat.listeners;
 
 import com.google.common.collect.ImmutableMap;
+import ltd.matrixstudios.alchemist.api.AlchemistAPI;
+import ltd.matrixstudios.alchemist.models.profile.GameProfile;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.frozenorb.foxtrot.FoxConstants;
 import net.frozenorb.foxtrot.Foxtrot;
@@ -21,6 +23,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 public class ChatListener implements Listener {
@@ -61,11 +64,9 @@ public class ChatListener implements Listener {
         event.getPlayer().removeMetadata("NoSpamCheck", Foxtrot.getInstance());
 
         Team playerTeam = Foxtrot.getInstance().getTeamHandler().getTeam(event.getPlayer());
-
-        String prefix1 = PlaceholderAPI.setPlaceholders(event.getPlayer(), "%luckperms_prefix%");
-        String rankPrefix = CC.translateHex(prefix1);
-        String suffix1 = PlaceholderAPI.setPlaceholders(event.getPlayer(), "%luckperms_suffix%");
-        String rankSuffix = CC.translateHex(suffix1);
+        GameProfile profile = AlchemistAPI.INSTANCE.quickFindProfile(event.getPlayer().getUniqueId());
+        //String prefix = CC.translate(profile.getActivePrefix());
+        String rankPrefix = CC.translate(profile.getCurrentRank().getPrefix());
         String customPrefix = getCustomPrefix(event.getPlayer().getUniqueId());
         ChatMode playerChatMode = Foxtrot.getInstance().getChatModeMap().getChatMode(event.getPlayer().getUniqueId());
         ChatMode forcedChatMode = ChatMode.findFromForcedPrefix(event.getMessage().charAt(0));
@@ -115,7 +116,7 @@ public class ChatListener implements Listener {
                     return;
                 }
 
-                String publicChatFormat = FoxConstants.publicChatFormat(playerTeam, " " + rankPrefix, customPrefix, rankSuffix);
+                String publicChatFormat = FoxConstants.publicChatFormat(playerTeam, " " + rankPrefix, customPrefix);
 
                 if (Foxtrot.getInstance().getConfig().getBoolean("legions")) {
                     publicChatFormat = FoxConstants.publicChatFormatTwoPointOhBaby(event.getPlayer(), playerTeam, rankPrefix, customPrefix);

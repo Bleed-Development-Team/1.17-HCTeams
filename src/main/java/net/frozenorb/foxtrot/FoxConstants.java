@@ -30,7 +30,7 @@ public final class FoxConstants {
         return (ChatColor.GOLD + "[" + Team.ALLY_COLOR + "AC: " + ChatColor.YELLOW + team.getName() + ChatColor.GOLD + "]" + Team.ALLY_COLOR + player.getName() + ": " + message);
     }
 
-    public static String publicChatFormat(Team team, String rankPrefix, String customPrefixString, String rankSuffix) {
+    public static String publicChatFormat(Team team, String rankPrefix, String customPrefixString) {
         String starting = "";
 
         if (team != null) {

@@ -5,3 +5,4 @@ authors: [Embry_, Nopox, FrozenOrb]
 api-version: 1.17
 depend:
   - ProtocolLib
+  - Alchemist
