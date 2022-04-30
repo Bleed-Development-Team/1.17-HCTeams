@@ -45,10 +45,10 @@ import net.frozenorb.foxtrot.extras.guide.GuideCommand;
 import net.frozenorb.foxtrot.extras.lunar.LunarClientHandler;
 import net.frozenorb.foxtrot.extras.lunar.nametag.ClientNametagProvider;
 import net.frozenorb.foxtrot.extras.quests.QuestsCommand;
-import net.frozenorb.foxtrot.extras.resoucepack.ResourcePack;
 import net.frozenorb.foxtrot.listener.*;
 import net.frozenorb.foxtrot.map.MapHandler;
 import net.frozenorb.foxtrot.map.stats.command.*;
+import net.frozenorb.foxtrot.nametags.Nametag;
 import net.frozenorb.foxtrot.packetborder.PacketBorderThread;
 import net.frozenorb.foxtrot.persist.RedisSaveTask;
 import net.frozenorb.foxtrot.persist.maps.*;
@@ -160,6 +160,7 @@ public class Foxtrot extends JavaPlugin {
 	@Getter private KitmapTokensMap tokensMap;
 	@Getter private RaidableTeamsMap raidableTeamsMap;
 
+	@Getter private Nametag nametagHandler;
 	@Getter private ChatGamesHandler chatGamesHandler;
 	@Getter private CombatLoggerListener combatLoggerListener;
 	@Getter
@@ -204,7 +205,7 @@ public class Foxtrot extends JavaPlugin {
 		}
 
 		try {
-			this.localJedisPool = new JedisPool(new JedisPoolConfig(), "127.0.0.1");
+			this.localJedisPool = new JedisPool(new JedisPoolConfig(), "172.17.0.1", 3214);
 			System.out.println("Connected to the local Jedis pool.");
 
 		} catch (Exception e) {
@@ -213,7 +214,7 @@ public class Foxtrot extends JavaPlugin {
 		}
 
 		try {
-			this.backboneJedisPool = new JedisPool(new JedisPoolConfig(), "127.0.0.1");
+			this.backboneJedisPool = new JedisPool(new JedisPoolConfig(), "172.17.0.1", 3214);
 			System.out.println("Connected to the Backbone Jedis pool.");
 		} catch (Exception e) {
 			this.backboneJedisPool = null;
@@ -509,7 +510,6 @@ public class Foxtrot extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new TeamListener(), this);
 		getServer().getPluginManager().registerEvents(new WebsiteListener(), this);
 		getServer().getPluginManager().registerEvents(new StatTrakListener(), this);
-		getServer().getPluginManager().registerEvents(new ResourcePack(), this);
 		getServer().getPluginManager().registerEvents(new AbilityPackageHandler(), this);
 
 		if (getServerHandler().isReduceArmorDamage()) {
