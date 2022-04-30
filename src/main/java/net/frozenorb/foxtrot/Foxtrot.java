@@ -45,6 +45,10 @@ import net.frozenorb.foxtrot.extras.guide.GuideCommand;
 import net.frozenorb.foxtrot.extras.lunar.LunarClientHandler;
 import net.frozenorb.foxtrot.extras.lunar.nametag.ClientNametagProvider;
 import net.frozenorb.foxtrot.extras.quests.QuestsCommand;
+import net.frozenorb.foxtrot.extras.sale.Sale;
+import net.frozenorb.foxtrot.extras.sale.SaleManager;
+import net.frozenorb.foxtrot.extras.sale.commands.SalesCommand;
+import net.frozenorb.foxtrot.extras.sale.provider.SaleProvider;
 import net.frozenorb.foxtrot.listener.*;
 import net.frozenorb.foxtrot.map.MapHandler;
 import net.frozenorb.foxtrot.map.stats.command.*;
@@ -160,7 +164,7 @@ public class Foxtrot extends JavaPlugin {
 	@Getter private KitmapTokensMap tokensMap;
 	@Getter private RaidableTeamsMap raidableTeamsMap;
 
-	@Getter private Nametag nametagHandler;
+	@Getter private SaleManager saleManager;
 	@Getter private ChatGamesHandler chatGamesHandler;
 	@Getter private CombatLoggerListener combatLoggerListener;
 	@Getter
@@ -197,7 +201,7 @@ public class Foxtrot extends JavaPlugin {
 		saveDefaultConfig();
 
 		try {
-			mongoPool = new MongoClient(new MongoClientURI(getConfig().getString("Mongo.URI")));
+			mongoPool = new MongoClient("172.17.0.1", 3212);
 			MONGO_DB_NAME = Bukkit.getServer().getName();
 
 		} catch (Exception e) {
@@ -264,6 +268,7 @@ public class Foxtrot extends JavaPlugin {
 		m.getCommandContexts().registerContext(Event.class, new EventParameterType());
 		m.getCommandContexts().registerContext(StatsTopCommand.StatsObjective.class, new StatsTopCommand.StatsObjectiveProvider());
 		m.getCommandContexts().registerContext(Subclaim.class, new SubclaimProvider());
+		m.getCommandContexts().registerContext(Sale.class, new SaleProvider());
 		m.getCommandCompletions().registerCompletion("team", c -> {
 			List<String> teams = new ArrayList<>();
 			for (Team team : getTeamHandler().getTeams()) {
@@ -355,6 +360,7 @@ public class Foxtrot extends JavaPlugin {
 		m.registerCommand(new PowerFactionCommand());
 		m.registerCommand(new RecalculatePointsCommand());
 		m.registerCommand(new ResetForceInvitesCommand());
+		m.registerCommand(new SalesCommand());
 		m.registerCommand(new SetTeamBalanceCommand());
 		m.registerCommand(new StartDTRRegenCommand());
 		m.registerCommand(new TeamDataCommands());
@@ -430,7 +436,7 @@ public class Foxtrot extends JavaPlugin {
 		pvpClassHandler = new PvPClassHandler();
 		eventHandler = new EventHandler();
 		conquestHandler = new ConquestHandler();
-
+		saleManager = new SaleManager();
 		if (getConfig().getBoolean("glowstoneMountain", false)) {
 			glowHandler = new GlowHandler();
 		}

@@ -8,6 +8,7 @@ import net.frozenorb.foxtrot.events.Event;
 import net.frozenorb.foxtrot.events.EventType;
 import net.frozenorb.foxtrot.events.conquest.game.ConquestGame;
 import net.frozenorb.foxtrot.events.koth.KOTH;
+import net.frozenorb.foxtrot.extras.sale.Sale;
 import net.frozenorb.foxtrot.listener.GoldenAppleListener;
 import net.frozenorb.foxtrot.map.stats.StatsEntry;
 import net.frozenorb.foxtrot.pvpclasses.pvpclasses.ArcherClass;
@@ -121,6 +122,11 @@ public class FoxtrotScoreboardProvider implements AssembleAdapter {
                 scores.add(CC.translate("&4&lEOTW is in &4" + getTimerScore(timer)));
             } else {
                 scores.add(CC.translate(timer.getKey() + "&7: &c" + getTimerScore(timer)));
+            }
+        }
+        if (Foxtrot.getInstance().getSaleManager().getSales() != null) {
+            for (Sale sale : Foxtrot.getInstance().getSaleManager().getSales()) {
+                scores.add(CC.translate(sale.getDisplayName() + " ends in &c" + TimeUtils.formatLongIntoDetailedString(sale.getStartedAt() + sale.getLength() - System.currentTimeMillis())));
             }
         }
 
