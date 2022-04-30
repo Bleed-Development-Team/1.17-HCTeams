@@ -98,7 +98,7 @@ public class FoxListener implements Listener {
 
         Bukkit.getScheduler().runTaskLater(Foxtrot.getInstance(), () -> {
             player.sendMessage(CC.translate(""));
-            player.sendMessage(CC.translate("&fYou've been connected to &4&lBleed&f."));
+            player.sendMessage(CC.translate("&fYou've been connected to &6&lFoxHCF&f."));
             player.sendMessage(CC.translate("&7This map began on 29th of April."));
             player.sendMessage(CC.translate(""));
         }, 5L);

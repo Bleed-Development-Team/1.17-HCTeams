@@ -190,6 +190,13 @@
             <artifactId>commons-pool2</artifactId>
             <version>2.6.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.98ping</groupId>
+            <artifactId>alchemist</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/spigot-1.0-SNAPSHOT-all.jar</systemPath>
+        </dependency>
     </dependencies>
 
 </project>

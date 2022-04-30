@@ -112,7 +112,11 @@ public class FoxtrotScoreboardProvider implements AssembleAdapter {
             }
 
             if (timer.getKey().equals("&aSOTW")) {
-                scores.add(CC.translate("&aSOTW&7: &f" + getTimerScore(timer)));
+                if (!CustomTimerCreateCommand.hasSOTWEnabled(player.getUniqueId())){
+                    scores.add(CC.translate("&aSOTW&7: &f" + getTimerScore(timer)));
+                } else {
+                    scores.add(CC.translate("&a&mSOTW&7&m: &f&m" + getTimerScore(timer)));
+                }
             } else if (timer.getKey().equals("&4&lEOTW In")){
                 scores.add(CC.translate("&4&lEOTW is in &4" + getTimerScore(timer)));
             } else {

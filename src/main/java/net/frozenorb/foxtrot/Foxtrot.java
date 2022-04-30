@@ -60,6 +60,7 @@ import net.frozenorb.foxtrot.redis.RedisCommand;
 import net.frozenorb.foxtrot.scoreboard.FoxtrotScoreboardProvider;
 import net.frozenorb.foxtrot.server.EnderpearlCooldownHandler;
 import net.frozenorb.foxtrot.server.ServerHandler;
+import net.frozenorb.foxtrot.server.rank.TopRankTask;
 import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.TeamHandler;
 import net.frozenorb.foxtrot.team.TeamType;
@@ -245,6 +246,8 @@ public class Foxtrot extends JavaPlugin {
 		// Set Style (Tip: Viper Style starts at -1 and goes down).
 		assemble.setAssembleStyle(AssembleStyle.KOHI);
 
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new TopRankTask(), 0L, 20L * 60L * 5);
+
 
 		for (World world : Bukkit.getWorlds()) {
 			world.setThundering(false);
@@ -354,7 +357,6 @@ public class Foxtrot extends JavaPlugin {
 		m.registerCommand(new SetTeamBalanceCommand());
 		m.registerCommand(new StartDTRRegenCommand());
 		m.registerCommand(new TeamDataCommands());
-		m.registerCommand(new TeamPointBreakDownCommand());
 		m.registerCommand(new PvPCommand());
 		m.registerCommand(new TeamChatCommand());
 		m.registerCommand(new TeamChatThree());
