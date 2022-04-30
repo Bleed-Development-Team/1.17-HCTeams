@@ -38,7 +38,7 @@ public class ChatGamesHandler {
         answers.add("embry_");
         answers.add("saturday");
         answers.add("24h");
-        answers.add("bleedhcf");
+        answers.add("foxhcf");
         answers.add("map 1");
 
         // Listeners
@@ -86,9 +86,9 @@ public class ChatGamesHandler {
             Bukkit.broadcastMessage("");
             Bukkit.broadcastMessage(CC.translate("&6&lChat Games"));
             Bukkit.broadcastMessage("");
-            Bukkit.broadcastMessage(CC.translate("&fCongratulations to &c" + player.getName() + " &ffor getting the word correct!"));
-            Bukkit.broadcastMessage(CC.translate("&fThe answer was: &c" + answer.substring(0, 1).toUpperCase() + answer.substring(1)));
-            Bukkit.broadcastMessage(CC.translate("&c" + player.getName() + " &fhas been awarded &f" + keys + " &6Legendary " + (keys == 1 ? "Key!" : "Keys!")));
+            Bukkit.broadcastMessage(CC.translate("&fCongratulations to &e" + player.getName() + " &ffor getting the word correct!"));
+            Bukkit.broadcastMessage(CC.translate("&fThe answer was: &e" + answer.substring(0, 1).toUpperCase() + answer.substring(1)));
+            Bukkit.broadcastMessage(CC.translate("&e" + player.getName() + " &fhas been awarded &f" + keys + " &6Legendary " + (keys == 1 ? "Key!" : "Keys!")));
             Bukkit.broadcastMessage("");
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "crate givekey " + player.getName() + "legendary " + keys);
         }
