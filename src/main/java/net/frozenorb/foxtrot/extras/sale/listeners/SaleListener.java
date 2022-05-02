@@ -17,6 +17,6 @@ public class SaleListener implements Listener {
 
         String command = event.getCommand();
 
-        for (Sale sale : Foxtrot.getInstance()) {
+        //for (Sale sale : Foxtrot.getInstance()) {
     }
 }

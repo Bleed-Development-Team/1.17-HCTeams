@@ -24,8 +24,9 @@ public class StatsCommand extends BaseCommand {
 
     @Default
     public static void stats(Player sender, @Optional OfflinePlayer player) {
-        UUID uuid = player.getUniqueId();
+        UUID uuid = player == null ? sender.getUniqueId() : player.getUniqueId();
 
+        assert player != null;
         if (!player.hasPlayedBefore()){
             sender.sendMessage(CC.translate("&cThat player hasn't played before."));
             return;

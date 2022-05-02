@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 public class SaleProvider implements ContextResolver<Sale, BukkitCommandExecutionContext> {
     @Override
     public Sale getContext(BukkitCommandExecutionContext event) throws InvalidCommandArgument {
-        Player sender = event.getPlayer();
         String source = event.popFirstArg();
 
         Sale sale = Foxtrot.getInstance().getSaleManager().getSale(source);

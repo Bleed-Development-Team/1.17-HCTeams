@@ -8,6 +8,7 @@ import net.frozenorb.foxtrot.extras.sale.Sale;
 import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.DyeUtils;
 import net.frozenorb.foxtrot.util.ItemBuilder;
+import net.frozenorb.foxtrot.util.TimeUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.conversations.*;
@@ -40,8 +41,14 @@ public class ActiveSalesGUI extends PaginatedMenu {
     }
 
     private ItemStack getSaleButton(Sale sale) {
+        System.out.println(sale.getStartedAt() + sale.getLength() - System.currentTimeMillis());
         return ItemBuilder.of(DyeUtils.chatColorToDye(sale.getColor()))
                 .name(CC.translate(sale.getDisplayName()))
+                .addToLore("&7&m--------------------")
+                .addToLore("&eSale Data:")
+                .addToLore("&7* &eDescription: &f" + sale.getDescription())
+                .addToLore("&7* &eRemaining: &c" + TimeUtils.formatLongIntoDetailedString(sale.getStartedAt() + sale.getLength() - System.currentTimeMillis()))
+                .addToLore("&7&m--------------------")
                 .addToLore(sale.getDescription())
                 .enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1)
                 .flag(ItemFlag.HIDE_ENCHANTS)
@@ -52,7 +59,7 @@ public class ActiveSalesGUI extends PaginatedMenu {
         player.closeInventory();
         ConversationFactory factory = new ConversationFactory(Foxtrot.getInstance()).withModality(true).withPrefix(new NullConversationPrefix()).withFirstPrompt(new StringPrompt() {
             public String getPromptText(ConversationContext context) {
-                return Chat.format("&ePlease type &ayes, or type &cno &eto cancel.");
+                return Chat.format("&ePlease type &ayes&e, or type &cno &eto cancel.");
             }
 
             public Prompt acceptInput(ConversationContext context, String input) {
@@ -64,7 +71,7 @@ public class ActiveSalesGUI extends PaginatedMenu {
                     Foxtrot.getInstance().getSaleManager().getSales().remove(sale);
 
                     Bukkit.getScheduler().runTaskLater(Foxtrot.getInstance(), () -> {
-                        player.sendMessage(Chat.format("&a " + sale.getDisplayName() + "&f has been removed" + input));
+                        player.sendMessage(Chat.format("&a" + sale.getDisplayName() + "&f has been removed"));
                     }, 5L);
 
                     return Prompt.END_OF_CONVERSATION;

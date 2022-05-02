@@ -360,7 +360,7 @@ public class Foxtrot extends JavaPlugin {
 		m.registerCommand(new PowerFactionCommand());
 		m.registerCommand(new RecalculatePointsCommand());
 		m.registerCommand(new ResetForceInvitesCommand());
-		m.registerCommand(new SalesCommand());
+		//m.registerCommand(new SalesCommand());
 		m.registerCommand(new SetTeamBalanceCommand());
 		m.registerCommand(new StartDTRRegenCommand());
 		m.registerCommand(new TeamDataCommands());

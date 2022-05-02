@@ -234,8 +234,8 @@ public class ServerHandler {
             return (false);
         }
 
-        int WARZONE_RADIUS2 = 300;
-        int WARZONE_BORDER2 = 800;
+        int WARZONE_RADIUS2 = 500;
+        int WARZONE_BORDER2 = 1000;
 
 
         return (Math.abs(loc.getBlockX()) <= WARZONE_RADIUS2 && Math.abs(loc.getBlockZ()) <= WARZONE_RADIUS2) || ((Math.abs(loc.getBlockX()) > WARZONE_BORDER2 || Math.abs(loc.getBlockZ()) > WARZONE_BORDER2));

@@ -235,7 +235,7 @@ public class MapHandler {
         dbObject.put("netherBuffer", 150);
         dbObject.put("worldBuffer", 100);
         dbObject.put("endPortalLocation", "2500, 2500");
-        dbObject.put("border", 300);
+        dbObject.put("border", 3000);
         dbObject.put("goppleCooldown", TimeUnit.HOURS.toMinutes(4));
         dbObject.put("fastSmeltEnabled", true);
 
