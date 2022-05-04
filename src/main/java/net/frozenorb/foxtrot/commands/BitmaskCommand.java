@@ -43,6 +43,7 @@ public class BitmaskCommand extends BaseCommand {
 
 
     @Subcommand("add")
+    @CommandCompletion("@bitmask")
     public static void bitmaskAdd(Player sender, @Name("team") Team team, @Name("bitmask")DTRBitmask bitmask) {
         if (team.getOwner() != null) {
             sender.sendMessage(ChatColor.RED + "Bitmask flags cannot be applied to teams without a null leader.");
@@ -64,6 +65,7 @@ public class BitmaskCommand extends BaseCommand {
 
 
     @Subcommand("remove")
+    @CommandCompletion("@bitmask")
     public void bitmaskRemove(Player sender, @Name("team") Team team, @Name("bitmask") DTRBitmask bitmask) {
         if (team.getOwner() != null) {
             sender.sendMessage(ChatColor.RED + "Bitmask flags cannot be applied to teams without a null leader.");

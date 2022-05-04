@@ -88,6 +88,28 @@ potions:
 
     #redis shit 100% not stolen from qlib :D
 
+reclaim:
+  Owner:
+    - "bc lol"
+  Fox:
+    - "bc lol"
+  Legend:
+    - "bc lol"
+  Pro:
+    - "bc lol"
+  MVP:
+    - "bc lol"
+  VIP:
+    - "bc lol"
+  Default:
+    - "bc lol"
+
+redeem:
+  Embry_:
+    - "bc lol"
+  Nopox:
+    - "bc lol"
+
 deathban-arena:
   world: "world"
   x: 0

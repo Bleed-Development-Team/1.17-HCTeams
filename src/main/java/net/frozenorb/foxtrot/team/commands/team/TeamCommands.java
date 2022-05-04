@@ -475,8 +475,11 @@ public class TeamCommands extends BaseCommand implements Listener {
 
     @Subcommand("deposit|d")
     @Description("Deposit money to your team.")
-    public static void teamDeposit(Player sender, @Name("amount") Float amount) {
+    public static void teamDeposit(Player sender, @Name("amount") String ogAmount) {
         Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        float amount = (ogAmount.equals("all")) ? (float) FrozenEconomyHandler.getBalance(sender.getUniqueId())
+                : Float.parseFloat(ogAmount);
+
 
         if (team == null) {
             sender.sendMessage(ChatColor.GRAY + "You are not on a team!");
@@ -514,12 +517,6 @@ public class TeamCommands extends BaseCommand implements Listener {
         team.sendMessage(ChatColor.YELLOW + sender.getName() + " deposited " + ChatColor.LIGHT_PURPLE + amount + ChatColor.YELLOW + " into the team balance.");
 
         Foxtrot.getInstance().getWrappedBalanceMap().setBalance(sender.getUniqueId(), FrozenEconomyHandler.getBalance(sender.getUniqueId()));
-    }
-
-    @Subcommand("deposit-all|d-all")
-    @Description("Deposit all money to your team.")
-    public static void teamDepositAll(Player sender) {
-        teamDeposit(sender, (float) FrozenEconomyHandler.getBalance(sender.getUniqueId()));
     }
 
     @Subcommand("disband")
@@ -970,6 +967,7 @@ public class TeamCommands extends BaseCommand implements Listener {
         if (team == null) {
             if (Foxtrot.getInstance().getTeamHandler().getTeam(sender) == null) {
                 sender.sendMessage(CC.translate( "&7You are not on a team!"));
+                return;
             }
             team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
         }

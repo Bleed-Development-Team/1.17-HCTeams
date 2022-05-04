@@ -9,30 +9,12 @@ import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.extras.ability.Ability;
 import net.frozenorb.foxtrot.extras.ability.util.Items;
 import net.frozenorb.foxtrot.util.CC;
+import net.frozenorb.foxtrot.util.Cooldown;
 import org.bukkit.entity.Player;
 
 @CommandAlias("ability")
 @CommandPermission("foxtrot.ability")
 public class AbilityCommand extends BaseCommand {
-
-    @Subcommand("give")
-    public void onAbilityCmd(Player player, @Name("ability") String ability){
-        boolean found = false;
-        Ability object = null;
-
-        for (Ability abilities : Foxtrot.getInstance().getAbilityHandler().getAbilities()){
-            if (!ability.equalsIgnoreCase(abilities.getName())) continue;
-
-            found = true;
-            object = abilities;
-        }
-
-        if (!found){
-            player.sendMessage(CC.translate("&cNo ability with the name " + ability + " found."));
-        } else {
-            player.getInventory().addItem(object.getItemStack());
-        }
-    }
 
     @Subcommand("giveall")
     public void onAbilityCommand(Player player) {
@@ -43,6 +25,15 @@ public class AbilityCommand extends BaseCommand {
 
     @Subcommand("reset")
     public void reset(Player player){
-        player.sendMessage(CC.translate("&csadly, this does not work yet :("));
+        int i = 0;
+        for (Ability ability : Foxtrot.getInstance().getAbilityHandler().getAbilities()){
+            if (Cooldown.isOnCooldown(ability.getCooldownID(), player)){
+                Cooldown.removeCooldown(ability.getCooldownID(), player);
+                i++;
+            }
+        }
+
+        Cooldown.removeCooldown("partner", player);
+        player.sendMessage(CC.translate("&aYou have reset &e" + i + " &aability cooldowns."));
     }
 }

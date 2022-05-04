@@ -2,7 +2,6 @@ package net.frozenorb.foxtrot.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
-import co.aikar.commands.annotation.HelpCommand;
 import lombok.Getter;
 import lombok.Setter;
 import net.frozenorb.foxtrot.Foxtrot;
@@ -21,7 +20,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @CommandAlias("eotw")
 @CommandPermission("foxtrot.eotw")
@@ -29,7 +27,7 @@ public class EOTWCommand extends BaseCommand {
 
     @Getter @Setter private static boolean ffaEnabled = false;
     @Getter @Setter private static long ffaActiveAt = -1L;
-    public static int SecondsToCountDown = 10;
+    public static int seconds = 10;
 
     public static BukkitTask eotwRunnable;
     public static BukkitTask preEotwRunnable;
@@ -41,8 +39,8 @@ public class EOTWCommand extends BaseCommand {
             return;
         }
 
-        if (Foxtrot.getInstance().getServerHandler().isEOTW()) {
-            sender.sendMessage(ChatColor.RED + "EOTW is already active.");
+        if (Foxtrot.getInstance().getServerHandler().isEOTW() || eotwRunnable != null) {
+            sender.sendMessage(ChatColor.RED + "The EOTW timer is already active.");
             return;
         }
 
@@ -74,6 +72,9 @@ public class EOTWCommand extends BaseCommand {
                 Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "█" + ChatColor.DARK_RED + "█" + ChatColor.RED + "█████" + " " + ChatColor.RED + "All players have been un-deathbanned.");
                 Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "█" + ChatColor.DARK_RED + "█████" + ChatColor.RED + "█" + " " + ChatColor.RED + "All deathbans are now permanent.");
                 Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "███████");
+
+                cancel();
+                preEotwRunnable = null;
             }
         }.runTaskLater(Foxtrot.getInstance(), (seconds - 5) * 20L);
 
@@ -103,6 +104,9 @@ public class EOTWCommand extends BaseCommand {
                 Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "█" + ChatColor.DARK_RED + "█████" + ChatColor.RED + "█");
                 Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED + "███████");
 
+                cancel();
+                eotwRunnable = null;
+
             }
         }.runTaskLater(Foxtrot.getInstance(), seconds * 20L);
     }
@@ -116,6 +120,7 @@ public class EOTWCommand extends BaseCommand {
 
         if (eotwRunnable != null){
             eotwRunnable.cancel();
+            eotwRunnable = null;
         }
 
         if (CustomTimerCreateCommand.customTimers.containsKey("&4&lEOTW In")) {
@@ -127,11 +132,10 @@ public class EOTWCommand extends BaseCommand {
         EndListener.endActive = true;
 
         sender.sendMessage(CC.translate("&cYou have cancelled the EOTW timer."));
-        if (eotwRunnable != null){
-            eotwRunnable.cancel();
-        }
+
         if (preEotwRunnable != null){
             preEotwRunnable.cancel();
+            preEotwRunnable = null;
         }
     }
 
@@ -157,17 +161,17 @@ public class EOTWCommand extends BaseCommand {
     @Subcommand("reduce")
     public void onReduceCommand(Player sender, @Name("amount")int amount) {
         double newAmount = Bukkit.getServer().getWorld("world").getWorldBorder().getSize() - amount;
-        Bukkit.broadcastMessage(CC.translate("&6The border will be reduced to &f" + newAmount + " &6in &f10 &6seconds."));
-        SecondsToCountDown = 10;
+        Bukkit.broadcastMessage(CC.translate("&7[&6&lBorder&7] &fThe border will be reduced to &6" + newAmount + " &fin &610 &fseconds."));
+        seconds = 10;
         new BukkitRunnable(){
             @Override
             public void run() {
-                SecondsToCountDown--;
-                if (SecondsToCountDown <= 5 && SecondsToCountDown > 0) {
-                    Bukkit.broadcastMessage(CC.translate("&6The border will be reduced to &f" + newAmount + " &6in &f" + SecondsToCountDown + "&6 seconds."));
+                seconds--;
+                if (seconds <= 5 && seconds > 0) {
+                    Bukkit.broadcastMessage(CC.translate("&7[&6&lBorder&7] &fThe border will be reduced to &6" + newAmount + " &fin &6" + seconds + "&f seconds."));
                 }
-                if (SecondsToCountDown <= 0) {
-                    Bukkit.broadcastMessage(CC.translate("&6The border has been reduced to &f" + sender.getWorld().getWorldBorder().getSize() + "&6."));
+                if (seconds <= 0) {
+                    Bukkit.broadcastMessage(CC.translate("&7[&6&lBorder&7] &fThe border has been reduced to &6" + sender.getWorld().getWorldBorder().getSize() + "&f."));
                     sender.getWorld().getWorldBorder().setSize(newAmount);
                     cancel();
                 }

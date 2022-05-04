@@ -17,9 +17,18 @@ public class AbilitiesMenu extends Menu {
 
     @Override
     public void tick() {
+        Player player = getPlayer();
         int i = 0;
+
         for (Ability ability : Foxtrot.getInstance().getAbilityHandler().getAbilities()) {
-            buttons[i++] = new Button(ability.getItemStack());
+            if (player.hasPermission("op")){
+                buttons[i++] = new Button(ability.getItemStack()).setClickAction(event -> {
+                    player.getInventory().addItem(ability.getItemStack());
+                    event.setCancelled(true);
+                });
+            } else {
+                buttons[i++] = new Button(ability.getItemStack());
+            }
         }
     }
 }

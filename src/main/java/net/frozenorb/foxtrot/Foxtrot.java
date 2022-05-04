@@ -163,6 +163,8 @@ public class Foxtrot extends JavaPlugin {
 	@Getter private KDRMap kdrMap;
 	@Getter private KitmapTokensMap tokensMap;
 	@Getter private RaidableTeamsMap raidableTeamsMap;
+	@Getter private ReclaimMap reclaimMap;
+	@Getter private RedeemMap redeemMap;
 
 	@Getter private SaleManager saleManager;
 	@Getter private ChatGamesHandler chatGamesHandler;
@@ -245,14 +247,8 @@ public class Foxtrot extends JavaPlugin {
 
 		Assemble assemble = new Assemble(this, new FoxtrotScoreboardProvider());
 
-		// Set Interval (Tip: 20 ticks = 1 second).
 		assemble.setTicks(2);
-
-		// Set Style (Tip: Viper Style starts at -1 and goes down).
 		assemble.setAssembleStyle(AssembleStyle.KOHI);
-
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new TopRankTask(), 0L, 20L * 60L * 5);
-
 
 		for (World world : Bukkit.getWorlds()) {
 			world.setThundering(false);
@@ -269,11 +265,26 @@ public class Foxtrot extends JavaPlugin {
 		m.getCommandContexts().registerContext(StatsTopCommand.StatsObjective.class, new StatsTopCommand.StatsObjectiveProvider());
 		m.getCommandContexts().registerContext(Subclaim.class, new SubclaimProvider());
 		m.getCommandContexts().registerContext(Sale.class, new SaleProvider());
+
+		m.getCommandCompletions().registerCompletion("bitmask", c -> {
+			List<String> bitmasks = new ArrayList<>();
+
+			for (DTRBitmask bitmask : DTRBitmask.values()) {
+				bitmasks.add(bitmask.name());
+			}
+
+			return bitmasks;
+		});
+
 		m.getCommandCompletions().registerCompletion("team", c -> {
 			List<String> teams = new ArrayList<>();
 			for (Team team : getTeamHandler().getTeams()) {
 				if (team.hasDTRBitmask(DTRBitmask.KOTH) || team.hasDTRBitmask(DTRBitmask.SAFE_ZONE) || team.hasDTRBitmask(DTRBitmask.CITADEL) || team.hasDTRBitmask(DTRBitmask.ROAD)) continue;
 				teams.add(team.getName());
+			}
+
+			if (teams.isEmpty()){
+				teams.add("No teams available");
 			}
 
 			return teams;
@@ -284,7 +295,7 @@ public class Foxtrot extends JavaPlugin {
 				events.add(event.getName());
 			}
 			return events;
-			});
+		});
 
 		m.registerCommand(new AddBalanceCommand());
 		m.registerCommand(new AssociateAccountsCommand());
@@ -304,6 +315,7 @@ public class Foxtrot extends JavaPlugin {
 		m.registerCommand(new HelpCommand());
 		m.registerCommand(new KOTHRewardKeyCommand());
 		m.registerCommand(new LastInvCommand());
+		m.registerCommand(new ReclaimCommand());
 		m.registerCommand(new LivesCommand());
 		m.registerCommand(new LocationCommand());
 		m.registerCommand(new LogoutCommand());
@@ -580,6 +592,8 @@ public class Foxtrot extends JavaPlugin {
 		(cobblePickupMap = new CobblePickupMap()).loadFromRedis();
 		(kdrMap = new KDRMap()).loadFromRedis();
 		(raidableTeamsMap = new RaidableTeamsMap()).loadFromRedis();
+		(reclaimMap = new ReclaimMap()).loadFromRedis();
+		(redeemMap = new RedeemMap()).loadFromRedis();
 
 
 		if (getServerHandler().isVeltKitMap() || getMapHandler().isKitMap()) {

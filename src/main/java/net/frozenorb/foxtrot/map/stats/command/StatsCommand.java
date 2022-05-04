@@ -26,8 +26,7 @@ public class StatsCommand extends BaseCommand {
     public static void stats(Player sender, @Optional OfflinePlayer player) {
         UUID uuid = player == null ? sender.getUniqueId() : player.getUniqueId();
 
-        assert player != null;
-        if (!player.hasPlayedBefore()){
+        if (player != null && !player.hasPlayedBefore()){
             sender.sendMessage(CC.translate("&cThat player hasn't played before."));
             return;
         }
@@ -37,14 +36,14 @@ public class StatsCommand extends BaseCommand {
         int deaths = Foxtrot.getInstance().getMapHandler().getStatsHandler().getStats(uuid).getDeaths();
 
         sender.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + StringUtils.repeat('-', 36));
-        sender.sendMessage(ChatColor.AQUA + player.getName() + ChatColor.WHITE + "'s  Statistics" + ChatColor.GRAY + ":");
+        sender.sendMessage(ChatColor.GOLD + (player == null ? sender.getName() : player.getName()) + ChatColor.WHITE + "'s  Statistics" + ChatColor.GRAY + ":");
         sender.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + StringUtils.repeat('-', 36));
 
-        sender.sendMessage(CC.translate(" &f» &bKills&7: &f" + kills));
-        sender.sendMessage(CC.translate(" &f» &bDeaths&7: &f" + deaths));
-        sender.sendMessage(CC.translate(" &f» &bBalance&7: &f$" + NumberFormat.getNumberInstance(Locale.US).format(FrozenEconomyHandler.getBalance(uuid))));
-        sender.sendMessage(CC.translate(" &f» &bKDR&7: &f" + (deaths == 0 ? "Infinity" : Team.DTR_FORMAT.format((double) kills / (double) deaths))));
-        sender.sendMessage(CC.translate(" &f» &bRaidable Teams&7 &f" + Foxtrot.getInstance().getRaidableTeamsMap().getRaidableTeams(uuid)));
+        sender.sendMessage(CC.translate(" &f» &6Kills&7: &f" + kills));
+        sender.sendMessage(CC.translate(" &f» &6Deaths&7: &f" + deaths));
+        sender.sendMessage(CC.translate(" &f» &6Balance&7: &f$" + NumberFormat.getNumberInstance(Locale.US).format(FrozenEconomyHandler.getBalance(uuid))));
+        sender.sendMessage(CC.translate(" &f» &6KDR&7: &f" + (deaths == 0 ? "Infinity" : Team.DTR_FORMAT.format((double) kills / (double) deaths))));
+        sender.sendMessage(CC.translate(" &f» &6Raidable Teams&7 &f" + Foxtrot.getInstance().getRaidableTeamsMap().getRaidableTeams(uuid)));
         sender.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + StringUtils.repeat('-', 36));
     }
 

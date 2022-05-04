@@ -22,6 +22,10 @@ public class StatsTopCommand extends BaseCommand {
 
     @Default
     public static void statstop(Player sender, @Optional StatsObjective objective) {
+        if (objective == null){
+            objective = StatsObjective.KILLS;
+        }
+
         sender.sendMessage(ChatColor.RED.toString() + ChatColor.STRIKETHROUGH + StringUtils.repeat('-', 53));
         sender.sendMessage(ChatColor.YELLOW + "Leaderboards for: " + ChatColor.RED + objective.getName());
         sender.sendMessage(ChatColor.RED.toString() + ChatColor.STRIKETHROUGH + StringUtils.repeat('-', 53));

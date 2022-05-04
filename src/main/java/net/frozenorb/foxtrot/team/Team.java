@@ -1386,11 +1386,9 @@ public class Team {
             teamLine.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tppos " + HQ.getBlockX() + " " + HQ.getBlockY() + " " + HQ.getBlockZ())).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aClick to warp to HQ").create()));
         }
 
-        if (player.hasPermission("foxtrot.manage")) {
-            teamLine.append("§3 - §e[Manage]").color(ChatColor.YELLOW.asBungee())
-                    .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/manageteam manage " + getName()))
-                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§bClick to manage team").create()));
-        }
+        teamLine.append("§3 - §e[Focus]").color(ChatColor.YELLOW.asBungee())
+                .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/f focus " + getName()))
+                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§bClick to focus team").create()));
 
         player.spigot().sendMessage(teamLine.create());
 
