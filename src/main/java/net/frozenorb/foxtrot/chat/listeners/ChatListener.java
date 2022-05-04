@@ -3,7 +3,6 @@ package net.frozenorb.foxtrot.chat.listeners;
 import com.google.common.collect.ImmutableMap;
 import ltd.matrixstudios.alchemist.api.AlchemistAPI;
 import ltd.matrixstudios.alchemist.models.profile.GameProfile;
-import me.clip.placeholderapi.PlaceholderAPI;
 import net.frozenorb.foxtrot.FoxConstants;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.chat.ChatHandler;
