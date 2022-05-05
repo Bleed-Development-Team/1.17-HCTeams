@@ -7,6 +7,8 @@ import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.Cooldown;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,8 +17,10 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class BackToTheRootsAbility extends Ability implements Listener {
+    int seconds;
     @Override
     public String getName() {
         return "&f&lBack to the Roots";
@@ -99,6 +103,7 @@ public class BackToTheRootsAbility extends Ability implements Listener {
             Bukkit.broadcastMessage(CC.translate(getName() + " has been line 110."));
 
             event.setCancelled(true);
+
 
         }
 

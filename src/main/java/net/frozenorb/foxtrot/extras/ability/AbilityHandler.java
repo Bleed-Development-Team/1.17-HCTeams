@@ -26,7 +26,7 @@ public class AbilityHandler implements Listener {
         abilities.put("potioncounter", new PotionCounterAbility());
         abilities.put("antipearl", new AntiPearlAbility());
         abilities.put("medkit", new MedkitAbility());
-        abilities.put("backtotheroots", new BackToTheRootsAbility());
+        //abilities.put("backtotheroots", new BackToTheRootsAbility());
         abilities.put("rocket", new RocketAbility());
         abilities.put("lucky-mode", new LuckyModeAbility());
         abilities.put("strength", new StrengthTwoAbility());
@@ -63,7 +63,7 @@ public class AbilityHandler implements Listener {
         Cooldown.createCooldown("antipearl");
 
         Cooldown.createCooldown("rocket");
-        Cooldown.createCooldown("backtotheroots");
+        //Cooldown.createCooldown("backtotheroots");
         Cooldown.createCooldown("ninja");
         Cooldown.createCooldown("lucky");
         Cooldown.createCooldown("portable");
