@@ -3,6 +3,7 @@ package net.frozenorb.foxtrot.chat.listeners;
 import com.google.common.collect.ImmutableMap;
 import ltd.matrixstudios.alchemist.api.AlchemistAPI;
 import ltd.matrixstudios.alchemist.models.profile.GameProfile;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.frozenorb.foxtrot.FoxConstants;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.chat.ChatHandler;
@@ -13,6 +14,7 @@ import net.frozenorb.foxtrot.team.track.TeamActionTracker;
 import net.frozenorb.foxtrot.team.track.TeamActionType;
 import net.frozenorb.foxtrot.util.CC;
 import org.bson.types.ObjectId;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -64,7 +66,7 @@ public class ChatListener implements Listener {
 
         Team playerTeam = Foxtrot.getInstance().getTeamHandler().getTeam(event.getPlayer());
         GameProfile profile = AlchemistAPI.INSTANCE.quickFindProfile(event.getPlayer().getUniqueId());
-        //String prefix = CC.translate(profile.getActivePrefix());
+        String prefix = PlaceholderAPI.setPlaceholders(event.getPlayer(), "%alchemist_prefix%");
         String rankPrefix = CC.translate(profile.getCurrentRank().getPrefix());
         String customPrefix = getCustomPrefix(event.getPlayer().getUniqueId());
         ChatMode playerChatMode = Foxtrot.getInstance().getChatModeMap().getChatMode(event.getPlayer().getUniqueId());
@@ -115,10 +117,10 @@ public class ChatListener implements Listener {
                     return;
                 }
 
-                String publicChatFormat = FoxConstants.publicChatFormat(playerTeam, " " + rankPrefix, customPrefix);
+                String publicChatFormat = FoxConstants.publicChatFormat(playerTeam, " " + prefix + rankPrefix, customPrefix);
 
                 if (Foxtrot.getInstance().getConfig().getBoolean("legions")) {
-                    publicChatFormat = FoxConstants.publicChatFormatTwoPointOhBaby(event.getPlayer(), playerTeam, rankPrefix, customPrefix);
+                    publicChatFormat = FoxConstants.publicChatFormatTwoPointOhBaby(event.getPlayer(), playerTeam, prefix + rankPrefix, customPrefix);
                 }
 
                 String finalMessage = String.format(publicChatFormat, event.getPlayer().getDisplayName(), event.getMessage());

@@ -13,6 +13,21 @@ import java.util.regex.Pattern;
 public class CC {
 
     public static String translate(String msg){
+        Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
+        Matcher matcher = pattern.matcher(msg);
+        while (matcher.find()) {
+            String hexCode = msg.substring(matcher.start(), matcher.end());
+            String replaceSharp = hexCode.replace('#', 'x');
+
+            char[] ch = replaceSharp.toCharArray();
+            StringBuilder builder = new StringBuilder("");
+            for (char c : ch) {
+                builder.append("&").append(c);
+            }
+
+            msg = msg.replace(hexCode, builder.toString());
+            matcher = pattern.matcher(msg);
+        }
         return ChatColor.translateAlternateColorCodes('&', msg);
     }
 
