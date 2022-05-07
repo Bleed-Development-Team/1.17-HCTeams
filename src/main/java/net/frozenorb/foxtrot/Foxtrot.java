@@ -12,6 +12,7 @@ import io.github.thatkawaiisam.assemble.Assemble;
 import io.github.thatkawaiisam.assemble.AssembleStyle;
 import lombok.Getter;
 import lombok.Setter;
+import me.clip.placeholderapi.util.Msg;
 import net.frozenorb.foxtrot.chat.ChatHandler;
 import net.frozenorb.foxtrot.chat.chatgames.ChatGamesHandler;
 import net.frozenorb.foxtrot.commands.*;
@@ -372,7 +373,8 @@ public class Foxtrot extends JavaPlugin {
 		m.registerCommand(new PowerFactionCommand());
 		m.registerCommand(new RecalculatePointsCommand());
 		m.registerCommand(new ResetForceInvitesCommand());
-		//m.registerCommand(new SalesCommand());
+		m.registerCommand(new MsgCommand());
+		m.registerCommand(new RCommand());
 		m.registerCommand(new SetTeamBalanceCommand());
 		m.registerCommand(new StartDTRRegenCommand());
 		m.registerCommand(new TeamDataCommands());
