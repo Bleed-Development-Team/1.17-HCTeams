@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class ChatGamesHandler {
@@ -59,7 +60,7 @@ public class ChatGamesHandler {
         Bukkit.broadcastMessage(CC.translate("&6&lChat Games"));
         Bukkit.broadcastMessage("");
         Bukkit.broadcastMessage(CC.translate("&fThe question is:"));
-        Bukkit.broadcastMessage(CC.translate(question));
+        Bukkit.broadcastMessage(CC.translate("&e"+ question));
         Bukkit.broadcastMessage("");
 
         Bukkit.getScheduler().runTaskLater(Foxtrot.getInstance(), () -> {
@@ -78,16 +79,17 @@ public class ChatGamesHandler {
             Bukkit.broadcastMessage(CC.translate("&6&lChat Games"));
             Bukkit.broadcastMessage("");
             Bukkit.broadcastMessage(CC.translate("&fYou ran out of time!"));
-            Bukkit.broadcastMessage(CC.translate("&fThe answer was: " + answer.substring(0, 1).toUpperCase() + answer.substring(1).replace("hcf", "HCF")));
+            Bukkit.broadcastMessage(CC.translate("&fThe answer was: &e" + answer.substring(0, 1).toUpperCase() + answer.substring(1).replace("hcf", "HCF")));
             Bukkit.broadcastMessage("");
 
         } else {
-            int keys = Foxtrot.RANDOM.nextInt(1, 2);
+            int keys = Foxtrot.RANDOM.nextInt(1, 3);
+
             Bukkit.broadcastMessage("");
             Bukkit.broadcastMessage(CC.translate("&6&lChat Games"));
             Bukkit.broadcastMessage("");
             Bukkit.broadcastMessage(CC.translate("&fCongratulations to &e" + player.getName() + " &ffor getting the word correct!"));
-            Bukkit.broadcastMessage(CC.translate("&fThe answer was: &e" + answer.substring(0, 1).toUpperCase() + answer.substring(1)));
+            Bukkit.broadcastMessage(CC.translate("&fThe answer was: &e" + answer.substring(0, 1).toUpperCase() + answer.substring(1).replace("hcf", "HCF")));
             Bukkit.broadcastMessage(CC.translate("&e" + player.getName() + " &fhas been awarded &f" + keys + " &6Legendary " + (keys == 1 ? "Key!" : "Keys!")));
             Bukkit.broadcastMessage("");
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "crate givekey " + player.getName() + "legendary " + keys);

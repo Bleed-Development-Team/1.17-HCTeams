@@ -23,7 +23,7 @@ import org.bukkit.inventory.PlayerInventory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FullInvis implements Listener {
+public class ArmorInvisAbility implements Listener {
     @EventHandler
     public void interact(PlayerInteractEvent event){
         Player player = event.getPlayer();

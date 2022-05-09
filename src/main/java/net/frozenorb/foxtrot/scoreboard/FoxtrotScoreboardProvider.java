@@ -3,9 +3,8 @@ package net.frozenorb.foxtrot.scoreboard;
 import io.github.thatkawaiisam.assemble.AssembleAdapter;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.commands.CustomTimerCreateCommand;
-import net.frozenorb.foxtrot.commands.EOTWCommand;
+import net.frozenorb.foxtrot.commands.eotw.commands.EOTWCommand;
 import net.frozenorb.foxtrot.events.Event;
-import net.frozenorb.foxtrot.events.EventType;
 import net.frozenorb.foxtrot.events.conquest.game.ConquestGame;
 import net.frozenorb.foxtrot.events.koth.KOTH;
 import net.frozenorb.foxtrot.extras.sale.Sale;
@@ -23,10 +22,8 @@ import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.Cooldown;
 import net.frozenorb.foxtrot.util.Logout;
 import net.frozenorb.foxtrot.util.TimeUtils;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.bson.types.ObjectId;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Fox;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -34,7 +31,7 @@ import java.util.*;
 public class FoxtrotScoreboardProvider implements AssembleAdapter {
     @Override
     public String getTitle(Player player) {
-        return CC.translate("&6&lFox &7" + StringEscapeUtils.unescapeJava("❘") + " &fHCF");
+        return CC.translate("&6&lPvPBeach &f[Map 1]");
     }
 
     @Override

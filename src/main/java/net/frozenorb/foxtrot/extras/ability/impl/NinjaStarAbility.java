@@ -66,7 +66,6 @@ public class NinjaStarAbility extends Ability implements Listener {
 
             if (!hits.containsKey(player.getUniqueId()) || !SpawnTagHandler.isTagged(player) || SpawnTagHandler.getTag(player) < 15) {
                 //hits.remove(player.getUniqueId());
-                Bukkit.broadcastMessage(hits.get(player.getUniqueId()) == null ? "null" : "not null ");
                 player.sendMessage(CC.translate("&c❤ &6Failed to use: &fNo last hit."));
                 return;
             }
@@ -74,6 +73,8 @@ public class NinjaStarAbility extends Ability implements Listener {
             Player victim = Bukkit.getPlayer(hits.get(player.getUniqueId()));
 
             giveCooldowns(player);
+            useItem(player);
+
             if (victim.isOnline()){
 
                 new BukkitRunnable(){

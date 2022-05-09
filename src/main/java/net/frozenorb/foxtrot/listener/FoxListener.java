@@ -200,6 +200,8 @@ public class FoxListener implements Listener {
             }
         }
 
+        event.getPlayer().setCollidable(false);
+
         if (Foxtrot.getInstance().getServerHandler().isEOTW() && !event.getPlayer().isOp()) {
             event.getPlayer().kickPlayer(ChatColor.RED + "EOTW is currently running. Please try again later.");
         }

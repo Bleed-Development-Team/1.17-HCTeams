@@ -23,24 +23,27 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class ChatListener implements Listener {
 
     private String getCustomPrefix(UUID uuid) {
-        Map<Integer, UUID> placesMap = Foxtrot.getInstance().getMapHandler().getStatsHandler() != null ? Foxtrot.getInstance().getMapHandler().getStatsHandler().getTopKills() : null;
-        if (placesMap == null) {
-            return Foxtrot.getInstance().getChatHandler().getCustomPrefix(uuid);
+        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(uuid);
+
+        if (team == null) return "";
+
+        try {
+            if (sortTeams().get(0) == team){
+                return CC.translate("&5①");
+            } else if (sortTeams().get(1) == team){
+                return CC.translate("&4②");
+            } else if (sortTeams().get(2) == team){
+                return CC.translate("&6③");
+            }
+        } catch (IndexOutOfBoundsException e){
+            return "";
         }
-        
-        int place = placesMap.size() == 3 ? placesMap.get(1).equals(uuid) ? 1 : placesMap.get(2).equals(uuid) ? 2 : placesMap.get(3).equals(uuid) ? 3 : 99 : 99;
-        if (place == 99) {
-            return Foxtrot.getInstance().getChatHandler().getCustomPrefix(uuid);
-        }
-        
-        return ChatColor.translateAlternateColorCodes('&', place == 1 ? "&8[&6#1&8]" : place == 2 ? "&8[&7#2&8]" : "&8[&f#3&8]");
+        return "";
     }
     
     @EventHandler(priority = EventPriority.LOWEST) // this handler prevents people from getting banned for spam in faction (or ally) chat
@@ -245,6 +248,31 @@ public class ChatListener implements Listener {
                 Foxtrot.getInstance().getServer().getLogger().info("[Officer Chat] [" + playerTeam.getName() + "] " + event.getPlayer().getName() + ": " + event.getMessage());
             }
         }
+    }
+
+    private List<Team> sortTeams(){
+
+        LinkedHashMap<Team, Integer> sortedTeamPlayerCount = TeamCommands.getSortedTeams();
+        List<Team> teams = new ArrayList<>();
+
+        int index = 0;
+
+        for (Map.Entry<Team, Integer> teamEntry : sortedTeamPlayerCount.entrySet()) {
+
+            if (teamEntry.getKey().getOwner() == null) {
+                continue;
+            }
+
+            index++;
+
+            if (3 <= index) {
+                break;
+            }
+
+            teams.add(teamEntry.getKey());
+        }
+
+        return teams;
     }
 
 }

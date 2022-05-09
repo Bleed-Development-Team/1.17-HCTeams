@@ -2,7 +2,7 @@ package net.frozenorb.foxtrot.listener;
 
 import lombok.Getter;
 import net.frozenorb.foxtrot.Foxtrot;
-import net.frozenorb.foxtrot.commands.EOTWCommand;
+import net.frozenorb.foxtrot.commands.eotw.commands.EOTWCommand;
 import net.frozenorb.foxtrot.util.TimeUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
