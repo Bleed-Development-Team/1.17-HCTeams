@@ -1,6 +1,7 @@
 package net.frozenorb.foxtrot.extras.enchants.listeners;
 
 import net.frozenorb.foxtrot.extras.enchants.events.PlayerArmorEquipEvent;
+import net.frozenorb.foxtrot.extras.enchants.events.PlayerArmorUnequipEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -37,5 +38,10 @@ public class InvisibilityEnchant implements Listener {
             }
             player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0));
         }
+    }
+
+    @EventHandler
+    public void onArmorDequipd(PlayerArmorUnequipEvent event) {
+        refreshInvisibility(event.getPlayer());
     }
 }

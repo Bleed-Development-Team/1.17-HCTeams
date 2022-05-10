@@ -6,9 +6,11 @@ import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Optional;
 import net.frozenorb.foxtrot.economy.FrozenEconomyHandler;
 import net.frozenorb.foxtrot.util.CC;
+import net.minecraft.world.EnumHand;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.text.NumberFormat;
@@ -19,7 +21,7 @@ public class BalanceCommand extends BaseCommand {
 
     @Default
     public void balance(Player sender, @Optional OfflinePlayer player) {
-        if (player == null) {
+            if (player == null) {
             player = Bukkit.getOfflinePlayer(sender.getUniqueId());
         }
         if (!player.hasPlayedBefore()){
