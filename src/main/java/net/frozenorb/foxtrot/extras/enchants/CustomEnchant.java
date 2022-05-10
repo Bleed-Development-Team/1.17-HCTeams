@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 public class CustomEnchant {
 
     public static void init() {
+        Bukkit.getLogger().info("Custom Enchantments are enabled!");
         Foxtrot.getInstance().getServer().getPluginManager().registerEvents(new FireResistanceEnchant(), Foxtrot.getInstance());
         Foxtrot.getInstance().getServer().getPluginManager().registerEvents(new SpeedEnchant(), Foxtrot.getInstance());
         Foxtrot.getInstance().getServer().getPluginManager().registerEvents(new InvisibilityEnchant(), Foxtrot.getInstance());

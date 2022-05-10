@@ -28,14 +28,24 @@ public class InvisibilityEnchant implements Listener {
     }
 
     public static void refreshInvisibility(Player player) {
+        PotionEffect effect = player.getPotionEffect(PotionEffectType.INVISIBILITY);
+        if (effect != null) {
+            if (effect.getAmplifier() == 1 || effect.getAmplifier() == 0) {
+                player.removePotionEffect(PotionEffectType.INVISIBILITY);
+            }
+        }
         ItemStack helmet = player.getInventory().getHelmet();
         if (helmet == null) return;
         if (helmet.getItemMeta().getLore() == null) return;
 
+<<<<<<< Updated upstream:src/main/java/net/frozenorb/foxtrot/extras/enchants/listeners/InvisibilityEnchant.java
         if (helmet.getItemMeta().getLore().contains("&9Invisibility")) {
             if (player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
                 player.removePotionEffect(PotionEffectType.INVISIBILITY);
             }
+=======
+        if (helmet.getItemMeta().getLore().contains("Invisibility")) {
+>>>>>>> Stashed changes:src/main/java/net/frozenorb/foxtrot/extras/enchants/listeners/InvisiblityEnchant.java
             player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0));
         }
     }

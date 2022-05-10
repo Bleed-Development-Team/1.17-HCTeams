@@ -27,14 +27,24 @@ public class FireResistanceEnchant implements Listener {
     }
 
     public static void refreshFireResistance(Player player) {
+        PotionEffect effect = player.getPotionEffect(PotionEffectType.FIRE_RESISTANCE);
+        if (effect != null) {
+            if (effect.getAmplifier() == 1 || effect.getAmplifier() == 0) {
+                player.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
+            }
+        }
         ItemStack chestplate = player.getInventory().getChestplate();
         if (chestplate == null) return;
         if (chestplate.getItemMeta().getLore() == null) return;
 
+<<<<<<< Updated upstream
         if (chestplate.getItemMeta().getLore().contains("&4Fire Resistance")) {
             if (player.hasPotionEffect(PotionEffectType.FIRE_RESISTANCE)) {
                 player.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
             }
+=======
+        if (chestplate.getItemMeta().getLore().contains("Fire Resistance")) {
+>>>>>>> Stashed changes
             player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE, 0));
         }
 
