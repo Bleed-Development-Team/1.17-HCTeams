@@ -17,6 +17,8 @@ public class HellForgedEnchant implements Listener {
 
             Damageable damageable = (Damageable) item.getItemMeta();
 
+            if (!damageable.hasDamage()) return;
+
             damageable.setDamage(damageable.getDamage() + 5);
 
         }
