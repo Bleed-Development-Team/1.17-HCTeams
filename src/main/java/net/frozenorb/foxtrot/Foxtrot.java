@@ -43,6 +43,7 @@ import net.frozenorb.foxtrot.extras.ability.packages.AbilityPackage;
 import net.frozenorb.foxtrot.extras.ability.packages.AbilityPackageHandler;
 import net.frozenorb.foxtrot.extras.ability.packages.commands.PartnerPackageCommand;
 import net.frozenorb.foxtrot.extras.blockshop.command.BlockShopCommand;
+import net.frozenorb.foxtrot.extras.enchants.CustomEnchant;
 import net.frozenorb.foxtrot.extras.guide.GuideCommand;
 import net.frozenorb.foxtrot.extras.lunar.LunarClientHandler;
 import net.frozenorb.foxtrot.extras.lunar.nametag.ClientNametagProvider;
@@ -257,6 +258,7 @@ public class Foxtrot extends JavaPlugin {
 			world.setGameRule(GameRule.DO_FIRE_TICK, false);
 			world.setGameRule(GameRule.MOB_GRIEFING, false);
 		}
+
 		Cooldown.createCooldown("lff");
 		PaperCommandManager m = new PaperCommandManager(this);
 		m.getCommandContexts().registerContext(Team.class, new TeamType());
