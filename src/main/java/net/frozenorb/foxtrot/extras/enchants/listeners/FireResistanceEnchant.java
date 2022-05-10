@@ -1,6 +1,7 @@
 package net.frozenorb.foxtrot.extras.enchants.listeners;
 
 import net.frozenorb.foxtrot.extras.enchants.events.PlayerArmorEquipEvent;
+import net.frozenorb.foxtrot.extras.enchants.events.PlayerArmorUnequipEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,5 +28,9 @@ public class FireResistanceEnchant implements Listener {
             player.removePotionEffect(PotionEffectType.INVISIBILITY);
         }
 
+    }
+    @EventHandler
+    public void onArmorDequipd(PlayerArmorUnequipEvent event) {
+        refreshFireResistance(event.getPlayer());
     }
 }
