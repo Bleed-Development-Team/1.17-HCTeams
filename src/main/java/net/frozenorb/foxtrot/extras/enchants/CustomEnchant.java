@@ -17,7 +17,7 @@ public class CustomEnchant {
 
         Foxtrot.getInstance().getServer().getScheduler().runTaskTimer(Foxtrot.getInstance(), () -> {
             Bukkit.getOnlinePlayers().forEach(CustomEnchant::refreshEnchants);
-        }, 20L, 20L);
+        }, 20L, 5L);
     }
 
     private static void refreshEnchants(Player player) {
