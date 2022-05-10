@@ -15,7 +15,7 @@ tab:
   sectionColor: '&5'
   infoColor: '&e'
 scoreboard:
-  title: "&6&lHCTeams &c[Map 1]" # doesmt worjk
+  title: "&e&lHCTeams &c[Map 1]" # doesmt worjk
 nightmare:
   enabled: true
   worldName: "NightmareEvent"
@@ -118,6 +118,36 @@ deathban-arena:
   yaw: 0
   pitch: 0
 
+title:
+  animation:
+    - text: "&e&lPvPBeach"
+      delay: 240
+    - text: "&e&lP&e&lV&f&lP&e&lBeach"
+      delay: 240
+    - text: "&e&lPV&e&lP&f&lB&e&leach"
+      delay: 240
+    - text: "&e&lPVP&e&lB&f&le&e&lach"
+      delay: 240
+    - text: "&e&lPVPB&e&le&f&la&e&lch"
+      delay: 240
+    - text: "&e&lPVPBe&e&la&f&lc&e&lh"
+      delay: 240
+    - text: "&e&lPVPBea&e&lc&f&lh"
+      delay: 240
+    - text: "&e&lPVPBeac&e&lh"
+      delay: 240
+    - text: "&e&lPVPBeach"
+      delay: 360
+    - text: "&f&lPvPBeach"
+      delay: 360
+    - text: "&6&lPvPBeach"
+      delay: 360
+    - text: "&f&lPvPBeach"
+      delay: 360
+    - text: "&e&lPvPBeach"
+      delay: 360
+    - text: "&f&lPvPBeach"
+      delay: 360
 
   #IGNORE THIS STUFF, I'M TESTING
   Redis:

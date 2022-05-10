@@ -14,7 +14,7 @@ import lombok.Getter;
 import mkremins.fanciful.FancyMessage;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.chat.enums.ChatMode;
-import net.frozenorb.foxtrot.commands.EOTWCommand;
+import net.frozenorb.foxtrot.commands.eotw.commands.EOTWCommand;
 import net.frozenorb.foxtrot.economy.FrozenEconomyHandler;
 import net.frozenorb.foxtrot.server.SpawnTagHandler;
 import net.frozenorb.foxtrot.team.Team;

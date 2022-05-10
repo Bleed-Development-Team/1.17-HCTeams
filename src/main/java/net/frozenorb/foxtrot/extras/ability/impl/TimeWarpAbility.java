@@ -67,6 +67,7 @@ public class TimeWarpAbility extends Ability implements Listener {
                 player.sendMessage(CC.translate("&c❤ &6No last pearl found!"));
                 return;
             }
+
             giveCooldowns(player);
             player.sendMessage(CC.translate("&c❤ &6Teleporting to last pearl in &f3 &6seconds!"));
 

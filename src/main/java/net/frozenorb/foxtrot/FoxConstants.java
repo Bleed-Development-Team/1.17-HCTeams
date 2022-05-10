@@ -40,7 +40,7 @@ public final class FoxConstants {
 
             starting = ChatColor.GOLD + "[" + Foxtrot.getInstance().getServerHandler().getDefaultRelationColor() + team.getName() + ChatColor.GOLD + "] ";
         }
-        return starting + customPrefixString + ChatColor.WHITE + rankPrefix + "%s" + ChatColor.WHITE + ": %s";
+        return customPrefixString + starting + ChatColor.WHITE + rankPrefix + "%s" + ChatColor.WHITE + ": %s";
     }
 
     public static String publicChatFormatTwoPointOhBaby(Player player, Team team, String rankPrefix, String customPrefixString) {

@@ -1,7 +1,7 @@
 package net.frozenorb.foxtrot.listener;
 
 import net.frozenorb.foxtrot.Foxtrot;
-import net.frozenorb.foxtrot.commands.EOTWCommand;
+import net.frozenorb.foxtrot.commands.eotw.commands.EOTWCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;

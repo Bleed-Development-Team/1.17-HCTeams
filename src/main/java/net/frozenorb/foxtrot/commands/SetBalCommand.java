@@ -1,10 +1,7 @@
 package net.frozenorb.foxtrot.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Name;
+import co.aikar.commands.annotation.*;
 import net.frozenorb.foxtrot.Foxtrot;
 import net.frozenorb.foxtrot.economy.FrozenEconomyHandler;
 import org.bukkit.command.CommandSender;
@@ -16,7 +13,7 @@ public class SetBalCommand extends BaseCommand {
 
 
     @Default
-    public static void setBal(CommandSender sender, @Name("target") Player player, @Name("amount") Float amount) {
+    public static void setBal(CommandSender sender, @Name("target") @Flags("other") Player player, @Name("amount") Float amount) {
         if (amount > 10000 && sender instanceof Player && !sender.isOp()) {
             sender.sendMessage("§cYou cannot set a balance this high. This action has been logged.");
             return;

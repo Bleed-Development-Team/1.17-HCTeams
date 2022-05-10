@@ -133,7 +133,7 @@ public class Items {
     }
 
     public static ItemStack getPortableBard(){
-        return ItemBuilder.of(Material.ORANGE_DYE)
+        return ItemBuilder.of(Material.BLAZE_SPAWN_EGG)
                 .name("&6&lPortable Bard")
                 .addToLore("&7&l* &aTeam Members")
                 .enchant(Enchantment.DURABILITY, 1)

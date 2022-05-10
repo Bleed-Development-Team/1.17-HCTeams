@@ -36,6 +36,7 @@ import org.bson.types.ObjectId;
 import org.bukkit.*;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import redis.clients.jedis.Jedis;
@@ -405,6 +406,59 @@ public class Team {
 
         flagForSave();
     }
+
+
+    public List<Player> getNearbyTeamMembers(Player player) {
+        List<Player> valid = new ArrayList<>();
+        Team sourceTeam = this;
+
+        // We divide by 2 so that the range isn't as much on the Y level (and can't be abused by standing on top of / under events)
+        for (Entity entity : player.getNearbyEntities(20, 20 / 2, 20)) {
+            if (entity instanceof Player) {
+                Player nearbyPlayer = (Player) entity;
+
+                if (Foxtrot.getInstance().getPvPTimerMap().hasTimer(nearbyPlayer.getUniqueId())) {
+                    continue;
+                }
+
+
+                boolean isFriendly = sourceTeam.isMember(nearbyPlayer.getUniqueId());
+
+                if (isFriendly) {
+                    valid.add(nearbyPlayer);
+                }
+            }
+        }
+
+        valid.add(player);
+        return (valid);
+    }
+
+
+    public List<Player> getNearbyTeamMembers(Entity inputEntity) {
+        List<Player> valid = new ArrayList<>();
+        Team sourceTeam = this;
+
+        // We divide by 2 so that the range isn't as much on the Y level (and can't be abused by standing on top of / under events)
+        for (Entity entity : inputEntity.getNearbyEntities(20, 20 / 2, 20)) {
+            if (entity instanceof Player) {
+                Player nearbyPlayer = (Player) entity;
+
+                if (Foxtrot.getInstance().getPvPTimerMap().hasTimer(nearbyPlayer.getUniqueId())) {
+                    continue;
+                }
+
+                boolean isFriendly = sourceTeam.isMember(nearbyPlayer.getUniqueId());
+
+                if (isFriendly) {
+                    valid.add(nearbyPlayer);
+                }
+            }
+        }
+
+        return (valid);
+    }
+
 
     public void setForceInvites(int forceInvites) {
         this.forceInvites = forceInvites;

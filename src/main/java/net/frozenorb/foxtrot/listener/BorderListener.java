@@ -16,7 +16,7 @@ import java.util.Objects;
 
 public class BorderListener implements Listener {
 
-    public static int BORDER_SIZE = 3000;
+    public static int BORDER_SIZE = 3000 * 2;
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {

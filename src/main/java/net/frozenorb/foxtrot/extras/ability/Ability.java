@@ -5,6 +5,7 @@ import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.Cooldown;
+import net.frozenorb.foxtrot.util.TimeUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -55,7 +56,7 @@ public abstract class Ability implements Listener {
     }
 
     public String getCooldownFormatted(Player player){
-        return Cooldown.getCooldownString(player, getCooldownID());
+        return TimeUtils.formatIntoDetailedString(Cooldown.getCooldownForPlayerInt(getCooldownID(), player));
     }
 
     public void useItem(Player player){
