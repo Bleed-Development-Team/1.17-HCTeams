@@ -11,6 +11,7 @@ public class HellForgedEnchant implements Listener {
 
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
+        if (event.getPlayer().getInventory().getArmorContents() == null) return;
         for (ItemStack item : event.getPlayer().getInventory().getArmorContents()) {
             if (!item.getItemMeta().hasLore()) continue;
             if (!item.getItemMeta().getLore().contains("&4HellForged IV")) continue;
