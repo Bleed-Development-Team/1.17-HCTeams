@@ -1,6 +1,7 @@
 package net.frozenorb.foxtrot.extras.enchants.listeners;
 
 import net.frozenorb.foxtrot.extras.enchants.events.PlayerArmorEquipEvent;
+import net.frozenorb.foxtrot.extras.enchants.events.PlayerArmorUnequipEvent;
 import net.frozenorb.foxtrot.pvpclasses.pvpclasses.BardClass;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -19,7 +20,7 @@ public class SpeedEnchant implements Listener {
     }
 
     @EventHandler
-    public void unEquip(PlayerArmorEquipEvent event) {
+    public void unEquip(PlayerArmorUnequipEvent event) {
         refreshSpeed(event.getPlayer());
     }
 
