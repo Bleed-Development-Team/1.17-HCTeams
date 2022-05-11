@@ -24,20 +24,19 @@ public class SpeedEnchant implements Listener {
     }
 
     public static void refreshSpeed(Player player) {
-
+        ItemStack boot = player.getInventory().getBoots();
         PotionEffect effect = player.getPotionEffect(PotionEffectType.SPEED);
+        if (boot == null) return;
+        if (boot.getItemMeta().getLore() == null) return;
+        if (boot.getItemMeta().getLore().contains("&4Speed II"))
         if (effect != null) {
             if (effect.getAmplifier() == 1 || effect.getAmplifier() == 0) {
                 player.removePotionEffect(PotionEffectType.SPEED);
             }
         }
-        ItemStack boot = player.getInventory().getBoots();
-        if (boot == null) return;
-        if (boot.getItemMeta().getLore() == null) return;
 
-        if (boot.getItemMeta().getLore().contains("&4Speed II")) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
-        }
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
+
     }
 
     public boolean qualifies(PlayerInventory armor) {
