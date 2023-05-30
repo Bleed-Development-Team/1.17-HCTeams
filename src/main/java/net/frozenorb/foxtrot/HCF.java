@@ -11,6 +11,7 @@ import io.github.thatkawaiisam.assemble.AssembleStyle;
 import lombok.Getter;
 import lombok.Setter;
 import net.frozenorb.foxtrot.chat.trivia.TriviaHandler;
+import net.frozenorb.foxtrot.crates.monthly.MonthlyCrates;
 import net.frozenorb.foxtrot.gameplay.ability.partnerpackages.PartnerPackageHandler;
 import net.frozenorb.foxtrot.chat.ChatHandler;
 import net.frozenorb.foxtrot.commands.CommandHandler;
@@ -286,6 +287,8 @@ public class HCF extends JavaPlugin {
 		HCF.getInstance().getMapHandler().getStatsHandler().save();
 
 		RegenUtils.resetAll();
+
+		MonthlyCrates.getInstance().init();
 	}
 
 	private void setupHandlers() {

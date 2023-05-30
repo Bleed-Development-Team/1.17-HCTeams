@@ -60,4 +60,7 @@ public final class HCFConstants {
         return customPrefixString + CC.translate(starting) + ChatColor.WHITE + CC.translate(rankPrefix) + "%s"  + ChatColor.WHITE + ": %s";
     }
 
+    public static String getPrefix() {
+        return CC.translate("&7[&b&lCrates&7]");
+    }
 }

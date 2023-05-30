@@ -12,6 +12,7 @@ import net.frozenorb.foxtrot.commands.op.gems.GemsCommand;
 import net.frozenorb.foxtrot.commands.staff.LastInvCommand;
 import net.frozenorb.foxtrot.commands.staff.ReviveCommand;
 import net.frozenorb.foxtrot.crates.commands.CrateCommand;
+import net.frozenorb.foxtrot.crates.monthly.commands.MonthlyCrateCommands;
 import net.frozenorb.foxtrot.gameplay.ability.partnerpackages.command.PartnerPackageCommand;
 import net.frozenorb.foxtrot.gameplay.airdrops.command.AirDropCommand;
 import net.frozenorb.foxtrot.gameplay.archerupgrades.command.ArcherUpgradesCommand;
@@ -147,6 +148,7 @@ public class CommandHandler {
         m.registerCommand(new TeamChatSpyCommand());
         m.registerCommand(new AbilityCommand());
         m.registerCommand(new AbiltiesCommand());
+        m.registerCommand(new MonthlyCrateCommands());
 
         m.getCommandCompletions().registerCompletion("bitmask", c -> {
             List<String> bitmasks = new ArrayList<>();
