@@ -5,7 +5,7 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Description;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.persist.RedisSaveTask;
 import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.claims.LandBoard;
@@ -32,7 +32,7 @@ public class ImportTeamDataCommand extends BaseCommand {
         }
 
         try {
-            Foxtrot.getInstance().runRedisCommand((jedis) -> {
+            HCF.getInstance().runRedisCommand((jedis) -> {
                 jedis.flushAll();
                 return null;
             });
@@ -49,11 +49,11 @@ public class ImportTeamDataCommand extends BaseCommand {
                 Team team = new Team(teamName);
                 team.load(teamData, true);
 
-                Foxtrot.getInstance().getTeamHandler().setupTeam(team, true);
+                HCF.getInstance().getTeamHandler().setupTeam(team, true);
             }
 
             LandBoard.getInstance().loadFromTeams(); // to update land board shit
-            Foxtrot.getInstance().getTeamHandler().recachePlayerTeams();
+            HCF.getInstance().getTeamHandler().recachePlayerTeams();
             RedisSaveTask.save(sender, true);
             sender.sendMessage(ChatColor.GOLD + "Loaded " + teamsToRead + " teams from an export created by " + ChatColor.GREEN + author + ChatColor.GOLD + " at " + ChatColor.GREEN + created + ChatColor.GOLD + " and recached claims in " + ChatColor.GREEN.toString() +  (System.currentTimeMillis() - startTime) + "ms.");
             in.close();

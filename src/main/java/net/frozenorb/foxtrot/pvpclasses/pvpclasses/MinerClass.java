@@ -1,7 +1,7 @@
 package net.frozenorb.foxtrot.pvpclasses.pvpclasses;
 
 import lombok.Getter;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.pvpclasses.PvPClass;
 import net.frozenorb.foxtrot.pvpclasses.PvPClassHandler;
 import org.bukkit.ChatColor;
@@ -37,7 +37,7 @@ public class MinerClass extends PvPClass implements Listener {
             public void run() {
                 for (String key : new HashMap<>(noDamage).keySet()) {
                     int left = noDamage.remove(key);
-                    Player player = Foxtrot.getInstance().getServer().getPlayerExact(key);
+                    Player player = HCF.getInstance().getServer().getPlayerExact(key);
 
                     if (player == null) {
                         continue;
@@ -46,7 +46,7 @@ public class MinerClass extends PvPClass implements Listener {
                     if (left == 0) {
                         if (player.getLocation().getY() <= Y_HEIGHT) {
                             invis.put(player.getName(), 10);
-                            player.sendMessage(ChatColor.BLUE + "Miner Invisibility" + ChatColor.YELLOW + " will be activated in 10 seconds!");
+                            player.sendMessage(ChatColor.BLUE + "Miner Invisibility" + ChatColor.WHITE + " will be activated in 10 seconds!");
                         }
                     } else {
                         noDamage.put(player.getName(), left - 1);
@@ -55,7 +55,7 @@ public class MinerClass extends PvPClass implements Listener {
 
                 //Manage invisibility
                 for (String key : new HashMap<>(invis).keySet()){
-                    Player player = Foxtrot.getInstance().getServer().getPlayerExact(key);
+                    Player player = HCF.getInstance().getServer().getPlayerExact(key);
 
                     if (player != null) {
                         int secs = invis.get(player.getName());
@@ -63,7 +63,7 @@ public class MinerClass extends PvPClass implements Listener {
                         if (secs == 0) {
                             if (player.getLocation().getY() <= Y_HEIGHT) {
                                 if (!(player.hasPotionEffect(PotionEffectType.INVISIBILITY))) {
-                                    player.sendMessage(ChatColor.BLUE + "Miner Invisibility" + ChatColor.YELLOW + " has been enabled!");
+                                    player.sendMessage(ChatColor.BLUE + "Miner Invisibility" + ChatColor.WHITE + " has been enabled!");
                                     player.addPotionEffect(PotionEffectType.INVISIBILITY.createEffect(Integer.MAX_VALUE, 0));
                                 }
                             }
@@ -74,7 +74,7 @@ public class MinerClass extends PvPClass implements Listener {
                 }
             }
 
-        }.runTaskTimer(Foxtrot.getInstance(), 20L, 20L);
+        }.runTaskTimer(HCF.getInstance(), 20L, 20L);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class MinerClass extends PvPClass implements Listener {
     public void apply(Player player) {
         player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0), true);
         player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, Integer.MAX_VALUE, 1), true);
-        if (!Foxtrot.getInstance().getServerHandler().isHardcore()) player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE, 0), true);
+        if (!HCF.getInstance().getServerHandler().isHardcore()) player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE, 0), true);
     }
 
     @Override
@@ -99,7 +99,7 @@ public class MinerClass extends PvPClass implements Listener {
             player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0), true);
         }
 
-        int diamonds = Foxtrot.getInstance().getDiamondMinedMap().getMined( player.getUniqueId() );
+        int diamonds = HCF.getInstance().getDiamondMinedMap().getMined( player.getUniqueId() );
         int level = 1;
         if (diamonds > 125) {
             level = 3;
@@ -238,7 +238,7 @@ public class MinerClass extends PvPClass implements Listener {
         }
         
 
-        if (!Foxtrot.getInstance().getCobblePickupMap().isCobblePickup(player.getUniqueId())) {
+        if (!HCF.getInstance().getCobblePickupMap().isCobblePickup(player.getUniqueId())) {
             event.setCancelled(true);
         }
     }

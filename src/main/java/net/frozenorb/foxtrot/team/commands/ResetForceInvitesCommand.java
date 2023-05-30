@@ -2,7 +2,7 @@ package net.frozenorb.foxtrot.team.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.team.Team;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.*;
@@ -15,7 +15,7 @@ public class ResetForceInvitesCommand extends BaseCommand {
     @Subcommand("all")
     @Description("Reset all teams force invites to the max.")
     public static void resetforceinvites_all(Player sender) {
-        ConversationFactory factory = new ConversationFactory(Foxtrot.getInstance()).withModality(true).withPrefix(new NullConversationPrefix()).withFirstPrompt(new StringPrompt() {
+        ConversationFactory factory = new ConversationFactory(HCF.getInstance()).withModality(true).withPrefix(new NullConversationPrefix()).withFirstPrompt(new StringPrompt() {
 
             public String getPromptText(ConversationContext context) {
                 return (ChatColor.GREEN  + "Are you sure you want to reset all force invites? Type §byes§a to confirm or §cno§a to quit.");
@@ -24,11 +24,11 @@ public class ResetForceInvitesCommand extends BaseCommand {
             @Override
             public Prompt acceptInput(ConversationContext cc, String s) {
                 if (s.equalsIgnoreCase("yes")) {
-                    for (Team team : Foxtrot.getInstance().getTeamHandler().getTeams()) {
+                    for (Team team : HCF.getInstance().getTeamHandler().getTeams()) {
                         team.setForceInvites(Team.MAX_FORCE_INVITES);
                     }
 
-                    Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED.toString() + ChatColor.BOLD + "All force invites have been reset!");
+                    HCF.getInstance().getServer().broadcastMessage(ChatColor.RED.toString() + ChatColor.BOLD + "All force invites have been reset!");
                     cc.getForWhom().sendRawMessage(ChatColor.RED.toString() + ChatColor.BOLD + "All force invites have been reset!");
                     return (Prompt.END_OF_CONVERSATION);
                 }

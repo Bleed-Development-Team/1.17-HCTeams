@@ -1,6 +1,6 @@
 package net.frozenorb.foxtrot.uuid.impl;
 
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.uuid.UUIDCache;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -15,7 +15,7 @@ public final class RedisUUIDCache implements UUIDCache {
     private static final Map<String, UUID> nameToUuid = new ConcurrentHashMap<>();
 
     public RedisUUIDCache() {
-        Foxtrot.getInstance().runBackboneRedisCommand(redis -> {
+        HCF.getInstance().runBackboneRedisCommand(redis -> {
             Map<String, String> cache = redis.hgetAll("UUIDCache");
             for (Map.Entry<String, String> cacheEntry : cache.entrySet()) {
                 UUID uuid = UUID.fromString(cacheEntry.getKey());
@@ -37,7 +37,7 @@ public final class RedisUUIDCache implements UUIDCache {
 
     public void ensure(UUID uuid) {
         if (String.valueOf(name(uuid)).equals("null"))
-            Foxtrot.getInstance().getLogger().warning(uuid + " didn't have a cached name.");
+            HCF.getInstance().getLogger().warning(uuid + " didn't have a cached name.");
     }
 
     public void update(final UUID uuid, final String name) {
@@ -50,11 +50,11 @@ public final class RedisUUIDCache implements UUIDCache {
         nameToUuid.put(name.toLowerCase(), uuid);
         (new BukkitRunnable() {
             public void run() {
-                Foxtrot.getInstance().runBackboneRedisCommand(redis -> {
+                HCF.getInstance().runBackboneRedisCommand(redis -> {
                     redis.hset("UUIDCache", uuid.toString(), name);
                     return null;
                 });
             }
-        }).runTaskAsynchronously(Foxtrot.getInstance());
+        }).runTaskAsynchronously(HCF.getInstance());
     }
 }

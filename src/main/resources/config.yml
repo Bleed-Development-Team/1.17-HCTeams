@@ -86,7 +86,6 @@ potions:
     splash: false
     drinkables: false
 
-    #redis shit 100% not stolen from qlib :D
 
 reclaim:
   Owner:
@@ -102,12 +101,6 @@ reclaim:
   VIP:
     - "bc lol"
   Default:
-    - "bc lol"
-
-redeem:
-  Embry_:
-    - "bc lol"
-  Nopox:
     - "bc lol"
 
 deathban-arena:

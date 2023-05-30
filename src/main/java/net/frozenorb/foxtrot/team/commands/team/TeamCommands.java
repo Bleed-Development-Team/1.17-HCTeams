@@ -12,10 +12,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import mkremins.fanciful.FancyMessage;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.chat.enums.ChatMode;
-import net.frozenorb.foxtrot.commands.eotw.commands.EOTWCommand;
-import net.frozenorb.foxtrot.economy.FrozenEconomyHandler;
+import net.frozenorb.foxtrot.commands.op.CustomTimerCreateCommand;
+import net.frozenorb.foxtrot.commands.op.eotw.commands.EOTWCommand;
+import net.frozenorb.foxtrot.economy.EconomyHandler;
 import net.frozenorb.foxtrot.server.SpawnTagHandler;
 import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.claims.*;
@@ -23,6 +24,7 @@ import net.frozenorb.foxtrot.team.dtr.DTRHandler;
 import net.frozenorb.foxtrot.team.event.FullTeamBypassEvent;
 import net.frozenorb.foxtrot.team.track.TeamActionTracker;
 import net.frozenorb.foxtrot.team.track.TeamActionType;
+import net.frozenorb.foxtrot.team.upgrades.menu.UpgradesMenu;
 import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.CuboidRegion;
 import net.frozenorb.foxtrot.util.TimeUtils;
@@ -71,18 +73,73 @@ public class TeamCommands extends BaseCommand implements Listener {
 
     private static final Set<Integer> warn = new HashSet<>();
 
+    @Subcommand("lock|lockclaim")
+    @Description("Lock your claim during SOTW.")
+    public static void lock(Player player){
+        Team team = HCF.getInstance().getTeamHandler().getTeam(player);
+
+        if (team == null){
+            player.sendMessage(CC.translate("&7You are not on a team!"));
+            return;
+        }
+
+        if (!CustomTimerCreateCommand.isSOTWTimer()){
+            player.sendMessage(CC.translate("&cYou can only use this command during SOTW."));
+            return;
+        }
+
+        long endsAt = CustomTimerCreateCommand.getCustomTimers().get("&a&lSOTW");
+        if (endsAt - System.currentTimeMillis() <= TimeUnit.MINUTES.toMillis(10L)) {
+            player.sendMessage(CC.translate("&cYou can't lock your claim 10 minutes before SOTW ends."));
+            return;
+        }
+
+        team.setClaimLocked(!team.isClaimLocked());
+
+        player.sendMessage(CC.translate("&fYou have &r" + (team.isClaimLocked() ? "&clocked" : "&aunlocked") + " &fyour claim."));
+
+        for (Claim claim : team.getClaims()){
+            for (Player teleport : claim.getPlayers()){
+                if (team.isMember(teleport.getUniqueId())) continue;
+
+                if (nearestSafeLocation(teleport.getLocation()) == null){
+                    teleport.teleport(HCF.getInstance().getServerHandler().getSpawnLocation());
+                    return;
+                }
+
+                teleport.teleport(nearestSafeLocation(teleport.getLocation()));
+
+                teleport.sendMessage(CC.translate("&cYou've been teleported out of this claim since the faction has locked their claim."));
+            }
+        }
+    }
+
+    @Subcommand("upgrades")
+    @Description("Upgrade your team's perks.")
+    public static void upgrades(Player player){
+        Team team = HCF.getInstance().getTeamHandler().getTeam(player.getUniqueId());
+
+        if (team == null){
+            player.sendMessage(CC.translate("&7You are not on a team!"));
+            return;
+        }
+
+        //new UpgradesMenu(player, team).updateMenu();
+        player.sendMessage(CC.translate("&cThis feature is currently not available."));
+    }
+
     @Subcommand("a|accept|join|j")
     @Description("Accepts a team invitation")
     public static void teamAccept(Player sender, @Name("team") Team team) {
         if (team.getInvitations().contains(sender.getUniqueId())) {
-            if (Foxtrot.getInstance().getTeamHandler().getTeam(sender.getUniqueId()) != null) {
+            if (HCF.getInstance().getTeamHandler().getTeam(sender.getUniqueId()) != null) {
                 sender.sendMessage(ChatColor.RED + "You are already on a team!");
                 return;
             }
 
-            if (team.getMembers().size() >= Foxtrot.getInstance().getMapHandler().getTeamSize()) {
+            if (team.getMembers().size() >= HCF.getInstance().getMapHandler().getTeamSize()) {
                 FullTeamBypassEvent attemptEvent = new FullTeamBypassEvent(sender, team);
-                Foxtrot.getInstance().getServer().getPluginManager().callEvent(attemptEvent);
+                HCF.getInstance().getServer().getPluginManager().callEvent(attemptEvent);
 
                 if (!attemptEvent.isAllowBypass()) {
                     sender.sendMessage(ChatColor.RED + team.getName() + " cannot be joined: Team is full!");
@@ -90,12 +147,12 @@ public class TeamCommands extends BaseCommand implements Listener {
                 }
             }
 
-            if (DTRHandler.isOnCooldown(team) && !Foxtrot.getInstance().getServerHandler().isPreEOTW() && !Foxtrot.getInstance().getMapHandler().isKitMap() && !Foxtrot.getInstance().getServerHandler().isVeltKitMap()) {
+            if (DTRHandler.isOnCooldown(team) && !HCF.getInstance().getServerHandler().isPreEOTW() && !HCF.getInstance().getMapHandler().isKitMap() && !HCF.getInstance().getServerHandler().isVeltKitMap()) {
                 sender.sendMessage(ChatColor.RED + team.getName() + " cannot be joined: Team not regenerating DTR!");
                 return;
             }
 
-            if (team.getMembers().size() >= 15 && Foxtrot.getInstance().getTeamHandler().isRostersLocked()) {
+            if (team.getMembers().size() >= 15 && HCF.getInstance().getTeamHandler().isRostersLocked()) {
                 sender.sendMessage(ChatColor.RED + team.getName() + " cannot be joined: Team rosters are locked server-wide!");
                 return;
             }
@@ -135,7 +192,7 @@ public class TeamCommands extends BaseCommand implements Listener {
 
             team.getInvitations().remove(sender.getUniqueId());
             team.addMember(sender.getUniqueId());
-            Foxtrot.getInstance().getTeamHandler().setTeam(sender.getUniqueId(), team);
+            HCF.getInstance().getTeamHandler().setTeam(sender.getUniqueId(), team);
 
             team.sendMessage(ChatColor.YELLOW + sender.getName() + " has joined the team!");
 
@@ -149,7 +206,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @CommandAlias("ally")
     @Description("Allies a team with another team")
     public static void teamAlly(Player sender, @Name("team") Team team) {
-        Team senderTeam = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team senderTeam = HCF.getInstance().getTeamHandler().getTeam(sender);
 
         if (senderTeam == null) {
             sender.sendMessage(ChatColor.GRAY + "You are not on a team!");
@@ -166,13 +223,13 @@ public class TeamCommands extends BaseCommand implements Listener {
             return;
         }
 
-        if (senderTeam.getAllies().size() >= Foxtrot.getInstance().getMapHandler().getAllyLimit()) {
-            sender.sendMessage(ChatColor.YELLOW + "Your team already has the max number of allies, which is " + Foxtrot.getInstance().getMapHandler().getAllyLimit() + ".");
+        if (senderTeam.getAllies().size() >= HCF.getInstance().getMapHandler().getAllyLimit()) {
+            sender.sendMessage(ChatColor.YELLOW + "Your team already has the max number of allies, which is " + HCF.getInstance().getMapHandler().getAllyLimit() + ".");
             return;
         }
 
-        if (team.getAllies().size() >= Foxtrot.getInstance().getMapHandler().getAllyLimit()) {
-            sender.sendMessage(ChatColor.YELLOW + "The team you're trying to ally already has the max number of allies, which is " + Foxtrot.getInstance().getMapHandler().getAllyLimit() + ".");
+        if (team.getAllies().size() >= HCF.getInstance().getMapHandler().getAllyLimit()) {
+            sender.sendMessage(ChatColor.YELLOW + "The team you're trying to ally already has the max number of allies, which is " + HCF.getInstance().getMapHandler().getAllyLimit() + ".");
             return;
         }
 
@@ -190,11 +247,11 @@ public class TeamCommands extends BaseCommand implements Listener {
             team.flagForSave();
             senderTeam.flagForSave();
 
-            for (Player player : Foxtrot.getInstance().getServer().getOnlinePlayers()) {
+            for (Player player : HCF.getInstance().getServer().getOnlinePlayers()) {
                 if (team.isMember(player.getUniqueId())) {
-                    player.sendMessage(senderTeam.getName(player) + ChatColor.YELLOW + " has accepted your request to ally. You now have " + Team.ALLY_COLOR + team.getAllies().size() + "/" + Foxtrot.getInstance().getMapHandler().getAllyLimit() + " allies" + ChatColor.YELLOW + ".");
+                    player.sendMessage(senderTeam.getName(player) + ChatColor.YELLOW + " has accepted your request to ally. You now have " + Team.ALLY_COLOR + team.getAllies().size() + "/" + HCF.getInstance().getMapHandler().getAllyLimit() + " allies" + ChatColor.YELLOW + ".");
                 } else if (senderTeam.isMember(player.getUniqueId())) {
-                    player.sendMessage(ChatColor.YELLOW + "Your team has allied " + team.getName(sender) + ChatColor.YELLOW + ". You now have " + Team.ALLY_COLOR + senderTeam.getAllies().size() + "/" + Foxtrot.getInstance().getMapHandler().getAllyLimit() + " allies" + ChatColor.YELLOW + ".");
+                    player.sendMessage(ChatColor.YELLOW + "Your team has allied " + team.getName(sender) + ChatColor.YELLOW + ". You now have " + Team.ALLY_COLOR + senderTeam.getAllies().size() + "/" + HCF.getInstance().getMapHandler().getAllyLimit() + " allies" + ChatColor.YELLOW + ".");
                 }
 
                 if (team.isMember(player.getUniqueId()) || senderTeam.isMember(player.getUniqueId())) {
@@ -211,7 +268,7 @@ public class TeamCommands extends BaseCommand implements Listener {
             team.getRequestedAllies().add(senderTeam.getUniqueId());
             team.flagForSave();
 
-            for (Player player : Foxtrot.getInstance().getServer().getOnlinePlayers()) {
+            for (Player player : HCF.getInstance().getServer().getOnlinePlayers()) {
                 if (team.isMember(player.getUniqueId())) {
                     player.sendMessage(senderTeam.getName(player.getPlayer()) + ChatColor.YELLOW + " has requested to be your ally. Type " + Team.ALLY_COLOR + "/team ally " + senderTeam.getName() + ChatColor.YELLOW + " to accept.");
                 } else if (senderTeam.isMember(player.getUniqueId())) {
@@ -223,7 +280,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("announcement|announcement")
     @Description("Announce a message to all teams.")
     public static void teamAnnouncement(Player sender, @Name("announcement") String newAnnouncement) {//TODO Check if string will work
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
 
         if (team == null) {
             sender.sendMessage(ChatColor.GRAY + "You are not on a team!");
@@ -247,7 +304,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("captain add|mod add")
     @Description("Add a player to the mod team.")
     public static void captainAdd(Player sender, @Name("target") OfflinePlayer promote) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender.getUniqueId());
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender.getUniqueId());
         if( team == null ) {
             sender.sendMessage(net.md_5.bungee.api.ChatColor.RED + "You must be in a team to execute this command.");
             return;
@@ -275,7 +332,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("captain remove|captain demote| mod remove|mod demote")
     @Description("Demote a player to a member.")
     public static void captainRemove(Player sender, @Name("target") OfflinePlayer demote) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender.getUniqueId());
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender.getUniqueId());
         if( team == null ) {
             sender.sendMessage(net.md_5.bungee.api.ChatColor.RED + "You must be in a team to execute this command.");
             return;
@@ -321,7 +378,7 @@ public class TeamCommands extends BaseCommand implements Listener {
 
     private static void setChat(Player player, ChatMode chatMode) {
         if (chatMode != null) {
-            Team playerTeam = Foxtrot.getInstance().getTeamHandler().getTeam(player);
+            Team playerTeam = HCF.getInstance().getTeamHandler().getTeam(player);
 
             if (chatMode != ChatMode.PUBLIC) {
                 if (playerTeam == null) {
@@ -348,17 +405,17 @@ public class TeamCommands extends BaseCommand implements Listener {
                     break;
             }
 
-            Foxtrot.getInstance().getChatModeMap().setChatMode(player.getUniqueId(), chatMode);
+            HCF.getInstance().getChatModeMap().setChatMode(player.getUniqueId(), chatMode);
         } else {
-            switch (Foxtrot.getInstance().getChatModeMap().getChatMode(player.getUniqueId())) {
+            switch (HCF.getInstance().getChatModeMap().getChatMode(player.getUniqueId())) {
                 case PUBLIC -> {
-                    Team team = Foxtrot.getInstance().getTeamHandler().getTeam(player);
+                    Team team = HCF.getInstance().getTeamHandler().getTeam(player);
                     boolean teamHasAllies = team != null && team.getAllies().size() > 0;
                     setChat(player, teamHasAllies ? ChatMode.ALLIANCE : ChatMode.TEAM);
                 }
                 case ALLIANCE -> setChat(player, ChatMode.TEAM);
                 case TEAM -> {
-                    Team team2 = Foxtrot.getInstance().getTeamHandler().getTeam(player);
+                    Team team2 = HCF.getInstance().getTeamHandler().getTeam(player);
                     boolean isOfficer = team2 != null && (team2.isCaptain(player.getUniqueId()) || team2.isCoLeader(player.getUniqueId()) || team2.isOwner(player.getUniqueId()));
                     setChat(player, isOfficer ? ChatMode.OFFICER : ChatMode.PUBLIC);
                 }
@@ -369,7 +426,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("create")
     @Description("Create a team")
     public static void teamCreate(Player sender, @Name("name") String team) {
-        if (Foxtrot.getInstance().getTeamHandler().getTeam(sender) != null) {
+        if (HCF.getInstance().getTeamHandler().getTeam(sender) != null) {
             sender.sendMessage(ChatColor.GRAY + "You're already in a team!");
             return;
         }
@@ -390,7 +447,7 @@ public class TeamCommands extends BaseCommand implements Listener {
 //        }
 
 
-        if (Foxtrot.getInstance().getTeamHandler().getTeam(team) != null) {
+        if (HCF.getInstance().getTeamHandler().getTeam(team) != null) {
             sender.sendMessage(ChatColor.GRAY + "That team already exists!");
             return;
         }
@@ -411,7 +468,7 @@ public class TeamCommands extends BaseCommand implements Listener {
             return;
         }
         //No longer needed cause we don't disband factions
-        if (Foxtrot.getInstance().getServerHandler().isEOTW()) {
+        if (HCF.getInstance().getServerHandler().isEOTW()) {
             sender.sendMessage(ChatColor.RED + "You can't create teams during EOTW.");
             return;
         }
@@ -430,7 +487,7 @@ public class TeamCommands extends BaseCommand implements Listener {
         createdTeam.setName(team);
         createdTeam.setDTR(1);
 
-        Foxtrot.getInstance().getTeamHandler().setupTeam(createdTeam);
+        HCF.getInstance().getTeamHandler().setupTeam(createdTeam);
 
         sender.sendMessage(ChatColor.YELLOW + "Team " + ChatColor.BLUE + createdTeam.getName() + ChatColor.YELLOW + " has been " + ChatColor.GREEN + "created" + ChatColor.YELLOW + " by " + sender.getDisplayName());
     }
@@ -438,7 +495,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("demote")
     @Description("Demote a player from team.")
     public static void teamDemote(Player sender, @Name("target") OfflinePlayer player) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
 
         if (team == null) {
             sender.sendMessage(ChatColor.GRAY + "You are not on a team!");
@@ -476,8 +533,8 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("deposit|d")
     @Description("Deposit money to your team.")
     public static void teamDeposit(Player sender, @Name("amount") String ogAmount) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
-        float amount = (ogAmount.equals("all")) ? (float) FrozenEconomyHandler.getBalance(sender.getUniqueId())
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
+        float amount = (ogAmount.equals("all")) ? (float) EconomyHandler.getBalance(sender.getUniqueId())
                 : Float.parseFloat(ogAmount);
 
 
@@ -496,12 +553,12 @@ public class TeamCommands extends BaseCommand implements Listener {
             return;
         }
 
-        if (FrozenEconomyHandler.getBalance(sender.getUniqueId()) < amount) {
+        if (EconomyHandler.getBalance(sender.getUniqueId()) < amount) {
             sender.sendMessage(ChatColor.RED + "You don't have enough money to do this!");
             return;
         }
 
-        FrozenEconomyHandler.withdraw(sender.getUniqueId(), amount);
+        EconomyHandler.withdraw(sender.getUniqueId(), amount);
 
         sender.sendMessage(ChatColor.YELLOW + "You have added " + ChatColor.LIGHT_PURPLE + amount + ChatColor.YELLOW + " to the team balance!");
 
@@ -516,13 +573,13 @@ public class TeamCommands extends BaseCommand implements Listener {
         team.setBalance(team.getBalance() + amount);
         team.sendMessage(ChatColor.YELLOW + sender.getName() + " deposited " + ChatColor.LIGHT_PURPLE + amount + ChatColor.YELLOW + " into the team balance.");
 
-        Foxtrot.getInstance().getWrappedBalanceMap().setBalance(sender.getUniqueId(), FrozenEconomyHandler.getBalance(sender.getUniqueId()));
+        HCF.getInstance().getWrappedBalanceMap().setBalance(sender.getUniqueId(), EconomyHandler.getBalance(sender.getUniqueId()));
     }
 
     @Subcommand("disband")
     @Description("Disband your team.")
     public static void teamDisband(Player player) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(player);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(player);
 
         if (team == null){
             player.sendMessage(ChatColor.RED + "You are not on a team!");
@@ -580,7 +637,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("focus")
     @Description("Focus on a team.")
     public static void focus(Player player, @Name("team") Team team){
-        Team playerTeam = Foxtrot.getInstance().getTeamHandler().getTeam(player.getUniqueId());
+        Team playerTeam = HCF.getInstance().getTeamHandler().getTeam(player.getUniqueId());
 
         if (playerTeam == null){
             player.sendMessage(CC.translate("&7You are not a team!"));
@@ -622,7 +679,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("unfocus")
     @Description("Unfocus a team.")
     public static void unfocus(Player player) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(player.getUniqueId());
+        Team team = HCF.getInstance().getTeamHandler().getTeam(player.getUniqueId());
 
         if (team == null){
             player.sendMessage(CC.translate("&7You are not on a team!"));
@@ -648,17 +705,38 @@ public class TeamCommands extends BaseCommand implements Listener {
         team.sendMessage("&d" + team.getFocusedTeam().getName() + " &efaction has been unfocused by &d" + player.getName() + "&e.");
         team.setFocusedTeam(null);
     }
+
+    @Subcommand("ff|friendlyfire")
+    public static void friendlyFire(Player player){
+        Team team = HCF.getInstance().getTeamHandler().getTeam(player.getUniqueId());
+
+        if (team == null){
+            player.sendMessage(CC.translate("&7You are not on a team!"));
+            return;
+        }
+
+        if (!team.isCaptain(player.getUniqueId()) || !team.isCoLeader(player.getUniqueId())) {
+            player.sendMessage(CC.translate("&3Only team captains can do this."));
+            return;
+        }
+
+        team.setFriendlyFire(!team.isFriendlyFire());
+        team.flagForSave();
+
+        team.sendMessage(CC.translate("&fFriendly fire was turned " + (team.isFriendlyFire() ? "&aon" : "&coff") + "&f."));
+    }
+
     @Subcommand("forceinvite")
     @Description("Force a player to join your team.")
     public static void teamForceInvite(Player sender, @Name("target") OfflinePlayer player) {
-        if (!Foxtrot.getInstance().getServerHandler().isForceInvitesEnabled()) {
+        if (!HCF.getInstance().getServerHandler().isForceInvitesEnabled()) {
             sender.sendMessage(ChatColor.RED + "Force-invites are not enabled on this server.");
             return;
         }
 
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
 
-        if (Foxtrot.getInstance().getMapHandler().isKitMap() || Foxtrot.getInstance().getServerHandler().isVeltKitMap()) {
+        if (HCF.getInstance().getMapHandler().isKitMap() || HCF.getInstance().getServerHandler().isVeltKitMap()) {
             sender.sendMessage(ChatColor.RED + "You don't need to use this during kit maps.");
             return;
         }
@@ -668,8 +746,8 @@ public class TeamCommands extends BaseCommand implements Listener {
             return;
         }
 
-        if (team.getMembers().size() >= Foxtrot.getInstance().getMapHandler().getTeamSize()) {
-            sender.sendMessage(ChatColor.RED + "The max team size is " + Foxtrot.getInstance().getMapHandler().getTeamSize() + "!");
+        if (team.getMembers().size() >= HCF.getInstance().getMapHandler().getTeamSize()) {
+            sender.sendMessage(ChatColor.RED + "The max team size is " + HCF.getInstance().getMapHandler().getTeamSize() + "!");
             return;
         }
 
@@ -724,12 +802,12 @@ public class TeamCommands extends BaseCommand implements Listener {
                     sender.sendMessage(ChatColor.YELLOW + "You have " + ChatColor.RED + "none" + ChatColor.YELLOW + " of those left.");
                 }
             }
-        }.runTask(Foxtrot.getInstance());
+        }.runTask(HCF.getInstance());
 
         team.getInvitations().add(player.getUniqueId());
         team.flagForSave();
 
-        Player bukkitPlayer = Foxtrot.getInstance().getServer().getPlayer(player.getUniqueId());
+        Player bukkitPlayer = HCF.getInstance().getServer().getPlayer(player.getUniqueId());
 
         if (bukkitPlayer != null) {
             bukkitPlayer.sendMessage(ChatColor.DARK_AQUA + sender.getName() + " invited you to join '" + ChatColor.YELLOW + team.getName() + ChatColor.DARK_AQUA + "'.");
@@ -747,7 +825,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("forcekick")
     @Description("Forcefully kicks a member from your faction.")
     public static void teamForceKick(Player sender, OfflinePlayer player) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
 
         if (team == null) {
             sender.sendMessage(ChatColor.GRAY + "You are not on a team!");
@@ -779,10 +857,10 @@ public class TeamCommands extends BaseCommand implements Listener {
             return;
         }
 
-        Player bukkitPlayer = Foxtrot.getInstance().getServer().getPlayer(player.getUniqueId());
+        Player bukkitPlayer = HCF.getInstance().getServer().getPlayer(player.getUniqueId());
 
 
-        if (team.getFocusedTeam().getHQ() != null && bukkitPlayer != null){
+        if (team.getFocusedTeam() != null && team.getFocusedTeam().getHQ() != null && bukkitPlayer != null){
             LunarClientAPI.getInstance().removeWaypoint(bukkitPlayer, new LCWaypoint(
                     team.getFocusedTeam().getName() + "'s HQ",
                     team.getFocusedTeam().getHQ(),
@@ -822,7 +900,7 @@ public class TeamCommands extends BaseCommand implements Listener {
             team.flagForSave();
         }
 
-        Foxtrot.getInstance().getTeamHandler().setTeam(player.getUniqueId(), null);
+        HCF.getInstance().getTeamHandler().setTeam(player.getUniqueId(), null);
 
         if (SpawnTagHandler.isTagged(bukkitPlayer)) {
             team.setDTR(team.getDTR() - 1);
@@ -830,9 +908,9 @@ public class TeamCommands extends BaseCommand implements Listener {
             long dtrCooldown;
             if (team.isRaidable()) {
                 TeamActionTracker.logActionAsync(team, TeamActionType.TEAM_NOW_RAIDABLE, ImmutableMap.of());
-                dtrCooldown = System.currentTimeMillis() + Foxtrot.getInstance().getMapHandler().getRegenTimeRaidable();
+                dtrCooldown = System.currentTimeMillis() + HCF.getInstance().getMapHandler().getRegenTimeRaidable();
             } else {
-                dtrCooldown = System.currentTimeMillis() + Foxtrot.getInstance().getMapHandler().getRegenTimeDeath();
+                dtrCooldown = System.currentTimeMillis() + HCF.getInstance().getMapHandler().getRegenTimeDeath();
             }
 
             team.setDTRCooldown(dtrCooldown);
@@ -848,7 +926,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     }
     @Subcommand("forceleave")
     public static void forceLeave(Player sender) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
 
         if (team == null) {
             sender.sendMessage(ChatColor.GRAY + "You are not on a team!");
@@ -894,10 +972,10 @@ public class TeamCommands extends BaseCommand implements Listener {
 
         if (team.removeMember(sender.getUniqueId())) {
             team.disband();
-            Foxtrot.getInstance().getTeamHandler().setTeam(sender.getUniqueId(), null);
+            HCF.getInstance().getTeamHandler().setTeam(sender.getUniqueId(), null);
             sender.sendMessage(ChatColor.DARK_AQUA + "Successfully left and disbanded team!");
         } else {
-            Foxtrot.getInstance().getTeamHandler().setTeam(sender.getUniqueId(), null);
+            HCF.getInstance().getTeamHandler().setTeam(sender.getUniqueId(), null);
             team.flagForSave();
 
             if (SpawnTagHandler.isTagged(sender)) {
@@ -918,7 +996,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("hq|home")
     @Description("Teleport to your team's HQ")
     public static void teamHQ(Player sender) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
 
         if (team == null) {
             sender.sendMessage(ChatColor.DARK_AQUA + "You are not on a team!");
@@ -930,7 +1008,7 @@ public class TeamCommands extends BaseCommand implements Listener {
             return;
         }
 
-        if (Foxtrot.getInstance().getServerHandler().isEOTW()) {
+        if (HCF.getInstance().getServerHandler().isEOTW()) {
             sender.sendMessage(ChatColor.RED + "You cannot teleport to your team headquarters during the End of the World!");
             return;
         }
@@ -940,24 +1018,24 @@ public class TeamCommands extends BaseCommand implements Listener {
             return;
         }
 
-        if (Foxtrot.getInstance().getInDuelPredicate().test(sender)) {
+        if (HCF.getInstance().getInDuelPredicate().test(sender)) {
             sender.sendMessage(ChatColor.RED + "You cannot teleport to HQ during a duel!");
             return;
         }
 
-        if (Foxtrot.getInstance().getPvPTimerMap().hasTimer(sender.getUniqueId())) {
+        if (HCF.getInstance().getPvPTimerMap().hasTimer(sender.getUniqueId())) {
             sender.sendMessage(ChatColor.RED + "Use /pvp enable to toggle your PvP Timer off!");
             return;
         }
 
-        boolean charge = team != LandBoard.getInstance().getTeam(sender.getLocation()) && !Foxtrot.getInstance().getConfig().getBoolean("legions");
+        boolean charge = team != LandBoard.getInstance().getTeam(sender.getLocation()) && !HCF.getInstance().getConfig().getBoolean("legions");
 
-        if (charge && team.getBalance() < (Foxtrot.getInstance().getServerHandler().isHardcore() ? 20 : 50)) {
-            sender.sendMessage(ChatColor.RED + "Your team needs at least $" + (Foxtrot.getInstance().getServerHandler().isHardcore() ? 20 : 50) + " to teleport to your team headquarters.");
+        if (charge && team.getBalance() < (HCF.getInstance().getServerHandler().isHardcore() ? 20 : 50)) {
+            sender.sendMessage(ChatColor.RED + "Your team needs at least $" + (HCF.getInstance().getServerHandler().isHardcore() ? 20 : 50) + " to teleport to your team headquarters.");
             return;
         }
 
-        Foxtrot.getInstance().getServerHandler().beginHQWarp(sender, team, 10, charge);
+        HCF.getInstance().getServerHandler().beginHQWarp(sender, team, 10, charge);
     }
     @Subcommand("who|info|show|i")
     @Description("Show info about your team")
@@ -965,16 +1043,16 @@ public class TeamCommands extends BaseCommand implements Listener {
     public static void teamInfo(final Player sender, @Optional Team team) {
 
         if (team == null) {
-            if (Foxtrot.getInstance().getTeamHandler().getTeam(sender) == null) {
+            if (HCF.getInstance().getTeamHandler().getTeam(sender) == null) {
                 sender.sendMessage(CC.translate( "&7You are not on a team!"));
                 return;
             }
-            team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+            team = HCF.getInstance().getTeamHandler().getTeam(sender);
         }
         Team finalTeam = team;
         new BukkitRunnable() {
             public void run() {
-                Team exactPlayerTeam = Foxtrot.getInstance().getTeamHandler().getTeam(UUIDUtils.uuid(finalTeam.getName()));
+                Team exactPlayerTeam = HCF.getInstance().getTeamHandler().getTeam(UUIDUtils.uuid(finalTeam.getName()));
 
                 if (exactPlayerTeam != null && exactPlayerTeam != finalTeam) {
                     exactPlayerTeam.sendTeamInfo(sender);
@@ -982,25 +1060,25 @@ public class TeamCommands extends BaseCommand implements Listener {
 
                 finalTeam.sendTeamInfo(sender);
             }
-        }.runTask(Foxtrot.getInstance());
+        }.runTask(HCF.getInstance());
     }
 
     @Subcommand("invite|inv")
     @Description("Invite a player to your team")
     public static void teamInvite(Player sender, @Flags("other") Player player) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
 
         if (team == null) {
             sender.sendMessage(ChatColor.GRAY + "You are not on a team!");
             return;
         }
 
-        if (team.getMembers().size() >= Foxtrot.getInstance().getMapHandler().getTeamSize()) {
+        if (team.getMembers().size() >= HCF.getInstance().getMapHandler().getTeamSize()) {
             FullTeamBypassEvent bypassEvent = new FullTeamBypassEvent(sender, team);
-            Foxtrot.getInstance().getServer().getPluginManager().callEvent(bypassEvent);
+            HCF.getInstance().getServer().getPluginManager().callEvent(bypassEvent);
 
             if (!bypassEvent.isAllowBypass()) {
-                sender.sendMessage(ChatColor.RED + "The max team size is " + Foxtrot.getInstance().getMapHandler().getTeamSize() + (bypassEvent.getExtraSlots() == 0 ? "" : " (+" + bypassEvent.getExtraSlots() + ")") + "!");
+                sender.sendMessage(ChatColor.RED + "The max team size is " + HCF.getInstance().getMapHandler().getTeamSize() + (bypassEvent.getExtraSlots() == 0 ? "" : " (+" + bypassEvent.getExtraSlots() + ")") + "!");
                 return;
             }
         }
@@ -1025,14 +1103,14 @@ public class TeamCommands extends BaseCommand implements Listener {
             return;
         }*/
 
-        if (Foxtrot.getInstance().getServerHandler().isForceInvitesEnabled() && !Foxtrot.getInstance().getServerHandler().isPreEOTW()) {
+        if (HCF.getInstance().getServerHandler().isForceInvitesEnabled() && !HCF.getInstance().getServerHandler().isPreEOTW()) {
             /* if we just check team.getSize() players can make a team with 10 players,
             send out 20 invites, and then have them all accepted (instead of 1 invite,
             1 join, 1 invite, etc) To solve this we treat their size as their actual
             size + number of open invites. */
             int possibleTeamSize = team.getSize() + team.getInvitations().size();
 
-            if (!Foxtrot.getInstance().getMapHandler().isKitMap() && !Foxtrot.getInstance().getServerHandler().isVeltKitMap() && team.getHistoricalMembers().contains(player.getUniqueId()) && possibleTeamSize > Foxtrot.getInstance().getMapHandler().getMinForceInviteMembers()) {
+            if (!HCF.getInstance().getMapHandler().isKitMap() && !HCF.getInstance().getServerHandler().isVeltKitMap() && team.getHistoricalMembers().contains(player.getUniqueId()) && possibleTeamSize > HCF.getInstance().getMapHandler().getMinForceInviteMembers()) {
                 sender.sendMessage(ChatColor.RED + "This player has previously joined your faction. You must use a force-invite to re-invite " + player.getName() + ". Type "
                         + ChatColor.YELLOW + "'/f forceinvite " + player.getName() + "'" + ChatColor.RED + " to use a force-invite."
                 );
@@ -1052,7 +1130,7 @@ public class TeamCommands extends BaseCommand implements Listener {
         team.getInvitations().add(player.getUniqueId());
         team.flagForSave();
 
-        Player bukkitPlayer = Foxtrot.getInstance().getServer().getPlayer(player.getUniqueId());
+        Player bukkitPlayer = HCF.getInstance().getServer().getPlayer(player.getUniqueId());
 
         if (bukkitPlayer != null) {
             bukkitPlayer.sendMessage(ChatColor.DARK_AQUA + sender.getName() + " invited you to join '" + ChatColor.YELLOW + team.getName() + ChatColor.DARK_AQUA + "'.");
@@ -1077,7 +1155,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     public static void teamInvites(Player sender) {
         StringBuilder yourInvites = new StringBuilder();
 
-        for (Team team : Foxtrot.getInstance().getTeamHandler().getTeams()) {
+        for (Team team : HCF.getInstance().getTeamHandler().getTeams()) {
             if (team.getInvitations().contains(sender.getUniqueId())) {
                 yourInvites.append(ChatColor.GRAY).append(team.getName()).append(ChatColor.YELLOW).append(", ");
             }
@@ -1091,7 +1169,7 @@ public class TeamCommands extends BaseCommand implements Listener {
 
         sender.sendMessage(ChatColor.YELLOW + "Your Invites: " + yourInvites);
 
-        Team current = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team current = HCF.getInstance().getTeamHandler().getTeam(sender);
 
         if (current != null) {
             StringBuilder invitedToYourTeam = new StringBuilder();
@@ -1120,7 +1198,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("kick")
     @Description("Kick a player from your team.")
     public static void teamKick(Player sender, OfflinePlayer player) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
 
         if (team == null) {
             sender.sendMessage(ChatColor.GRAY + "You are not on a team!");
@@ -1152,7 +1230,7 @@ public class TeamCommands extends BaseCommand implements Listener {
             return;
         }
 
-        Player bukkitPlayer = Foxtrot.getInstance().getServer().getPlayer(player.getUniqueId());
+        Player bukkitPlayer = HCF.getInstance().getServer().getPlayer(player.getUniqueId());
 
         if (bukkitPlayer != null && SpawnTagHandler.isTagged(bukkitPlayer)) {
             sender.sendMessage(ChatColor.RED + bukkitPlayer.getName() + " is currently combat-tagged! You can forcibly kick " + bukkitPlayer.getName() + " by using '"
@@ -1160,7 +1238,7 @@ public class TeamCommands extends BaseCommand implements Listener {
             return;
         }
 
-        if (team.getFocusedTeam().getHQ() != null && bukkitPlayer != null){
+        if (team.getFocusedTeam() != null && team.getFocusedTeam().getHQ() != null && bukkitPlayer != null){
             LunarClientAPI.getInstance().removeWaypoint(bukkitPlayer, new LCWaypoint(
                     team.getFocusedTeam().getName() + "'s HQ",
                     team.getFocusedTeam().getHQ(),
@@ -1202,7 +1280,7 @@ public class TeamCommands extends BaseCommand implements Listener {
             team.flagForSave();
         }
 
-        Foxtrot.getInstance().getTeamHandler().setTeam(player.getUniqueId(), null);
+        HCF.getInstance().getTeamHandler().setTeam(player.getUniqueId(), null);
 
         if (player.isOnline() && team.getHQ() != null){
             LunarClientAPI.getInstance().removeWaypoint(bukkitPlayer, new LCWaypoint("HQ", team.getHQ(), 0, true));
@@ -1211,7 +1289,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("newleader|leader")
     @Description("Set a new team leader")
     public static void teamLeader(Player sender, @Flags("other") @Name("target")Player player) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
 
         if (team == null) {
             sender.sendMessage(ChatColor.GRAY + "You are not on a team!");
@@ -1228,6 +1306,11 @@ public class TeamCommands extends BaseCommand implements Listener {
             return;
         }
 
+        if (team.isOwner(player.getUniqueId())){
+            sender.sendMessage(CC.translate("&cYou can't leader yourself!"));
+            return;
+        }
+
         team.sendMessage(ChatColor.DARK_AQUA + player.getName() + " has been given ownership of " + team.getName() + ".");
         team.setOwner(player.getUniqueId());
         team.addCaptain(sender.getUniqueId());
@@ -1236,7 +1319,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("leave")
     @Description("Leave your current team")
     public static void teamLeave(Player sender) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
 
         if (team == null) {
             sender.sendMessage(ChatColor.GRAY + "You are not on a team!");
@@ -1287,10 +1370,10 @@ public class TeamCommands extends BaseCommand implements Listener {
 
         if (team.removeMember(sender.getUniqueId())) {
             team.disband();
-            Foxtrot.getInstance().getTeamHandler().setTeam(sender.getUniqueId(), null);
+            HCF.getInstance().getTeamHandler().setTeam(sender.getUniqueId(), null);
             sender.sendMessage(ChatColor.DARK_AQUA + "Successfully left and disbanded team!");
         } else {
-            Foxtrot.getInstance().getTeamHandler().setTeam(sender.getUniqueId(), null);
+            HCF.getInstance().getTeamHandler().setTeam(sender.getUniqueId(), null);
             team.flagForSave();
             team.sendMessage(ChatColor.YELLOW + sender.getName() + " has left the team.");
 
@@ -1326,12 +1409,12 @@ public class TeamCommands extends BaseCommand implements Listener {
                 Map<Team, Integer> teamPlayerCount = new HashMap<>();
 
                 // Sort of weird way of getting player counts, but it does it in the least iterations (1), which is what matters!
-                for (Player player : Foxtrot.getInstance().getServer().getOnlinePlayers()) {
+                for (Player player : HCF.getInstance().getServer().getOnlinePlayers()) {
                     if (player.hasMetadata("invisible")) {
                         continue;
                     }
 
-                    Team playerTeam = Foxtrot.getInstance().getTeamHandler().getTeam(player);
+                    Team playerTeam = HCF.getInstance().getTeamHandler().getTeam(player);
 
                     if (playerTeam != null) {
                         if (teamPlayerCount.containsKey(playerTeam)) {
@@ -1383,7 +1466,7 @@ public class TeamCommands extends BaseCommand implements Listener {
                 sender.sendMessage(Team.GRAY_LINE);
             }
 
-        }.runTaskAsynchronously(Foxtrot.getInstance());
+        }.runTaskAsynchronously(HCF.getInstance());
     }
 
     public static LinkedHashMap<Team, Integer> sortByValues(Map<Team, Integer> map) {
@@ -1403,7 +1486,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("lives add|lives deposit|lives d")
     @Description("Add or deposit lives")
     public static void livesAdd(Player sender, @Name("amount") int lives) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
         if( team == null ) {
             sender.sendMessage(net.md_5.bungee.api.ChatColor.RED + "You need a team to use this command.");
             return;
@@ -1414,21 +1497,21 @@ public class TeamCommands extends BaseCommand implements Listener {
             return;
         }
 
-        int currLives = Foxtrot.getInstance().getFriendLivesMap().getLives(sender.getUniqueId());
+        int currLives = HCF.getInstance().getFriendLivesMap().getLives(sender.getUniqueId());
 
         if( currLives < lives ) {
             sender.sendMessage(net.md_5.bungee.api.ChatColor.RED + "You only have " + net.md_5.bungee.api.ChatColor.YELLOW + currLives + net.md_5.bungee.api.ChatColor.RED + " friend lives, you cannot deposit " + net.md_5.bungee.api.ChatColor.YELLOW + lives);
             return;
         }
 
-        Foxtrot.getInstance().getFriendLivesMap().setLives(sender.getUniqueId(), currLives - lives);
+        HCF.getInstance().getFriendLivesMap().setLives(sender.getUniqueId(), currLives - lives);
         team.addLives(lives);
         sender.sendMessage(net.md_5.bungee.api.ChatColor.GREEN + "You have deposited " + net.md_5.bungee.api.ChatColor.RED + lives + net.md_5.bungee.api.ChatColor.GREEN + "  friendlives to " + net.md_5.bungee.api.ChatColor.YELLOW + team.getName() + net.md_5.bungee.api.ChatColor.GREEN + ". You now have " + net.md_5.bungee.api.ChatColor.RED + (currLives - lives) + net.md_5.bungee.api.ChatColor.GREEN + " lives and your team now has " + net.md_5.bungee.api.ChatColor.RED + team.getLives() + net.md_5.bungee.api.ChatColor.GREEN + " lives." );
     }
     @Subcommand("revive")
     @Description("Revive a player")
     public static void livesRevive(Player sender, @Flags("other") @Name("target") Player whom) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
         if( team == null ) {
             sender.sendMessage(net.md_5.bungee.api.ChatColor.RED + "You need a team to use this command.");
             return;
@@ -1449,19 +1532,19 @@ public class TeamCommands extends BaseCommand implements Listener {
             return;
         }
 
-        if(!Foxtrot.getInstance().getDeathbanMap().isDeathbanned(whom.getUniqueId())) {
+        if(!HCF.getInstance().getDeathbanMap().isDeathbanned(whom.getUniqueId())) {
             sender.sendMessage(net.md_5.bungee.api.ChatColor.RED + "This player is not death banned currently.");
             return;
         }
 
         team.removeLives(1);
-        Foxtrot.getInstance().getDeathbanMap().revive(whom.getUniqueId());
+        HCF.getInstance().getDeathbanMap().revive(whom.getUniqueId());
         sender.sendMessage(net.md_5.bungee.api.ChatColor.GREEN + "You have revived " + net.md_5.bungee.api.ChatColor.RED + UUIDUtils.name(whom.getUniqueId()) + net.md_5.bungee.api.ChatColor.GREEN + ".");
     }
     @Subcommand("lives")
     @Description("View your lives")
     public static void getLives(Player sender) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
         if( team == null ) {
             sender.sendMessage(net.md_5.bungee.api.ChatColor.RED + "You need a team to use this command.");
             return;
@@ -1487,7 +1570,7 @@ public class TeamCommands extends BaseCommand implements Listener {
         for (UUID player : team.getMembers()) {
             teamMutes.put(player, team.getName());
 
-            Player bukkitPlayer = Foxtrot.getInstance().getServer().getPlayer(player);
+            Player bukkitPlayer = HCF.getInstance().getServer().getPlayer(player);
 
             if (bukkitPlayer != null) {
                 bukkitPlayer.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + "Your team has been muted for " + TimeUtils.formatIntoMMSS(timeSeconds) + " for " + reason + ".");
@@ -1519,7 +1602,7 @@ public class TeamCommands extends BaseCommand implements Listener {
                 }
             }
 
-        }.runTaskLater(Foxtrot.getInstance(), timeSeconds * 20L);
+        }.runTaskLater(HCF.getInstance(), timeSeconds * 20L);
 
         sender.sendMessage(ChatColor.YELLOW + "Muted the team " + team.getName() + ChatColor.GRAY + " for " + TimeUtils.formatIntoMMSS(timeSeconds) + " for " + reason + ".");
     }
@@ -1529,7 +1612,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     public static void teamNullLeader(Player sender) {
         int nullLeaders = 0;
 
-        for (Team team : Foxtrot.getInstance().getTeamHandler().getTeams()) {
+        for (Team team : HCF.getInstance().getTeamHandler().getTeams()) {
             if (team.getOwner() == null) {
                 nullLeaders++;
                 sender.sendMessage(ChatColor.RED + "- " + team.getName());
@@ -1547,7 +1630,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Description("Opclaim a team")
     @CommandPermission("foxtrot.opclaim")
     public static void teamOpClaim(final Player sender) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
 
         if (team == null) {
             sender.sendMessage(ChatColor.GRAY + "You are not on a team!");
@@ -1562,7 +1645,7 @@ public class TeamCommands extends BaseCommand implements Listener {
                 sender.getInventory().addItem(SELECTION_WAND.clone());
             }
 
-        }.runTaskLater(Foxtrot.getInstance(), 1L);
+        }.runTaskLater(HCF.getInstance(), 1L);
 
         new VisualClaim(sender, VisualClaimType.CREATE, true).draw(false);
 
@@ -1574,7 +1657,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("promote")
     @Description("Promote a player in a team.")
     public static void teamPromote(Player sender, @Name("target") OfflinePlayer player) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender.getUniqueId());
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender.getUniqueId());
 
         if (team == null) {
             sender.sendMessage(ChatColor.GRAY + "You are not on a team!");
@@ -1616,7 +1699,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("rally")
     @Description("Rally for your team!")
     public static void rally(Player player){
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(player.getUniqueId());
+        Team team = HCF.getInstance().getTeamHandler().getTeam(player.getUniqueId());
 
         if (team == null){
             player.sendMessage(CC.translate("&7You are not on a team!"));
@@ -1649,7 +1732,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("unrally")
     @Description("Unsets the rally point.")
     public static void unrally(Player player){
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(player.getUniqueId());
+        Team team = HCF.getInstance().getTeamHandler().getTeam(player.getUniqueId());
 
         if (team == null){
             player.sendMessage(CC.translate("&7You are not on a team!"));
@@ -1676,14 +1759,14 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("rename")
     @Description("Renames your team.")
     public static void teamRename(Player sender, @Name("newName") String newName) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
 
         if (team == null) {
             sender.sendMessage(ChatColor.GRAY + "You are not on a team!");
             return;
         }
 
-        if (Foxtrot.getInstance().getCitadelHandler().getCappers().contains(team.getUniqueId())) {
+        if (HCF.getInstance().getCitadelHandler().getCappers().contains(team.getUniqueId())) {
             sender.sendMessage(ChatColor.RED + "Citadel cappers cannot change their name. Please contact an admin to rename your team.");
             return;
         }
@@ -1704,7 +1787,7 @@ public class TeamCommands extends BaseCommand implements Listener {
         }
 
         if (!ALPHA_NUMERIC.matcher(newName).find()) {
-            if (Foxtrot.getInstance().getTeamHandler().getTeam(newName) == null) {
+            if (HCF.getInstance().getTeamHandler().getTeam(newName) == null) {
                 team.rename(newName);
                 sender.sendMessage(ChatColor.GREEN + "Team renamed to " + newName);
             } else {
@@ -1717,7 +1800,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("sethq|sethome|setheadquarters")
     @Description("Sets the team's headquarters.")
     public static void teamSetHQ(Player sender) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
 
         if (team == null) {
             sender.sendMessage(ChatColor.GRAY + "You are not on a team!");
@@ -1789,7 +1872,7 @@ public class TeamCommands extends BaseCommand implements Listener {
                 teamShadowMutes.entrySet().removeIf(mute -> mute.getValue().equalsIgnoreCase(team.getName()));
             }
 
-        }.runTaskLater(Foxtrot.getInstance(), timeSeconds * 20L);
+        }.runTaskLater(HCF.getInstance(), timeSeconds * 20L);
 
         sender.sendMessage(ChatColor.YELLOW + "Shadow muted the team " + team.getName() + ChatColor.GRAY + " for " + TimeUtils.formatIntoMMSS(timeSeconds) + ".");
     }
@@ -1813,7 +1896,7 @@ public class TeamCommands extends BaseCommand implements Listener {
         warn.add(2);
         warn.add(1);
 
-        Foxtrot.getInstance().getServer().getPluginManager().registerEvents(new TeamCommands(), Foxtrot.getInstance());
+        HCF.getInstance().getServer().getPluginManager().registerEvents(new TeamCommands(), HCF.getInstance());
     }
 
     @Getter private static Map<String, Long> warping = new ConcurrentHashMap<>();
@@ -1872,7 +1955,7 @@ public class TeamCommands extends BaseCommand implements Listener {
                             nearest = nearestSafeLocation(sender.getLocation());
                         }
 
-                    }.runTask(Foxtrot.getInstance());
+                    }.runTask(HCF.getInstance());
                 }
 
                 Location loc = sender.getLocation();
@@ -1881,7 +1964,7 @@ public class TeamCommands extends BaseCommand implements Listener {
                     if (nearest == null) {
                         kick(sender);
                     } else {
-                        Foxtrot.getInstance().getLogger().info("Moved " + sender.getName() + " " + loc.distance(nearest) + " blocks from " + toStr(loc) + " to " + toStr(nearest));
+                        HCF.getInstance().getLogger().info("Moved " + sender.getName() + " " + loc.distance(nearest) + " blocks from " + toStr(loc) + " to " + toStr(nearest));
 
                         sender.teleport(nearest);
                         sender.sendMessage(ChatColor.YELLOW + "Teleported you to the nearest safe area!");
@@ -1909,7 +1992,7 @@ public class TeamCommands extends BaseCommand implements Listener {
                 seconds--;
             }
 
-        }.runTaskTimer(Foxtrot.getInstance(), 0L, 20L);
+        }.runTaskTimer(HCF.getInstance(), 0L, 20L);
     }
 
     private static String toStr(Location loc) {
@@ -1967,8 +2050,8 @@ public class TeamCommands extends BaseCommand implements Listener {
     }
 
     private static void kick(Player player){
-        player.setMetadata("loggedout", new FixedMetadataValue(Foxtrot.getInstance(), true));
-        player.kickPlayer(ChatColor.RED + "We couldn't find a safe location, so we safely logged you out for now. Contact a staff member before logging back on! " + ChatColor.BLUE + "TeamSpeak: ts." + Foxtrot.getInstance().getServerHandler().getNetworkWebsite());
+        player.setMetadata("loggedout", new FixedMetadataValue(HCF.getInstance(), true));
+        player.kickPlayer(ChatColor.RED + "We couldn't find a safe location, so we safely logged you out for now. Contact a staff member before logging back on! " + ChatColor.BLUE + "TeamSpeak: ts." + HCF.getInstance().getServerHandler().getNetworkWebsite());
     }
 
     /**
@@ -2007,7 +2090,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Description("Teleports all players to the nearest safe location")
     @CommandPermission("foxtrot.tpall")
     public static void teamTP(Player sender, @Name("team") Team team) {
-        ConversationFactory factory = new ConversationFactory(Foxtrot.getInstance()).withModality(true).withPrefix(new NullConversationPrefix()).withFirstPrompt(new StringPrompt() {
+        ConversationFactory factory = new ConversationFactory(HCF.getInstance()).withModality(true).withPrefix(new NullConversationPrefix()).withFirstPrompt(new StringPrompt() {
 
             public @NotNull String getPromptText(@NotNull ConversationContext context) {
                 return "§aAre you sure you want to teleport all players in " + team.getName() + " ("  + team.getOnlineMembers().size() + ") to your location? Type §byes§a to confirm or §cno§a to quit.";
@@ -2051,6 +2134,8 @@ public class TeamCommands extends BaseCommand implements Listener {
                 int index = 0;
 
                 sender.sendMessage(Team.GRAY_LINE);
+                sender.sendMessage(CC.translate("&b&lFaction Top"));
+                sender.sendMessage("");
 
                 for (Map.Entry<Team, Integer> teamEntry : sortedTeamPlayerCount.entrySet()) {
 
@@ -2060,7 +2145,7 @@ public class TeamCommands extends BaseCommand implements Listener {
 
                     index++;
 
-                    if (10 <= index) {
+                    if (10 < index) {
                         break;
                     }
 
@@ -2069,15 +2154,14 @@ public class TeamCommands extends BaseCommand implements Listener {
                     Team team = teamEntry.getKey();
 
                     teamMessage.append(index + ". ").color(ChatColor.GRAY.asBungee());
-                    teamMessage.append(teamEntry.getKey().getName()).color(sender instanceof Player && teamEntry.getKey().isMember(((Player) sender).getUniqueId()) ? ChatColor.GREEN.asBungee() : ChatColor.RED.asBungee())
+                    teamMessage.append(CC.translate(team.getDQ() ? "&4&l✗ " : "") + teamEntry.getKey().getName()).color(sender instanceof Player && teamEntry.getKey().isMember(((Player) sender).getUniqueId()) ? ChatColor.GREEN.asBungee() : ChatColor.RED.asBungee())
                             .event((new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder((teamEntry.getKey().isMember(((Player) sender).getUniqueId()) ? ChatColor.GREEN.asBungee() : ChatColor.RED.asBungee()) + teamEntry.getKey().getName() + "\n" +
-                                    ChatColor.LIGHT_PURPLE + "Leader: " + ChatColor.GRAY + UUIDUtils.name(teamEntry.getKey().getOwner()) + "\n\n" +
-                                    ChatColor.LIGHT_PURPLE + "Balance: " + ChatColor.GRAY + "$" + team.getBalance() + "\n" +
-                                    ChatColor.LIGHT_PURPLE + "Kills: " + ChatColor.GRAY.toString() + team.getKills() + "\n" +
-                                    ChatColor.LIGHT_PURPLE + "Deaths: " + ChatColor.GRAY.toString() + team.getDeaths() + "\n\n" +
-                                    ChatColor.LIGHT_PURPLE + "KOTH Captures: " + ChatColor.GRAY.toString() + team.getKothCaptures() + "\n" +
-                                    ChatColor.LIGHT_PURPLE + "Diamonds Mined: " + ChatColor.GRAY.toString() + team.getDiamondsMined() + "\n\n" +
-                                    ChatColor.GREEN + "Click to view team info").create())));
+                                    ChatColor.AQUA + "Leader: " + ChatColor.WHITE + UUIDUtils.name(teamEntry.getKey().getOwner()) + "\n\n" +
+                                    ChatColor.AQUA + "Balance: " + ChatColor.WHITE + "$" + team.getBalance() + "\n" +
+                                    ChatColor.AQUA + "Kills: " + ChatColor.WHITE.toString() + team.getKills() + "\n" +
+                                    ChatColor.AQUA+ "Deaths: " + ChatColor.WHITE.toString() + team.getDeaths() + "\n\n" +
+                                    ChatColor.AQUA + "KOTH Captures: " + ChatColor.WHITE.toString() + team.getKothCaptures() + "\n" +
+                                    ChatColor.AQUA+ "Diamonds Mined: " + ChatColor.WHITE.toString() + team.getDiamondsMined() + "").create())));
                     teamMessage.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/t who " + teamEntry.getKey().getName()));
                     teamMessage.append(" - ").color(ChatColor.YELLOW.asBungee());
                     teamMessage.append(teamEntry.getValue().toString()).color(ChatColor.GRAY.asBungee());
@@ -2088,14 +2172,14 @@ public class TeamCommands extends BaseCommand implements Listener {
                 sender.sendMessage(Team.GRAY_LINE);
             }
 
-        }.runTaskAsynchronously(Foxtrot.getInstance());
+        }.runTaskAsynchronously(HCF.getInstance());
     }
 
     public static LinkedHashMap<Team, Integer> getSortedTeams() {
         Map<Team, Integer> teamPointsCount = new HashMap<>();
 
         // Sort of weird way of getting player counts, but it does it in the least iterations (1), which is what matters!
-        for (Team team : Foxtrot.getInstance().getTeamHandler().getTeams()) {
+        for (Team team : HCF.getInstance().getTeamHandler().getTeams()) {
             teamPointsCount.put(team, team.getPoints());
         }
 
@@ -2134,7 +2218,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("unally")
     @Description("Unally a team.")
     public static void teamUnally(Player sender, @Name("team") Team team) {
-        Team senderTeam = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team senderTeam = HCF.getInstance().getTeamHandler().getTeam(sender);
 
         if (senderTeam == null) {
             sender.sendMessage(ChatColor.GRAY + "You are not on a team!");
@@ -2157,7 +2241,7 @@ public class TeamCommands extends BaseCommand implements Listener {
         senderTeam.flagForSave();
         team.flagForSave();
 
-        for (Player player : Foxtrot.getInstance().getServer().getOnlinePlayers()) {
+        for (Player player : HCF.getInstance().getServer().getOnlinePlayers()) {
             if (team.isMember(player.getUniqueId())) {
                 player.sendMessage(senderTeam.getName(player) + ChatColor.YELLOW + " has dropped their alliance with your team.");
             } else if (senderTeam.isMember(player.getUniqueId())) {
@@ -2174,7 +2258,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("unclaim")
     @Description("Unclaims.")
     public static void teamUnclaim(Player sender, String all) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
         if (!all.equals("all")) {
             all = "not all?";
         }
@@ -2225,7 +2309,7 @@ public class TeamCommands extends BaseCommand implements Listener {
             team.setHQ(null);
             team.flagForSave();
 
-            for (Player player : Foxtrot.getInstance().getServer().getOnlinePlayers()) {
+            for (Player player : HCF.getInstance().getServer().getOnlinePlayers()) {
                 if (team.isMember(player.getUniqueId())) {
                     player.sendMessage(ChatColor.YELLOW + sender.getName() + " has unclaimed all of your team's claims. (" + ChatColor.LIGHT_PURPLE + claims + " total" + ChatColor.YELLOW + ")");
                 }
@@ -2279,7 +2363,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("uninvite|revoke")
     @Description("Revoke an invite to your team.")
     public static void teamUninvite(final Player sender, final String allPlayer) {
-        final Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        final Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
 
         if (team == null) {
             sender.sendMessage(ChatColor.GRAY + "You are not on a team!");
@@ -2314,10 +2398,10 @@ public class TeamCommands extends BaseCommand implements Listener {
                                 }
                             }
 
-                        }.runTask(Foxtrot.getInstance());
+                        }.runTask(HCF.getInstance());
                     }
 
-                }.runTaskAsynchronously(Foxtrot.getInstance());
+                }.runTaskAsynchronously(HCF.getInstance());
             }
         } else {
             sender.sendMessage(ChatColor.DARK_AQUA + "Only team captains can do this.");
@@ -2352,7 +2436,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("withdraw|w")
     @Description("Withdraw money from your team!")
     public static void teamWithdraw(Player sender, Float amount) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
 
         if (team == null) {
             sender.sendMessage(ChatColor.GRAY + "You are not on a team!");
@@ -2380,7 +2464,7 @@ public class TeamCommands extends BaseCommand implements Listener {
                 return;
             }
 
-            FrozenEconomyHandler.deposit(sender.getUniqueId(), amount);
+            EconomyHandler.deposit(sender.getUniqueId(), amount);
             sender.sendMessage(ChatColor.YELLOW + "You have withdrawn " + ChatColor.LIGHT_PURPLE + amount + ChatColor.YELLOW + " from the team balance!");
 
             TeamActionTracker.logActionAsync(team, TeamActionType.PLAYER_WITHDRAW_MONEY, ImmutableMap.of(
@@ -2425,12 +2509,12 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("claim")
     @Description("Claim a area for your team!")
     public static void teamClaim(final Player sender) {
-        if( Foxtrot.getInstance().getMapHandler().isKitMap() ) {
+        if( HCF.getInstance().getMapHandler().isKitMap() ) {
             sender.sendMessage(ChatColor.RED + "You cannot use this command on a Kit map.");
             return;
         }
 
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
 
         if (team == null) {
             sender.sendMessage(ChatColor.GRAY + "You are not on a team!");
@@ -2474,7 +2558,7 @@ public class TeamCommands extends BaseCommand implements Listener {
                     sender.getInventory().setItem(finalSlot, SELECTION_WAND.clone());
                 }
 
-            }.runTaskLater(Foxtrot.getInstance(), 1L);
+            }.runTaskLater(HCF.getInstance(), 1L);
 
             new VisualClaim(sender, VisualClaimType.CREATE, false).draw(false);
 
@@ -2519,7 +2603,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("subclaim addplayer|sub addplayer|subclaim grant|sub grant")
     @Description("Add a player to your subclaim.")
     public static void teamSubclaimAddPlayer(Player sender, Subclaim subclaim, @Flags("other") Player player) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
 
         if (!team.isOwner(sender.getUniqueId()) && !team.isCoLeader(sender.getUniqueId()) && !team.isCaptain(sender.getUniqueId())) {
             sender.sendMessage(ChatColor.RED + "Only the team captains can do this.");
@@ -2575,7 +2659,7 @@ public class TeamCommands extends BaseCommand implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(event.getPlayer());
+        Team team = HCF.getInstance().getTeamHandler().getTeam(event.getPlayer());
 
         if (event.getItem() != null && (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) && event.getItem().getType() == SELECTION_WAND_SUBCLAIM.getType()) {
             if (event.getItem().hasItemMeta() && event.getItem().getItemMeta().getDisplayName() != null && event.getItem().getItemMeta().getDisplayName().contains("Subclaim")) {
@@ -2650,7 +2734,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("subclaim create| sub create}")
     @Description("Creates a subclaim")
     public static void teamSubclaimCreate(Player sender, String subclaim) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
 
         if (team == null) {
             sender.sendMessage(ChatColor.RED + "You must be on a team to execute this command!");
@@ -2721,7 +2805,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("subclaim list|sub list}")
     @Description("Lists all subclaims")
     public static void teamSubclaimList(Player sender) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
 
         if (team == null) {
             sender.sendMessage(ChatColor.RED + "You must be on a team to execute this command!");
@@ -2762,7 +2846,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("subclaim removeplayer|sub removeplayer")
     @Description("Removes a player from a subclaim")
     public static void teamSubclaimRemovePlayer(Player sender, Subclaim subclaim, @Flags("other") Player player) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
 
         if (!team.isOwner(sender.getUniqueId()) && !team.isCoLeader(sender.getUniqueId()) && !team.isCaptain(sender.getUniqueId())) {
             sender.sendMessage(ChatColor.RED + "Only the team captains can do this.");
@@ -2787,7 +2871,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("subclaim start|sub start")
     @Description("Starts a new subclaim")
     public static void teamSubclaimStart(Player sender) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
 
         if (team == null) {
             sender.sendMessage(ChatColor.RED + "You must be on a team to execute this command!");
@@ -2823,7 +2907,7 @@ public class TeamCommands extends BaseCommand implements Listener {
     @Subcommand("subclaim unclaim|sub unclaim")
     @Description("Unclaims a subclaim")
     public static void teamSubclaimUnclaim(Player sender, Subclaim subclaim) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender);
+        Team team = HCF.getInstance().getTeamHandler().getTeam(sender);
 
         if (team.isOwner(sender.getUniqueId()) || team.isCoLeader(sender.getUniqueId()) || team.isCaptain(sender.getUniqueId())) {
             team.getSubclaims().remove(subclaim);

@@ -1,7 +1,7 @@
 package net.frozenorb.foxtrot.util;
 
 
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -41,26 +41,26 @@ public class DeathbanUtils {
     }
 
     public static void putOutOfDeathban(Player player, String outcome){
-        player.teleport(Foxtrot.getInstance().getServerHandler().getSpawnLocation());
+        player.teleport(HCF.getInstance().getServerHandler().getSpawnLocation());
         player.getInventory().clear();
 
-        Foxtrot.getInstance().getDeathbanMap().revive(player.getUniqueId());
+        HCF.getInstance().getDeathbanMap().revive(player.getUniqueId());
 
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(Foxtrot.getInstance(), () -> {
-            Foxtrot.getInstance().getPvPTimerMap().createTimer(player.getUniqueId(), 30 * 60);//moved inside here due to occasional CME maybe this will fix?
+        Bukkit.getScheduler().scheduleSyncDelayedTask(HCF.getInstance(), () -> {
+            HCF.getInstance().getPvPTimerMap().createTimer(player.getUniqueId(), 30 * 60);//moved inside here due to occasional CME maybe this will fix?
         }, 20L);
 
     }
 
     public static void teleportToDeathban(Player player){
         player.teleport(new Location(
-                Bukkit.getWorld(Foxtrot.getInstance().getConfig().getString("deathban-arena.world")),
-                Foxtrot.getInstance().getConfig().getDouble("deathban-arena.x"),
-                Foxtrot.getInstance().getConfig().getDouble("deathban-arena.y"),
-                Foxtrot.getInstance().getConfig().getDouble("deathban-arena.z"),
-                (float) Foxtrot.getInstance().getConfig().getDouble("deathban-arena.yaw"),
-                (float) Foxtrot.getInstance().getConfig().getDouble("deathban-arena.pitch")
+                Bukkit.getWorld(HCF.getInstance().getConfig().getString("deathban-arena.world")),
+                HCF.getInstance().getConfig().getDouble("deathban-arena.x"),
+                HCF.getInstance().getConfig().getDouble("deathban-arena.y"),
+                HCF.getInstance().getConfig().getDouble("deathban-arena.z"),
+                (float) HCF.getInstance().getConfig().getDouble("deathban-arena.yaw"),
+                (float) HCF.getInstance().getConfig().getDouble("deathban-arena.pitch")
         ));
 
         player.sendMessage(CC.translate(""));
@@ -71,13 +71,13 @@ public class DeathbanUtils {
     }
 
     public static void setDeathbanArea(Location location){
-        Foxtrot.getInstance().getConfig().set("deathban-arean.world", location.getWorld().getName());
-        Foxtrot.getInstance().getConfig().set("deathban.x", location.getX());
-        Foxtrot.getInstance().getConfig().set("deathban.y", location.getY());
-        Foxtrot.getInstance().getConfig().set("deathban-arena.z", location.getZ());
-        Foxtrot.getInstance().getConfig().set("deathban-arena.yaw", location.getYaw());
-        Foxtrot.getInstance().getConfig().set("deathban-arena.pitch", location.getPitch());
-        Foxtrot.getInstance().saveConfig();
+        HCF.getInstance().getConfig().set("deathban-arean.world", location.getWorld().getName());
+        HCF.getInstance().getConfig().set("deathban.x", location.getX());
+        HCF.getInstance().getConfig().set("deathban.y", location.getY());
+        HCF.getInstance().getConfig().set("deathban-arena.z", location.getZ());
+        HCF.getInstance().getConfig().set("deathban-arena.yaw", location.getYaw());
+        HCF.getInstance().getConfig().set("deathban-arena.pitch", location.getPitch());
+        HCF.getInstance().saveConfig();
     }
 
 

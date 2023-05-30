@@ -1,6 +1,6 @@
 package net.frozenorb.foxtrot.pvpclasses.pvpclasses;
 
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.deathmessage.DeathMessageHandler;
 import net.frozenorb.foxtrot.deathmessage.objects.PlayerDamage;
 import net.frozenorb.foxtrot.pvpclasses.PvPClass;
@@ -34,7 +34,7 @@ public class RogueClass extends PvPClass implements Listener {
     public RogueClass() {
         super("Rogue", 15, Arrays.asList(Material.SUGAR, Material.FEATHER));
 
-        Bukkit.getServer().getPluginManager().registerEvents(this, Foxtrot.getInstance());
+        Bukkit.getServer().getPluginManager().registerEvents(this, HCF.getInstance());
     }
 
     @Override
@@ -185,7 +185,7 @@ public class RogueClass extends PvPClass implements Listener {
         }
 
         public String getDeathMessage() {
-            return (ChatColor.RED + getDamaged() + ChatColor.DARK_RED + "[" + Foxtrot.getInstance().getMapHandler().getStatsHandler().getStats(UUIDUtils.uuid(getDamaged())).getKills() + "]" + ChatColor.YELLOW + " was backstabbed by " + ChatColor.RED + getDamager() + ChatColor.DARK_RED + "[" + Foxtrot.getInstance().getMapHandler().getStatsHandler().getStats(UUIDUtils.uuid(getDamager())).getKills() + "]" + ChatColor.YELLOW + ".");
+            return (ChatColor.RED + getDamaged() + ChatColor.DARK_RED + "[" + HCF.getInstance().getMapHandler().getStatsHandler().getStats(UUIDUtils.uuid(getDamaged())).getKills() + "]" + ChatColor.WHITE + " was backstabbed by " + ChatColor.RED + getDamager() + ChatColor.DARK_RED + "[" + HCF.getInstance().getMapHandler().getStatsHandler().getStats(UUIDUtils.uuid(getDamager())).getKills() + "]" + ChatColor.WHITE + ".");
         }
 
         //***************************//

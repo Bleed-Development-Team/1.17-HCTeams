@@ -4,7 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import lombok.Getter;
 import lombok.Setter;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.team.Team;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -22,15 +22,15 @@ public class LandBoard implements Listener {
     private final Map<String, Multimap<CoordinateSet, Map.Entry<Claim, Team>>> buckets = new ConcurrentHashMap<>();
 
     public LandBoard() {
-        for (World world : Foxtrot.getInstance().getServer().getWorlds()) {
+        for (World world : HCF.getInstance().getServer().getWorlds()) {
             buckets.put(world.getName(), HashMultimap.create());
         }
 
-        Foxtrot.getInstance().getServer().getPluginManager().registerEvents(this, Foxtrot.getInstance());
+        HCF.getInstance().getServer().getPluginManager().registerEvents(this, HCF.getInstance());
     }
 
     public void loadFromTeams() {
-        for (Team team : Foxtrot.getInstance().getTeamHandler().getTeams()) {
+        for (Team team : HCF.getInstance().getTeamHandler().getTeams()) {
             for (Claim claim : team.getClaims()) {
                 setTeamAt(claim, team);
             }

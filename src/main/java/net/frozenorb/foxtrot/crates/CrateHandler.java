@@ -5,7 +5,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import lombok.Getter;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.util.InventorySerialization;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -35,7 +35,7 @@ public class CrateHandler implements Listener {
 
 		Bukkit.getLogger().info("Creating indexes...");
 
-		collection = Foxtrot.getInstance().getMongoPool().getDB(Foxtrot.MONGO_DB_NAME).getCollection("HCTCrates");
+		collection = HCF.getInstance().getMongoPool().getDB(HCF.MONGO_DB_NAME).getCollection("HCTCrates");
 		collection.createIndex(new BasicDBObject("CrateName", 1));
 		collection.createIndex(new BasicDBObject("Items", 1));
 
@@ -45,7 +45,7 @@ public class CrateHandler implements Listener {
 		loadCrates();
 
 		// Register this as a listener
-		Foxtrot.getInstance().getServer().getPluginManager().registerEvents(this, Foxtrot.getInstance());
+		HCF.getInstance().getServer().getPluginManager().registerEvents(this, HCF.getInstance());
 	}
 
 	public void loadCrates() {
@@ -79,7 +79,7 @@ public class CrateHandler implements Listener {
 	public void onCrateInteract(PlayerInteractEvent event) {
 		if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Player player = event.getPlayer();
-			ItemStack inHand = player.getItemInUse();
+			ItemStack inHand = player.getItemInHand();
 
 			if (inHand != null && inHand.getType() == Material.ENDER_CHEST && inHand.hasItemMeta()) {
 				String name = Objects.requireNonNull(inHand.getItemMeta()).getDisplayName();
@@ -105,7 +105,7 @@ public class CrateHandler implements Listener {
 								public void run() {
 									player.updateInventory();
 								}
-							}.runTaskLater(Foxtrot.getInstance(), 1L);
+							}.runTaskLater(HCF.getInstance(), 1L);
 
 						} else {
 							player.sendMessage(ChatColor.RED + "You dont have enough space in your inventory!");

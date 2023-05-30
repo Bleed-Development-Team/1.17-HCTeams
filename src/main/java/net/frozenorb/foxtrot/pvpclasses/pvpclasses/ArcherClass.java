@@ -1,14 +1,16 @@
 package net.frozenorb.foxtrot.pvpclasses.pvpclasses;
 
 import lombok.Getter;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.deathmessage.DeathMessageHandler;
 import net.frozenorb.foxtrot.deathmessage.trackers.ArrowTracker;
+import net.frozenorb.foxtrot.gameplay.archerupgrades.ArcherUpgrade;
 import net.frozenorb.foxtrot.pvpclasses.PvPClass;
 import net.frozenorb.foxtrot.pvpclasses.PvPClassHandler;
 import net.frozenorb.foxtrot.server.SpawnTagHandler;
 import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
+import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.Pair;
 import net.frozenorb.foxtrot.util.TimeUtils;
 import org.bukkit.ChatColor;
@@ -74,6 +76,8 @@ public class ArcherClass extends PvPClass {
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onEntityArrowHit(EntityDamageByEntityEvent event) {
+
+
 		if (event.getEntity() instanceof Player && event.getDamager() instanceof Arrow) {
 			Arrow arrow = (Arrow) event.getDamager();
 			final Player victim = (Player) event.getEntity();
@@ -101,7 +105,6 @@ public class ArcherClass extends PvPClass {
 			if (victim.getHealth() - damage <= 0D) {
 				event.setCancelled(true);
 			} else {
-				event.setDamage(0D);
 			}
 
 			// The 'ShotFromDistance' metadata is applied in the deathmessage module.
@@ -122,6 +125,17 @@ public class ArcherClass extends PvPClass {
 				// Only send the message if they're not already marked.
 				if (!isMarked(victim)) {
 					victim.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + "Marked! " + ChatColor.YELLOW + "An archer has shot you and marked you (+25% damage) for " + MARK_SECONDS + " seconds.");
+				}
+
+				ArcherUpgrade archerUpgrade = HCF.getInstance().getArcherUpgradeHandler().getCurrentArcher(shooter);
+
+				if (archerUpgrade != null){
+					double percentage = HCF.RANDOM.nextDouble();
+
+					if (percentage < 0.25){
+						victim.addPotionEffect(archerUpgrade.getEffect());
+						victim.sendMessage(CC.translate("&fYou have been &cinfected &fwith an &4archer upgrade&f!"));
+					}
 				}
 
 				PotionEffect invis = null;
@@ -156,7 +170,7 @@ public class ArcherClass extends PvPClass {
 								victim.addPotionEffect(invisFinal);
 							}
 
-						}.runTaskLater(Foxtrot.getInstance(), (MARK_SECONDS * 20) + 5);
+						}.runTaskLater(HCF.getInstance(), (MARK_SECONDS * 20) + 5);
 					}
 				}
 
@@ -196,7 +210,7 @@ public class ArcherClass extends PvPClass {
 
 	@EventHandler
 	public void onEntityShootBow(EntityShootBowEvent event) {
-		event.getProjectile().setMetadata("Pullback", new FixedMetadataValue(Foxtrot.getInstance(), event.getForce()));
+		event.getProjectile().setMetadata("Pullback", new FixedMetadataValue(HCF.getInstance(), event.getForce()));
 	}
 
 	@Override
@@ -240,8 +254,8 @@ public class ArcherClass extends PvPClass {
 	}
 
 	private boolean canUseMark(Player player, Player victim) {
-		if (Foxtrot.getInstance().getTeamHandler().getTeam(player) != null) {
-			Team team = Foxtrot.getInstance().getTeamHandler().getTeam(player);
+		if (HCF.getInstance().getTeamHandler().getTeam(player) != null) {
+			Team team = HCF.getInstance().getTeamHandler().getTeam(player);
 
 			int amount = 0;
 			for (Player member : team.getOnlineMembers()) {

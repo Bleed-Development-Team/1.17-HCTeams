@@ -1,6 +1,6 @@
 package net.frozenorb.foxtrot.util;
 
-import net.frozenorb.foxtrot.listener.PortalTrapListener;
+import net.frozenorb.foxtrot.server.listener.impl.PortalTrapListener;
 import net.frozenorb.foxtrot.team.claims.Claim;
 import net.frozenorb.foxtrot.team.claims.LandBoard;
 import org.bukkit.Effect;

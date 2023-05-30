@@ -5,7 +5,7 @@ import com.mongodb.BasicDBObject;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
-import net.frozenorb.foxtrot.serialization.LocationSerializer;
+import net.frozenorb.foxtrot.util.serialization.LocationSerializer;
 import net.frozenorb.foxtrot.util.UUIDUtils;
 import org.bukkit.Location;
 

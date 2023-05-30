@@ -1,6 +1,6 @@
 package net.frozenorb.foxtrot.util;
 
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -20,7 +20,7 @@ public class RegenUtils {
 
         allEntries.add(block.getLocation());
 
-        Bukkit.getScheduler().runTaskLater(Foxtrot.getInstance(), () -> {
+        Bukkit.getScheduler().runTaskLater(HCF.getInstance(), () -> {
             if (willRegen.test(block)) {
                 onRegen.callback(block);
 

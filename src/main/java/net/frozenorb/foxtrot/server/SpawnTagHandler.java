@@ -2,7 +2,7 @@ package net.frozenorb.foxtrot.server;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -24,7 +24,7 @@ public class SpawnTagHandler {
     }
 
     public static void addPassiveSeconds(Player player, int seconds) {
-        if (!Foxtrot.getInstance().getServerHandler().isPassiveTagEnabled()) {
+        if (!HCF.getInstance().getServerHandler().isPassiveTagEnabled()) {
             return;
         }
 
@@ -60,11 +60,11 @@ public class SpawnTagHandler {
     }
 
     public static int getMaxTagTime() {
-        if (Foxtrot.getInstance().getServerHandler().isHardcore()) {
+        if (HCF.getInstance().getServerHandler().isHardcore()) {
             return 45;
         }
 
-        return Foxtrot.getInstance().getServerHandler().isPassiveTagEnabled() ? 30 : 60;
+        return HCF.getInstance().getServerHandler().isPassiveTagEnabled() ? 30 : 60;
     }
 
 }

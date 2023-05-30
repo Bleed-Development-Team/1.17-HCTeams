@@ -1,11 +1,9 @@
 package net.frozenorb.foxtrot.persist.maps;
 
 import com.google.common.collect.Maps;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.persist.PersistMap;
-import net.frozenorb.foxtrot.team.Team;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -18,7 +16,7 @@ public class PlaytimeMap extends PersistMap<Long> {
     public PlaytimeMap() {
         super("PlayerPlaytimes", "Playtime");
 
-        Bukkit.getScheduler().runTaskTimerAsynchronously(Foxtrot.getInstance(), () -> {
+        Bukkit.getScheduler().runTaskTimerAsynchronously(HCF.getInstance(), () -> {
             List<UUID> toRemove = new ArrayList<>();
             List<UUID> toUpdate = new ArrayList<>();
 
@@ -45,6 +43,7 @@ public class PlaytimeMap extends PersistMap<Long> {
                 pendingReward.remove(uuid);
             }
 
+            /*
             for (UUID uuid : toUpdate) {
                 Player player = Bukkit.getPlayer(uuid);
 
@@ -52,13 +51,15 @@ public class PlaytimeMap extends PersistMap<Long> {
                     Team team = Foxtrot.getInstance().getTeamHandler().getTeam(player);
 
                     if (team != null) {
-                        team.addPlaytimePoints(5);
-                        team.sendMessage(ChatColor.GREEN + "Your team received 5 points thanks to " + ChatColor.AQUA + ChatColor.BOLD + player.getName() + ChatColor.GREEN + "'s play-time.");
+                        //team.addPlaytimePoints(5);
+                        //team.sendMessage(ChatColor.GREEN + "Your team received 5 points thanks to " + ChatColor.AQUA + ChatColor.BOLD + player.getName() + ChatColor.GREEN + "'s play-time.");
                     }
 
                     pendingReward.put(uuid, System.currentTimeMillis() + calculateNextRewardTime(player.getUniqueId()));
                 }
             }
+
+             */
         }, 0, 20L);
     }
 

@@ -2,7 +2,7 @@ package net.frozenorb.foxtrot.team.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.team.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,7 +16,7 @@ public class ForceLeaderCommand extends BaseCommand {
     @Default
     @Description("Force a player to be the leader of a team")
     public static void forceLeader(Player sender, @Name("target") Player player) {
-        Team playerTeam = Foxtrot.getInstance().getTeamHandler().getTeam(player.getUniqueId());
+        Team playerTeam = HCF.getInstance().getTeamHandler().getTeam(player.getUniqueId());
 
         if (playerTeam == null) {
             sender.sendMessage(ChatColor.GRAY + "That player is not on a team.");

@@ -1,8 +1,7 @@
 package net.frozenorb.foxtrot.deathmessage.listeners;
 
 import com.google.common.collect.Maps;
-import net.frozenorb.foxtrot.Foxtrot;
-import net.frozenorb.foxtrot.commands.ApplyDeathbanKit;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.deathmessage.DeathMessageHandler;
 import net.frozenorb.foxtrot.deathmessage.event.CustomPlayerDamageEvent;
 import net.frozenorb.foxtrot.deathmessage.event.PlayerKilledEvent;
@@ -13,22 +12,23 @@ import net.frozenorb.foxtrot.map.killstreaks.Killstreak;
 import net.frozenorb.foxtrot.map.killstreaks.PersistentKillstreak;
 import net.frozenorb.foxtrot.map.stats.StatsEntry;
 import net.frozenorb.foxtrot.team.Team;
-import net.frozenorb.foxtrot.util.DeathbanUtils;
+import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.Players;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.util.List;
 import java.util.Map;
@@ -47,7 +47,7 @@ public class DamageListener implements Listener {
             Player player = (Player) event.getEntity();
             CustomPlayerDamageEvent customEvent = new CustomPlayerDamageEvent(event, new UnknownDamage(player.getName(), event.getDamage()));
             
-            Foxtrot.getInstance().getServer().getPluginManager().callEvent(customEvent);
+            HCF.getInstance().getServer().getPluginManager().callEvent(customEvent);
             DeathMessageHandler.addDamage(player, customEvent.getTrackerDamage());
         }
     }
@@ -75,17 +75,17 @@ public class DamageListener implements Listener {
             if (deathCause instanceof PlayerDamage && deathCause.getTimeDifference() < TimeUnit.MINUTES.toMillis(1)) {
                 // System.out.println("Its a playerdamage thing");
                 String killerName = ((PlayerDamage) deathCause).getDamager();
-                Player killer = Foxtrot.getInstance().getServer().getPlayerExact(killerName);
+                Player killer = HCF.getInstance().getServer().getPlayerExact(killerName);
                 
-                if (killer != null && !Foxtrot.getInstance().getInDuelPredicate().test(event.getEntity())) {
+                if (killer != null && !HCF.getInstance().getInDuelPredicate().test(event.getEntity())) {
 
                     // kit-map death handling
-                    if (Foxtrot.getInstance().getMapHandler().isKitMap() || Foxtrot.getInstance().getServerHandler().isVeltKitMap()) {
+                    if (HCF.getInstance().getMapHandler().isKitMap() || HCF.getInstance().getServerHandler().isVeltKitMap()) {
                         Player victim = event.getEntity();
 
                         // Call event
                         PlayerKilledEvent killedEvent = new PlayerKilledEvent(killer, victim);
-                        Foxtrot.getInstance().getServer().getPluginManager().callEvent(killedEvent);
+                        HCF.getInstance().getServer().getPluginManager().callEvent(killedEvent);
 
                         // Prevent kill boosting
                         // Check if the victim's UUID is the same as the killer's last victim UUID
@@ -98,7 +98,7 @@ public class DamageListener implements Listener {
                         }
 
                         if (killer.equals(victim) || Players.isNaked(victim)) {
-                            StatsEntry victimStats = Foxtrot.getInstance().getMapHandler().getStatsHandler().getStats(victim);
+                            StatsEntry victimStats = HCF.getInstance().getMapHandler().getStatsHandler().getStats(victim);
 
                             victimStats.addDeath();
                         } else if (killer.getAddress().getAddress().getHostAddress().equalsIgnoreCase(victim.getAddress().getAddress().getHostAddress())) {
@@ -106,12 +106,12 @@ public class DamageListener implements Listener {
                         } else if (boosting.containsKey(killer.getUniqueId()) && boosting.get(killer.getUniqueId()) > 1) {
                             killer.sendMessage(ChatColor.RED + "Boost Check: You've killed " + victim.getName() + " " + boosting.get(killer.getUniqueId()) + " times.");
                             
-                            StatsEntry victimStats = Foxtrot.getInstance().getMapHandler().getStatsHandler().getStats(victim);
+                            StatsEntry victimStats = HCF.getInstance().getMapHandler().getStatsHandler().getStats(victim);
                             
                             victimStats.addDeath();
                         } else {
-                            StatsEntry victimStats = Foxtrot.getInstance().getMapHandler().getStatsHandler().getStats(victim);
-                            StatsEntry killerStats = Foxtrot.getInstance().getMapHandler().getStatsHandler().getStats(killer);
+                            StatsEntry victimStats = HCF.getInstance().getMapHandler().getStatsHandler().getStats(victim);
+                            StatsEntry killerStats = HCF.getInstance().getMapHandler().getStatsHandler().getStats(killer);
                             
                             victimStats.addDeath();
                             killerStats.addKill();
@@ -119,14 +119,14 @@ public class DamageListener implements Listener {
                             
                             lastKilled.put(killer.getUniqueId(), victim.getUniqueId());
                             
-                            Killstreak killstreak = Foxtrot.getInstance().getMapHandler().getKillstreakHandler().check(killerStats.getKillstreak());
+                            Killstreak killstreak = HCF.getInstance().getMapHandler().getKillstreakHandler().check(killerStats.getKillstreak());
                             
                             if (killstreak != null) {
                                 killstreak.apply(killer);
                                 
                                 Bukkit.broadcastMessage(killer.getDisplayName() + ChatColor.YELLOW + " has gotten the " + ChatColor.RED + killstreak.getName() + ChatColor.YELLOW + " killstreak!");
 
-                                List<PersistentKillstreak> persistent = Foxtrot.getInstance().getMapHandler().getKillstreakHandler().getPersistentKillstreaks(killer, killerStats.getKillstreak());
+                                List<PersistentKillstreak> persistent = HCF.getInstance().getMapHandler().getKillstreakHandler().getPersistentKillstreaks(killer, killerStats.getKillstreak());
 
                                 for (PersistentKillstreak persistentStreak : persistent) {
                                     if (persistentStreak.matchesExactly(killerStats.getKillstreak())) {
@@ -137,17 +137,17 @@ public class DamageListener implements Listener {
                                 }
                             }
                             
-                            Foxtrot.getInstance().getKillsMap().setKills(killer.getUniqueId(), killerStats.getKills());
-                            Foxtrot.getInstance().getDeathsMap().setDeaths(victim.getUniqueId(), victimStats.getDeaths());
+                            HCF.getInstance().getKillsMap().setKills(killer.getUniqueId(), killerStats.getKills());
+                            HCF.getInstance().getDeathsMap().setDeaths(victim.getUniqueId(), victimStats.getDeaths());
                         }
-                        StatsEntry victimStats = Foxtrot.getInstance().getMapHandler().getStatsHandler().getStats(victim);
-                        StatsEntry killerStats = Foxtrot.getInstance().getMapHandler().getStatsHandler().getStats(killer);
+                        StatsEntry victimStats = HCF.getInstance().getMapHandler().getStatsHandler().getStats(victim);
+                        StatsEntry killerStats = HCF.getInstance().getMapHandler().getStatsHandler().getStats(killer);
 
                         victimStats.addDeath();
                         killerStats.addKill();
 
-                        if (Foxtrot.getInstance().getServerHandler().isHardcore()) {
-                            event.getDrops().add(Foxtrot.getInstance().getServerHandler().generateDeathSign(event.getEntity().getName(), killer.getName()));
+                        if (HCF.getInstance().getServerHandler().isHardcore()) {
+                            event.getDrops().add(HCF.getInstance().getServerHandler().generateDeathSign(event.getEntity().getName(), killer.getName()));
                         }
                     }
                 }
@@ -161,115 +161,100 @@ public class DamageListener implements Listener {
         Player killer = event.getEntity().getKiller();
         Player victim = event.getEntity().getPlayer();
         
-        Team killerTeam = killer == null ? null : Foxtrot.getInstance().getTeamHandler().getTeam(killer);
-        Team deadTeam = Foxtrot.getInstance().getTeamHandler().getTeam(event.getEntity());
-        StatsEntry killerStats = killer == null ? null : Foxtrot.getInstance().getMapHandler().getStatsHandler().getStats(killer);
-
-
-        if (killer != null && ApplyDeathbanKit.people.contains(killer.getUniqueId()) && ApplyDeathbanKit.people.contains(killer.getUniqueId()) || victim != null && ApplyDeathbanKit.people.contains(victim.getUniqueId())) {
-            if (Foxtrot.getInstance().getDeathbanMap().getDeathban(killer.getUniqueId()) - 60 * 5 <= 0) {
-                DeathbanUtils.putOutOfDeathban(killer,  "");
-
-                return;
-            }
-
-            Foxtrot.getInstance().getDeathbanMap().removeTime(killer.getUniqueId(), 60 * 5);
-            return;
-        }
+        Team killerTeam = killer == null ? null : HCF.getInstance().getTeamHandler().getTeam(killer);
+        Team deadTeam = HCF.getInstance().getTeamHandler().getTeam(event.getEntity());
+        StatsEntry killerStats = killer == null ? null : HCF.getInstance().getMapHandler().getStatsHandler().getStats(killer);
 
         if (killer != null){
-            killerStats.addKill();
+            if (!isNaked(victim.getInventory())) {
+                killerStats.addKill();
+            }
         }
 
         if (killerTeam != null) {
-            killerTeam.setKills(killerTeam.getKills() + 1);
+            if (!isNaked(victim.getInventory())) {
+                killerTeam.setKills(killerTeam.getKills() + 1);
+            }
         }
         
         if (deadTeam != null) {
             deadTeam.setDeaths(deadTeam.getDeaths() + 1);
         }
-        
-        Bukkit.getScheduler().scheduleAsyncDelayedTask(Foxtrot.getInstance(), () -> {
+
+        if (killer != null){
+            HCF.getInstance().getGemsMap().addGems(killer.getUniqueId(), 5);
+            killer.sendMessage(CC.translate("&aYou earned &2+5 &agems!"));
+        }
+
+        Bukkit.getScheduler().scheduleAsyncDelayedTask(HCF.getInstance(), () -> {
             for (Player player : Bukkit.getOnlinePlayers()) {
 
 
-                if (Foxtrot.getInstance().getToggleDeathMessageMap().areDeathMessagesEnabled(player.getUniqueId())) {
+                if (HCF.getInstance().getToggleDeathMessageMap().areDeathMessagesEnabled(player.getUniqueId())) {
                     player.sendMessage(deathMessage);
                 } else {
-                    if (Foxtrot.getInstance().getTeamHandler().getTeam(player) == null) {
+                    if (HCF.getInstance().getTeamHandler().getTeam(player) == null) {
                         continue;
                     }
                     
                     // send them the message if the player who died was on their team
-                    if (Foxtrot.getInstance().getTeamHandler().getTeam(event.getEntity()) != null && Foxtrot.getInstance().getTeamHandler().getTeam(player).equals(Foxtrot.getInstance().getTeamHandler().getTeam(event.getEntity()))) {
+                    if (HCF.getInstance().getTeamHandler().getTeam(event.getEntity()) != null && HCF.getInstance().getTeamHandler().getTeam(player).equals(HCF.getInstance().getTeamHandler().getTeam(event.getEntity()))) {
                         player.sendMessage(deathMessage);
                     }
                     
                     // send them the message if the killer was on their team
-                    if (Foxtrot.getInstance().getTeamHandler().getTeam(killer) != null && Foxtrot.getInstance().getTeamHandler().getTeam(player).equals(Foxtrot.getInstance().getTeamHandler().getTeam(killer))) {
+                    if (HCF.getInstance().getTeamHandler().getTeam(killer) != null && HCF.getInstance().getTeamHandler().getTeam(player).equals(HCF.getInstance().getTeamHandler().getTeam(killer))) {
                         player.sendMessage(deathMessage);
                     }
                 }
             }
+
+            if (killer != null){
+                TextComponent component = new TextComponent(CC.translate("&4✗ &eYou have killed &6&l" + event.getEntity().getName() + " &4✗"));
+                killer.spigot().sendMessage(ChatMessageType.ACTION_BAR, component);
+
+                killer.playSound(killer.getLocation(), Sound.ENTITY_IRON_GOLEM_DEATH, 1.0f, 1.0f);
+            }
+
+
         });
         
-        // DeathTracker.logDeath(event.getEntity(), event.getEntity().getKiller());
+        //DeathTracker.logDeath(event.getEntity(), event.getEntity().getKiller());
         DeathMessageHandler.clearDamage(event.getEntity());
-        Foxtrot.getInstance().getMapHandler().getStatsHandler().getStats(event.getEntity()).addDeath();
-        Foxtrot.getInstance().getDeathsMap().setDeaths(event.getEntity().getUniqueId(), Foxtrot.getInstance().getDeathsMap().getDeaths(event.getEntity().getUniqueId()) + 1);
-
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(event.getEntity());
-
+        HCF.getInstance().getMapHandler().getStatsHandler().getStats(event.getEntity()).addDeath();
+        HCF.getInstance().getDeathsMap().setDeaths(event.getEntity().getUniqueId(), HCF.getInstance().getDeathsMap().getDeaths(event.getEntity().getUniqueId()) + 1);
     }
     
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
-        if (Foxtrot.getInstance().getMapHandler().isKitMap() || Foxtrot.getInstance().getServerHandler().isVeltKitMap()) {
+        if (HCF.getInstance().getMapHandler().isKitMap() || HCF.getInstance().getServerHandler().isVeltKitMap()) {
             checkKillstreaks(event.getPlayer());
         }
     }
     
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        if (Foxtrot.getInstance().getMapHandler().isKitMap() || Foxtrot.getInstance().getServerHandler().isVeltKitMap()) {
+        if (HCF.getInstance().getMapHandler().isKitMap() || HCF.getInstance().getServerHandler().isVeltKitMap()) {
             checkKillstreaks(event.getPlayer());
         }
     }
     
     private void checkKillstreaks(Player player) {
-        Bukkit.getScheduler().runTaskLater(Foxtrot.getInstance(), () -> {
-            int killstreak = Foxtrot.getInstance().getMapHandler().getStatsHandler().getStats(player).getKillstreak();
-            List<PersistentKillstreak> persistent = Foxtrot.getInstance().getMapHandler().getKillstreakHandler().getPersistentKillstreaks(player, killstreak);
+        Bukkit.getScheduler().runTaskLater(HCF.getInstance(), () -> {
+            int killstreak = HCF.getInstance().getMapHandler().getStatsHandler().getStats(player).getKillstreak();
+            List<PersistentKillstreak> persistent = HCF.getInstance().getMapHandler().getKillstreakHandler().getPersistentKillstreaks(player, killstreak);
             
             for (PersistentKillstreak persistentStreak : persistent) {
                 persistentStreak.apply(player);
             }
         }, 5L);
     }
-    
-    @EventHandler()
-    public void onRightClick(PlayerInteractEvent event) {
-        if (!event.getAction().name().startsWith("RIGHT_CLICK")) {
-            return;
-        }
-        
-        ItemStack inHand = event.getPlayer().getItemInHand();
-        if (inHand == null) {
-            return;
-        }
-        
-        if (inHand.getType() != Material.NETHER_STAR) {
-            return;
-        }
-        
-        if (!inHand.hasItemMeta() || !inHand.getItemMeta().hasDisplayName() || !inHand.getItemMeta().getDisplayName().startsWith(ChatColor.RED.toString() + ChatColor.BOLD.toString() + "Potion Refill Token")) {
-            return;
-        }
-        
-        event.getPlayer().setItemInHand(null);
-        
-        ItemStack pot = new ItemStack(Material.POTION, 1);
-        while (event.getPlayer().getInventory().addItem(pot).isEmpty()) {}
+
+
+    public boolean isNaked(PlayerInventory armor) {
+        return (armor.getHelmet() == null &&
+                armor.getChestplate() == null &&
+                armor.getLeggings() == null &&
+                armor.getBoots() == null);
     }
-    
 }

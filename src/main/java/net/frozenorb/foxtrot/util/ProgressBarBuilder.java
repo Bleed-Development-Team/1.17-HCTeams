@@ -13,41 +13,26 @@ import java.util.Arrays;
 @Setter
 @Accessors(fluent = true)
 public class ProgressBarBuilder {
+	private static int blocksToDisplay = 10;
 
-	private int blocksToDisplay;
-	private char blockChar;
-	private String completedColor;
-	private String uncompletedColor;
+	private static char blockChar = StringEscapeUtils.unescapeJava("█").charAt(0);
 
-	public ProgressBarBuilder(int blocksToDisplay) {
-		this.blocksToDisplay = blocksToDisplay;
-	}
+	private static String completedColor = ChatColor.GREEN.toString();
 
-	public ProgressBarBuilder() {
-		this(10);
+	private static String uncompletedColor = ChatColor.GRAY.toString();
 
-		blockChar = StringEscapeUtils.unescapeJava("\u2588").charAt(0);
-		completedColor = ChatColor.GREEN.toString();
-		uncompletedColor = ChatColor.GRAY.toString();
-	}
-
-	public String build(double percentage) {
+	public static String build(double percentage) {
 		String[] blocks = new String[blocksToDisplay];
 		Arrays.fill(blocks, uncompletedColor + blockChar);
-
-		if (percentage > 100.0D) {
+		if (percentage > 100.0D)
 			percentage = 100.0D;
-		}
-
-		for (int i = 0; i < percentage / 10; i++) {
+		for (int i = 0; i < percentage / 10.0D; i++)
 			blocks[i] = completedColor + blockChar;
-		}
-
 		return StringUtils.join(blocks);
 	}
 
 	public static double percentage(int value, int goal) {
-		return value > goal ? 100.0D : (((double) value / (double) goal) * 100.0D);
+		return (value > goal) ? 100.0D : (value / goal * 100.0D);
 	}
 
 }

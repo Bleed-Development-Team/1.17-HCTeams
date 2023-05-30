@@ -1,7 +1,7 @@
 package net.frozenorb.foxtrot.deathmessage.trackers;
 
 import lombok.Getter;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.deathmessage.event.CustomPlayerDamageEvent;
 import net.frozenorb.foxtrot.deathmessage.objects.Damage;
 import net.frozenorb.foxtrot.deathmessage.objects.MobDamage;
@@ -25,7 +25,7 @@ public class ArrowTracker implements Listener {
     @EventHandler
     public void onEntityShootBow(EntityShootBowEvent event) {
         if (event.getEntity() instanceof Player) {
-            event.getProjectile().setMetadata("ShotFromDistance", new FixedMetadataValue(Foxtrot.getInstance(), event.getProjectile().getLocation()));
+            event.getProjectile().setMetadata("ShotFromDistance", new FixedMetadataValue(HCF.getInstance(), event.getProjectile().getLocation()));
         }
     }
 
@@ -79,7 +79,7 @@ public class ArrowTracker implements Listener {
         }
 
         public String getDeathMessage() {
-            return (wrapName(getDamaged()) + " was shot by " + wrapName(getDamager()) + " from " + ChatColor.BLUE + (int) distance + " blocks" + ChatColor.YELLOW + ".");
+            return (wrapName(getDamaged()) + " was shot by " + wrapName(getDamager()) + " from " + ChatColor.BLUE + (int) distance + " blocks" + ChatColor.WHITE + ".");
         }
 
     }
@@ -91,7 +91,7 @@ public class ArrowTracker implements Listener {
         }
 
         public String getDeathMessage() {
-            return (wrapName(getDamaged()) + " was shot by a " + ChatColor.RED + EntityUtils.getName(getMobType()) + ChatColor.YELLOW + ".");
+            return (wrapName(getDamaged()) + " was shot by a " + ChatColor.RED + EntityUtils.getName(getMobType()) + ChatColor.WHITE + ".");
         }
 
     }

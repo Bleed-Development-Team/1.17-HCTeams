@@ -5,7 +5,7 @@ import com.google.gson.JsonParser;
 import com.mongodb.BasicDBObject;
 import com.mongodb.util.JSON;
 import lombok.Getter;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.chat.listeners.ChatListener;
 import net.frozenorb.foxtrot.chat.tasks.SaveCustomPrefixesTask;
 import org.bukkit.ChatColor;
@@ -26,9 +26,9 @@ public class ChatHandler {
     private Map<UUID, String> customPrefixes = new HashMap<>();
 
     public ChatHandler() {
-        customPrefixesFile = new File(Foxtrot.getInstance().getDataFolder(), "customPrefixes.json");
-        Foxtrot.getInstance().getServer().getPluginManager().registerEvents(new ChatListener(), Foxtrot.getInstance());
-        (new SaveCustomPrefixesTask()).runTaskTimerAsynchronously(Foxtrot.getInstance(), 5 * 60 * 20, 5 * 60 * 20); // Every 5 minutes.
+        customPrefixesFile = new File(HCF.getInstance().getDataFolder(), "customPrefixes.json");
+        HCF.getInstance().getServer().getPluginManager().registerEvents(new ChatListener(), HCF.getInstance());
+        (new SaveCustomPrefixesTask()).runTaskTimerAsynchronously(HCF.getInstance(), 5 * 60 * 20, 5 * 60 * 20); // Every 5 minutes.
         reloadCustomPrefixes();
     }
 
@@ -49,9 +49,9 @@ public class ChatHandler {
 
             int loaded = customPrefixes.size();
             long timeElapsed = System.currentTimeMillis() - started;
-            Foxtrot.getInstance().getLogger().warning("Loaded " + loaded + " custom chat prefix" + (loaded == 1 ? "" : "es") + " in " + timeElapsed + "ms");
+            HCF.getInstance().getLogger().warning("Loaded " + loaded + " custom chat prefix" + (loaded == 1 ? "" : "es") + " in " + timeElapsed + "ms");
         } catch (Exception e) {
-            Foxtrot.getInstance().getLogger().warning("Failed to load custom chat prefixes: " + e.getMessage());
+            HCF.getInstance().getLogger().warning("Failed to load custom chat prefixes: " + e.getMessage());
         }
     }
 
@@ -60,13 +60,13 @@ public class ChatHandler {
             long started = System.currentTimeMillis();
 
             BasicDBObject json = new BasicDBObject("prefixes", customPrefixes);
-            FileUtils.write(customPrefixesFile, Foxtrot.GSON.toJson(new JsonParser().parse(json.toString())));
+            FileUtils.write(customPrefixesFile, HCF.GSON.toJson(new JsonParser().parse(json.toString())));
 
             int loaded = customPrefixes.size();
             long timeElapsed = System.currentTimeMillis() - started;
-            Foxtrot.getInstance().getLogger().warning("Saved " + loaded + " custom chat prefix" + (loaded == 1 ? "" : "es") + " in " + timeElapsed + "ms");
+            HCF.getInstance().getLogger().warning("Saved " + loaded + " custom chat prefix" + (loaded == 1 ? "" : "es") + " in " + timeElapsed + "ms");
         } catch (Exception e) {
-            Foxtrot.getInstance().getLogger().warning("Failed to save custom chat prefixes: " + e.getMessage());
+            HCF.getInstance().getLogger().warning("Failed to save custom chat prefixes: " + e.getMessage());
             e.printStackTrace();
         }
     }

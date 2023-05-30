@@ -4,7 +4,7 @@ import com.google.common.reflect.TypeToken;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.util.JSON;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Type;
@@ -32,11 +32,11 @@ public class InventorySerialization {
 	public static BasicDBList serialize(ItemStack[] items) {
 		List<ItemStack> kits = new ArrayList<>(Arrays.asList(items));
 		kits.removeIf(Objects::isNull);
-		return (BasicDBList) JSON.parse(Foxtrot.PLAIN_GSON.toJson(kits.toArray(new ItemStack[kits.size()])));
+		return (BasicDBList) JSON.parse(HCF.PLAIN_GSON.toJson(kits.toArray(new ItemStack[kits.size()])));
 	}
 
 	public static ItemStack[] deserialize(BasicDBList dbList) {
-		return Foxtrot.PLAIN_GSON.fromJson(Foxtrot.PLAIN_GSON.toJson(dbList), TYPE);
+		return HCF.PLAIN_GSON.fromJson(HCF.PLAIN_GSON.toJson(dbList), TYPE);
 	}
 
 }

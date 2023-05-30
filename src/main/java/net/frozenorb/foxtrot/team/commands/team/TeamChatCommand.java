@@ -3,7 +3,7 @@ package net.frozenorb.foxtrot.team.commands.team;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.chat.enums.ChatMode;
 import net.frozenorb.foxtrot.team.Team;
 import org.bukkit.ChatColor;
@@ -19,7 +19,7 @@ public class TeamChatCommand extends BaseCommand {
 
     public static void setChat(Player player, ChatMode chatMode) {
         if (chatMode != null) {
-            Team playerTeam = Foxtrot.getInstance().getTeamHandler().getTeam(player);
+            Team playerTeam = HCF.getInstance().getTeamHandler().getTeam(player);
 
             if (chatMode != ChatMode.PUBLIC) {
                 if (playerTeam == null) {
@@ -46,17 +46,17 @@ public class TeamChatCommand extends BaseCommand {
                     break;
             }
 
-            Foxtrot.getInstance().getChatModeMap().setChatMode(player.getUniqueId(), chatMode);
+            HCF.getInstance().getChatModeMap().setChatMode(player.getUniqueId(), chatMode);
         } else {
-            switch (Foxtrot.getInstance().getChatModeMap().getChatMode(player.getUniqueId())) {
+            switch (HCF.getInstance().getChatModeMap().getChatMode(player.getUniqueId())) {
                 case PUBLIC -> {
-                    Team team = Foxtrot.getInstance().getTeamHandler().getTeam(player);
+                    Team team = HCF.getInstance().getTeamHandler().getTeam(player);
                     boolean teamHasAllies = team != null && team.getAllies().size() > 0;
                     setChat(player, teamHasAllies ? ChatMode.ALLIANCE : ChatMode.TEAM);
                 }
                 case ALLIANCE -> setChat(player, ChatMode.TEAM);
                 case TEAM -> {
-                    Team team2 = Foxtrot.getInstance().getTeamHandler().getTeam(player);
+                    Team team2 = HCF.getInstance().getTeamHandler().getTeam(player);
                     boolean isOfficer = team2 != null && (team2.isCaptain(player.getUniqueId()) || team2.isCoLeader(player.getUniqueId()) || team2.isOwner(player.getUniqueId()));
                     setChat(player, isOfficer ? ChatMode.OFFICER : ChatMode.PUBLIC);
                 }

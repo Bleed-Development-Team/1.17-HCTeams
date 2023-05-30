@@ -1,8 +1,8 @@
 package net.frozenorb.foxtrot.pvpclasses.pvpclasses;
 
 import lombok.Getter;
-import net.frozenorb.foxtrot.Foxtrot;
-import net.frozenorb.foxtrot.listener.FoxListener;
+import net.frozenorb.foxtrot.HCF;
+import net.frozenorb.foxtrot.server.listener.impl.FoxListener;
 import net.frozenorb.foxtrot.pvpclasses.PvPClass;
 import net.frozenorb.foxtrot.pvpclasses.PvPClassHandler;
 import net.frozenorb.foxtrot.pvpclasses.pvpclasses.bard.BardEffect;
@@ -59,7 +59,7 @@ public class BardClass extends PvPClass implements Listener {
         BARD_CLICK_EFFECTS.put(Material.IRON_INGOT, BardEffect.fromPotionAndEnergy(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 5, 2), 40));
         BARD_CLICK_EFFECTS.put(Material.GHAST_TEAR, BardEffect.fromPotionAndEnergy(new PotionEffect(PotionEffectType.REGENERATION, 20 * 5, 2), 40));
         BARD_CLICK_EFFECTS.put(Material.MAGMA_CREAM, BardEffect.fromPotionAndEnergy(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 20 * 45, 0), 40));
-        //BARD_CLICK_EFFECTS.put(Material.FERMENTED_SPIDER_EYE, BardEffect.fromEnergy(60));
+        BARD_CLICK_EFFECTS.put(Material.FERMENTED_SPIDER_EYE, BardEffect.fromEnergy(60));
         BARD_CLICK_EFFECTS.put(Material.WHEAT, BardEffect.fromEnergy(25));
 
         // Click debuffs
@@ -77,8 +77,8 @@ public class BardClass extends PvPClass implements Listener {
         new BukkitRunnable() {
 
             public void run() {
-                for (Player player : Foxtrot.getInstance().getServer().getOnlinePlayers()) {
-                    if (!PvPClassHandler.hasKitOn(player, BardClass.this) || Foxtrot.getInstance().getPvPTimerMap().hasTimer(player.getUniqueId())) {
+                for (Player player : HCF.getInstance().getServer().getOnlinePlayers()) {
+                    if (!PvPClassHandler.hasKitOn(player, BardClass.this) || HCF.getInstance().getPvPTimerMap().hasTimer(player.getUniqueId())) {
                         continue;
                     }
 
@@ -95,12 +95,12 @@ public class BardClass extends PvPClass implements Listener {
                     int manaInt = energy.get(player.getName()).intValue();
 
                     if (manaInt % 10 == 0) {
-                        player.sendMessage(ChatColor.AQUA + "Bard Energy: " + ChatColor.GREEN + manaInt);
+                        player.sendMessage(ChatColor.WHITE + "Bard Energy: " + ChatColor.GREEN + manaInt);
                     }
                 }
             }
 
-        }.runTaskTimer(Foxtrot.getInstance(), 15L, 20L);
+        }.runTaskTimer(HCF.getInstance(), 15L, 20L);
     }
 
     @Override
@@ -118,7 +118,7 @@ public class BardClass extends PvPClass implements Listener {
         player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 1), true);
         player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 0), true);
 
-        if (Foxtrot.getInstance().getPvPTimerMap().hasTimer(player.getUniqueId())) {
+        if (HCF.getInstance().getPvPTimerMap().hasTimer(player.getUniqueId())) {
             player.sendMessage(ChatColor.RED + "You are in PvP Protection and cannot use Bard effects. Type '/pvp enable' to remove your protection.");
         }
     }
@@ -138,13 +138,21 @@ public class BardClass extends PvPClass implements Listener {
         }
 
         player.getItemInHand();
-        if (BARD_PASSIVE_EFFECTS.containsKey(player.getItemInHand().getType()) && !DTRBitmask.SAFE_ZONE.appliesAt(player.getLocation())) {
+        if (BARD_PASSIVE_EFFECTS.containsKey(player.getInventory().getItemInMainHand().getType()) && !DTRBitmask.SAFE_ZONE.appliesAt(player.getLocation())) {
             // CUSTOM
-            if (player.getItemInHand().getType() == Material.FERMENTED_SPIDER_EYE && getLastEffectUsage().containsKey(player.getName()) && getLastEffectUsage().get(player.getName()) > System.currentTimeMillis()) {
+            if (player.getInventory().getItemInMainHand().getType() == Material.FERMENTED_SPIDER_EYE && getLastEffectUsage().containsKey(player.getName()) && getLastEffectUsage().get(player.getName()) > System.currentTimeMillis()) {
                 return;
             }
 
-            giveBardEffect(player, BARD_PASSIVE_EFFECTS.get(player.getItemInHand().getType()), true, false);
+            giveBardEffect(player, BARD_PASSIVE_EFFECTS.get(player.getInventory().getItemInMainHand().getType()), true, false);
+        }
+        if (BARD_PASSIVE_EFFECTS.containsKey(player.getInventory().getItemInOffHand().getType()) && !DTRBitmask.SAFE_ZONE.appliesAt(player.getLocation())){
+            // CUSTOM
+            if (player.getInventory().getItemInOffHand().getType() == Material.FERMENTED_SPIDER_EYE && getLastEffectUsage().containsKey(player.getName()) && getLastEffectUsage().get(player.getName()) > System.currentTimeMillis()) {
+                return;
+            }
+
+            giveBardEffect(player, BARD_PASSIVE_EFFECTS.get(player.getInventory().getItemInOffHand().getType()), true, false);
         }
         super.tick(player);
     }
@@ -174,7 +182,7 @@ public class BardClass extends PvPClass implements Listener {
             return;
         }
 
-        if (Foxtrot.getInstance().getPvPTimerMap().hasTimer(event.getPlayer().getUniqueId())) {
+        if (HCF.getInstance().getPvPTimerMap().hasTimer(event.getPlayer().getUniqueId())) {
             event.getPlayer().sendMessage(ChatColor.RED + "You are in PvP Protection and cannot use Bard effects. Type '/pvp enable' to remove your protection.");
             return;
         }
@@ -248,20 +256,20 @@ public class BardClass extends PvPClass implements Listener {
 
                 break;
             default:
-                Foxtrot.getInstance().getLogger().warning("No custom Bard effect defined for " + material + ".");
+                HCF.getInstance().getLogger().warning("No custom Bard effect defined for " + material + ".");
         }
     }
 
     public List<Player> getNearbyPlayers(Player player, boolean friendly) {
         List<Player> valid = new ArrayList<>();
-        Team sourceTeam = Foxtrot.getInstance().getTeamHandler().getTeam(player);
+        Team sourceTeam = HCF.getInstance().getTeamHandler().getTeam(player);
 
         // We divide by 2 so that the range isn't as much on the Y level (and can't be abused by standing on top of / under events)
         for (Entity entity : player.getNearbyEntities(BARD_RANGE, BARD_RANGE / 2, BARD_RANGE)) {
             if (entity instanceof Player) {
                 Player nearbyPlayer = (Player) entity;
 
-                if (Foxtrot.getInstance().getPvPTimerMap().hasTimer(nearbyPlayer.getUniqueId())) {
+                if (HCF.getInstance().getPvPTimerMap().hasTimer(nearbyPlayer.getUniqueId())) {
                     continue;
                 }
 

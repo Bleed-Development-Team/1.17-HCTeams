@@ -4,14 +4,13 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.map.stats.command.StatsTopCommand.StatsObjective;
 import org.bukkit.ChatColor;
 import org.bukkit.SkullType;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.Skull;
-import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 
 @CommandAlias("leaderboard")
@@ -43,20 +42,20 @@ public class LeaderboardAddCommand extends BaseCommand {
                 return;
             }
 
-            Foxtrot.getInstance().getMapHandler().getStatsHandler().getLeaderboardHeads().put(skull.getLocation(), place);
-            Foxtrot.getInstance().getMapHandler().getStatsHandler().getObjectives().put(skull.getLocation(), objective);
-            Foxtrot.getInstance().getMapHandler().getStatsHandler().updatePhysicalLeaderboards();
+            HCF.getInstance().getMapHandler().getStatsHandler().getLeaderboardHeads().put(skull.getLocation(), place);
+            HCF.getInstance().getMapHandler().getStatsHandler().getObjectives().put(skull.getLocation(), objective);
+            HCF.getInstance().getMapHandler().getStatsHandler().updatePhysicalLeaderboards();
             sender.sendMessage(ChatColor.GREEN + "This skull will now display the number " + ChatColor.WHITE + place + ChatColor.GREEN + " player's head.");
         } else {
             Sign sign = (Sign) block.getState();
 
-            Foxtrot.getInstance().getMapHandler().getStatsHandler().getLeaderboardSigns().put(sign.getLocation(), place);
-            Foxtrot.getInstance().getMapHandler().getStatsHandler().getObjectives().put(sign.getLocation(), objective);
-            Foxtrot.getInstance().getMapHandler().getStatsHandler().updatePhysicalLeaderboards();
+            HCF.getInstance().getMapHandler().getStatsHandler().getLeaderboardSigns().put(sign.getLocation(), place);
+            HCF.getInstance().getMapHandler().getStatsHandler().getObjectives().put(sign.getLocation(), objective);
+            HCF.getInstance().getMapHandler().getStatsHandler().updatePhysicalLeaderboards();
             sender.sendMessage(ChatColor.GREEN + "This sign will now display the number " + ChatColor.WHITE + place + ChatColor.GREEN + " player's stats.");
         }
         
-        Foxtrot.getInstance().getMapHandler().getStatsHandler().getObjectives().put(block.getLocation(), objective);
+        HCF.getInstance().getMapHandler().getStatsHandler().getObjectives().put(block.getLocation(), objective);
     }
 
 

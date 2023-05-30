@@ -8,7 +8,7 @@ public class MobUtil {
 
     public static String getItemName(ItemStack itemStack) {
         if (itemStack.getItemMeta().hasDisplayName()) {
-            return (ChatColor.stripColor(itemStack.getItemMeta().getDisplayName()));
+            return itemStack.getItemMeta().getDisplayName();
         }
 
         return (WordUtils.capitalizeFully(itemStack.getType().name().replace('_', ' ')));

@@ -1,8 +1,8 @@
 package net.frozenorb.foxtrot.pvpclasses.pvpclasses;
 
 import lombok.Getter;
-import net.frozenorb.foxtrot.Foxtrot;
-import net.frozenorb.foxtrot.listener.FoxListener;
+import net.frozenorb.foxtrot.HCF;
+import net.frozenorb.foxtrot.server.listener.impl.FoxListener;
 import net.frozenorb.foxtrot.pvpclasses.PvPClass;
 import net.frozenorb.foxtrot.pvpclasses.PvPClassHandler;
 import net.frozenorb.foxtrot.pvpclasses.pvpclasses.bard.BardEffect;
@@ -63,8 +63,8 @@ public class MageClass extends PvPClass {
         new BukkitRunnable() {
 
             public void run() {
-                for (Player player : Foxtrot.getInstance().getServer().getOnlinePlayers()) {
-                    if (!PvPClassHandler.hasKitOn(player, MageClass.this) || Foxtrot.getInstance().getPvPTimerMap().hasTimer(player.getUniqueId())) {
+                for (Player player : HCF.getInstance().getServer().getOnlinePlayers()) {
+                    if (!PvPClassHandler.hasKitOn(player, MageClass.this) || HCF.getInstance().getPvPTimerMap().hasTimer(player.getUniqueId())) {
                         continue;
                     }
 
@@ -81,12 +81,12 @@ public class MageClass extends PvPClass {
                     int manaInt = energy.get(player.getName()).intValue();
 
                     if (manaInt % 10 == 0) {
-                        player.sendMessage(ChatColor.AQUA + "Mage Energy: " + ChatColor.GREEN + manaInt);
+                        player.sendMessage(ChatColor.WHITE + "Mage Energy: " + ChatColor.GREEN + manaInt);
                     }
                 }
             }
 
-        }.runTaskTimer(Foxtrot.getInstance(), 15L, 20L);
+        }.runTaskTimer(HCF.getInstance(), 15L, 20L);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class MageClass extends PvPClass {
         player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 1), true);
         player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 0), true);
 
-        if (Foxtrot.getInstance().getPvPTimerMap().hasTimer(player.getUniqueId())) {
+        if (HCF.getInstance().getPvPTimerMap().hasTimer(player.getUniqueId())) {
             player.sendMessage(ChatColor.RED + "You are in PvP Protection and cannot use Mage effects. Type '/pvp enable' to remove your protection.");
         }
     }
@@ -134,7 +134,7 @@ public class MageClass extends PvPClass {
             return;
         }
 
-        if (Foxtrot.getInstance().getPvPTimerMap().hasTimer(event.getPlayer().getUniqueId())) {
+        if (HCF.getInstance().getPvPTimerMap().hasTimer(event.getPlayer().getUniqueId())) {
             event.getPlayer().sendMessage(ChatColor.RED + "You are in PvP Protection and cannot use Mage effects. Type '/pvp enable' to remove your protection.");
             return;
         }
@@ -208,20 +208,20 @@ public class MageClass extends PvPClass {
 
                 break;
             default:
-                Foxtrot.getInstance().getLogger().warning("No custom Mage effect defined for " + material + ".");
+                HCF.getInstance().getLogger().warning("No custom Mage effect defined for " + material + ".");
         }
     }
 
     public List<Player> getNearbyPlayers(Player player, boolean friendly) {
         List<Player> valid = new ArrayList<>();
-        Team sourceTeam = Foxtrot.getInstance().getTeamHandler().getTeam(player);
+        Team sourceTeam = HCF.getInstance().getTeamHandler().getTeam(player);
 
         // We divide by 2 so that the range isn't as much on the Y level (and can't be abused by standing on top of / under events)
         for (Entity entity : player.getNearbyEntities(BARD_RANGE, BARD_RANGE / 2, BARD_RANGE)) {
             if (entity instanceof Player) {
                 Player nearbyPlayer = (Player) entity;
 
-                if (Foxtrot.getInstance().getPvPTimerMap().hasTimer(nearbyPlayer.getUniqueId())) {
+                if (HCF.getInstance().getPvPTimerMap().hasTimer(nearbyPlayer.getUniqueId())) {
                     continue;
                 }
 

@@ -1,6 +1,6 @@
 package net.frozenorb.foxtrot.persist.maps;
 
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.persist.PersistMap;
 
 import java.util.UUID;
@@ -32,7 +32,7 @@ public class RaidableTeamsMap extends PersistMap<Integer> {
 
     public void setRaidableTeams(UUID update, int kills) {
         updateValueAsync(update, kills);
-        Foxtrot.getInstance().getKdrMap().updateKDR(update);
+        HCF.getInstance().getKdrMap().updateKDR(update);
     }
 
     public void add(UUID update, int kills) {

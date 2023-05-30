@@ -4,7 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
 import lombok.Getter;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -20,7 +20,7 @@ public class ChestCommand extends BaseCommand {
 
     @Default
     public static void chest(Player sender) {
-        if (!Foxtrot.getInstance().getServerHandler().isVeltKitMap() && !Foxtrot.getInstance().getMapHandler().isKitMap()) {
+        if (!HCF.getInstance().getServerHandler().isVeltKitMap() && !HCF.getInstance().getMapHandler().isKitMap()) {
             sender.sendMessage(ChatColor.RED + "This is a KitMap only command.");
             return;
         }

@@ -3,13 +3,14 @@ package net.frozenorb.foxtrot.team.claims;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import lombok.*;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.claims.Claim.CuboidDirection;
 import net.frozenorb.foxtrot.team.commands.team.TeamCommands;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import net.frozenorb.foxtrot.team.track.TeamActionTracker;
 import net.frozenorb.foxtrot.team.track.TeamActionType;
+import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.CuboidRegion;
 import net.frozenorb.foxtrot.util.ItemUtils;
 import org.bukkit.*;
@@ -64,7 +65,7 @@ public class VisualClaim implements Listener {
         }
 
         taskSetup = true;
-        Bukkit.getScheduler().runTaskTimer(Foxtrot.getInstance(), () -> {
+        Bukkit.getScheduler().runTaskTimer(HCF.getInstance(), () -> {
             Iterator<Entry<UUID, Queue<QueuedBlockChange>>> entryIterator = queuedBlockChanges.entrySet().iterator();
             while (entryIterator.hasNext()) {
                 Entry<UUID, Queue<QueuedBlockChange>> entry = entryIterator.next();
@@ -128,12 +129,12 @@ public class VisualClaim implements Listener {
             default -> visualClaims.put(player.getName(), this);
         }
 
-        Foxtrot.getInstance().getServer().getPluginManager().registerEvents(this, Foxtrot.getInstance());
+        HCF.getInstance().getServer().getPluginManager().registerEvents(this, HCF.getInstance());
 
         switch (type) {
             case CREATE -> {
                 // Don't allow claiming during a kit map
-                if (!bypass && Foxtrot.getInstance().getMapHandler().isKitMap()) {
+                if (!bypass && HCF.getInstance().getMapHandler().isKitMap()) {
                     if (!silent) {
                         player.sendMessage(ChatColor.RED + "Land claiming is disabled during kit maps");
                     }
@@ -186,7 +187,7 @@ public class VisualClaim implements Listener {
                 for (Entry<Claim, Team> regionData : LandBoard.getInstance().getRegionData(player.getLocation(), MAP_RADIUS, 256, MAP_RADIUS)) {
                     Claim claim = regionData.getKey();
                     Team claimOwner = regionData.getValue();
-                    World claimWorld = Foxtrot.getInstance().getServer().getWorld(claim.getWorld());
+                    World claimWorld = HCF.getInstance().getServer().getWorld(claim.getWorld());
 
                     for (Coordinate coordinate : claim) {
                         Block block = claimWorld.getBlockAt(coordinate.getX(), 100, coordinate.getZ());
@@ -244,7 +245,7 @@ public class VisualClaim implements Listener {
                 }
             }
             case SUBCLAIM_MAP -> {
-                Team senderTeam = Foxtrot.getInstance().getTeamHandler().getTeam(player);
+                Team senderTeam = HCF.getInstance().getTeamHandler().getTeam(player);
                 if (bypass) {
                     senderTeam = LandBoard.getInstance().getTeam(player.getLocation());
                 }
@@ -308,7 +309,7 @@ public class VisualClaim implements Listener {
 
         for (int x = minPoint.getBlockX(); x <= maxPoint.getBlockX(); x++) {
             for (int z = minPoint.getBlockZ(); z <= maxPoint.getBlockZ(); z++) {
-                Location at = new Location(Foxtrot.getInstance().getServer().getWorld(claim.getWorld()), x, 80, z);
+                Location at = new Location(HCF.getInstance().getServer().getWorld(claim.getWorld()), x, 80, z);
                 Team teamAt = LandBoard.getInstance().getTeam(at);
 
                 if (teamAt != null && (type != VisualClaimType.RESIZE || !teamAt.isMember(player.getUniqueId()))) {
@@ -324,7 +325,7 @@ public class VisualClaim implements Listener {
         Set<Claim> touchingClaims = new HashSet<>();
 
         for (Coordinate coordinate : claim.outset(CuboidDirection.Horizontal, 1)) {
-            Location loc = new Location(Foxtrot.getInstance().getServer().getWorld(claim.getWorld()), coordinate.getX(), 80, coordinate.getZ());
+            Location loc = new Location(HCF.getInstance().getServer().getWorld(claim.getWorld()), coordinate.getX(), 80, coordinate.getZ());
             Entry<Claim, Team> claimAtLocation = LandBoard.getInstance().getRegionData(loc);
 
             if (claimAtLocation != null) {
@@ -336,7 +337,7 @@ public class VisualClaim implements Listener {
     }
 
     public void setLoc(int locationId, final Location clicked) {
-        Team playerTeam = Foxtrot.getInstance().getTeamHandler().getTeam(player);
+        Team playerTeam = HCF.getInstance().getTeamHandler().getTeam(player);
 
         if (playerTeam == null) {
             player.sendMessage(ChatColor.RED + "You have to be on a team to " + type.name().toLowerCase() + " land!");
@@ -345,7 +346,7 @@ public class VisualClaim implements Listener {
         }
 
         if (type == VisualClaimType.CREATE) {
-            if (!bypass && !Foxtrot.getInstance().getServerHandler().isUnclaimed(clicked) && !Foxtrot.getInstance().getServerHandler().isWarzone(player.getLocation())) {
+            if (!bypass && !HCF.getInstance().getServerHandler().isUnclaimed(clicked) && !HCF.getInstance().getServerHandler().isWarzone(player.getLocation())) {
                 player.sendMessage(ChatColor.RED + "You can only claim land in the Wilderness!");
                 return;
             }
@@ -365,20 +366,23 @@ public class VisualClaim implements Listener {
                 clearPillarAt(corner2);
                 this.corner2 = clicked;
             }
+
             new BukkitRunnable(){
                 @Override
                 public void run() {
                     erectPillar(clicked, Material.EMERALD_BLOCK);
                 }
-            }.runTaskLater(Foxtrot.getInstance(), 1L);
+            }.runTaskLater(HCF.getInstance(), 1L);
+
 
             player.sendMessage(ChatColor.YELLOW + "Set claim's location " + ChatColor.LIGHT_PURPLE + locationId + ChatColor.YELLOW + " to " + ChatColor.GREEN + "(" + ChatColor.WHITE + clicked.getBlockX() + ", " + clicked.getBlockY() + ", " + clicked.getBlockZ() + ChatColor.GREEN + ")" + ChatColor.YELLOW + ".");
 
             if (corner1 != null && corner2 != null) {
-                int price = Claim.getPrice(new Claim(corner1, corner2), playerTeam, true);
 
                 int x = Math.abs(corner1.getBlockX() - corner2.getBlockX());
                 int z = Math.abs(corner1.getBlockZ() - corner2.getBlockZ());
+
+                int price = Claim.getPrice(new Claim(corner1, corner2), playerTeam, true);
 
                 if (price > playerTeam.getBalance() && !bypass) {
                     player.sendMessage(ChatColor.YELLOW + "Claim cost: " + ChatColor.RED + "$" + price + ChatColor.YELLOW + ", Current size: (" + ChatColor.WHITE + x + ", " + z + ChatColor.YELLOW + "), " + ChatColor.WHITE + (x * z) + ChatColor.YELLOW + " blocks");
@@ -421,7 +425,7 @@ public class VisualClaim implements Listener {
                         drawClaim(claimClone, Material.EMERALD_BLOCK);
                     }
 
-                }.runTaskLater(Foxtrot.getInstance(), 1L);
+                }.runTaskLater(HCF.getInstance(), 1L);
             }
 
             if (locationId == 1) {
@@ -478,7 +482,7 @@ public class VisualClaim implements Listener {
     }
 
     public void purchaseClaim() {
-        Team playerTeam = Foxtrot.getInstance().getTeamHandler().getTeam(player);
+        Team playerTeam = HCF.getInstance().getTeamHandler().getTeam(player);
 
         if (playerTeam == null) {
             player.sendMessage(ChatColor.RED + "You have to be on a team to claim land!");
@@ -511,13 +515,23 @@ public class VisualClaim implements Listener {
                 }
             }
 
+            int x = Math.abs(corner1.getBlockX() - corner2.getBlockX());
+            int z = Math.abs(corner1.getBlockZ() - corner2.getBlockZ());
+
+
+            if (x >= 50 && z >= 50 && !bypass){
+                player.sendMessage(CC.translate("&cYou cannot go over the 50 block claim limit."));
+                return;
+            }
+
+
             Claim claim = new Claim(corner1, corner2);
 
             if (isIllegalClaim(claim, null) || Double.isNaN(playerTeam.getBalance())) {
                 return;
             }
 
-            claim.setName(playerTeam.getName() + "_" + (100 + Foxtrot.RANDOM.nextInt(800)));
+            claim.setName(playerTeam.getName() + "_" + (100 + HCF.RANDOM.nextInt(800)));
             claim.setY1(0);
             claim.setY2(256);
 
@@ -530,7 +544,7 @@ public class VisualClaim implements Listener {
 
             if (!bypass) {
                 playerTeam.setBalance(playerTeam.getBalance() - price);
-                Foxtrot.getInstance().getLogger().info("Economy Logger: Withdrawing " + price + " from " + playerTeam.getBalance() + "'s account: Claimed land");
+                HCF.getInstance().getLogger().info("Economy Logger: Withdrawing " + price + " from " + playerTeam.getBalance() + "'s account: Claimed land");
                 player.sendMessage(ChatColor.YELLOW + "Your team's new balance is " + ChatColor.WHITE + "$" + (int) playerTeam.getBalance() + ChatColor.LIGHT_PURPLE + " (Price: $" + price + ")");
             }
 
@@ -557,14 +571,14 @@ public class VisualClaim implements Listener {
                     new VisualClaim(player, VisualClaimType.MAP, false).draw(true);
                 }
 
-            }.runTaskLater(Foxtrot.getInstance(), 1L);
+            }.runTaskLater(HCF.getInstance(), 1L);
         } else {
             player.sendMessage(ChatColor.RED + "You have not selected both corners of your claim yet!");
         }
     }
 
     public void resizeClaim() {
-        Team playerTeam = Foxtrot.getInstance().getTeamHandler().getTeam(player);
+        Team playerTeam = HCF.getInstance().getTeamHandler().getTeam(player);
 
         if (playerTeam == null) {
             player.sendMessage(ChatColor.RED + "You have to be on a team to resize land!");
@@ -638,7 +652,7 @@ public class VisualClaim implements Listener {
                     new VisualClaim(player, VisualClaimType.MAP, false).draw(true);
                 }
 
-            }.runTaskLater(Foxtrot.getInstance(), 1L);
+            }.runTaskLater(HCF.getInstance(), 1L);
         } else {
             player.sendMessage(ChatColor.RED + "You have not selected both corners of your claim yet!");
         }
@@ -733,7 +747,7 @@ public class VisualClaim implements Listener {
             return (false);
         }
 
-        Team playerTeam = Foxtrot.getInstance().getTeamHandler().getTeam(player);
+        Team playerTeam = HCF.getInstance().getTeamHandler().getTeam(player);
 
         if (containsOtherClaim(claim)) {
             player.sendMessage(ChatColor.RED + "This claim contains unclaimable land!");

@@ -6,7 +6,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import lombok.Getter;
 import lombok.Setter;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.team.Team;
 import org.bukkit.Bukkit;
 
@@ -27,7 +27,7 @@ public final class TeamActionTracker {
             return;
         }
 
-        Bukkit.getScheduler().runTaskAsynchronously(Foxtrot.getInstance(), () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(HCF.getInstance(), () -> {
             logActionToFile(team, actionType, params);
 
             if (databaseLogEnabled && actionType.isLoggedToDatabase()) {
@@ -95,7 +95,7 @@ public final class TeamActionTracker {
         // less work if we embed it.
         entry.put("teamAfterAction", team.toJSON());
 
-        DB db = Foxtrot.getInstance().getMongoPool().getDB(Foxtrot.MONGO_DB_NAME);
+        DB db = HCF.getInstance().getMongoPool().getDB(HCF.MONGO_DB_NAME);
         db.getCollection("TeamActions").insert(entry);
     }
 

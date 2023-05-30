@@ -13,7 +13,7 @@
     <name>HCTeams</name>
 
     <properties>
-        <java.version>17</java.version>
+        <java.version>16</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -85,14 +85,21 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.17.1-R0.1-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>1.16.5-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.22</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>tabapi</groupId>
+            <artifactId>tab</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/tab.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>
@@ -139,11 +146,23 @@
             <systemPath>${project.basedir}/lib/bukkitapi.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>ltd.matrixstudios</groupId>
-            <artifactId>alchemist</artifactId>
-            <version>1.0</version>
+            <groupId>com.github.cryptomorin</groupId>
+            <artifactId>XSeries</artifactId>
+            <version>9.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.nosequel</groupId>
+            <artifactId>shared</artifactId>
+            <version>1.1</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/spigot-1.0-SNAPSHOT-all (8).jar</systemPath>
+            <systemPath>${project.basedir}/lib/shared-1.1-SNAPSHOT.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>io.github.nosequel</groupId>
+            <artifactId>1.17</artifactId>
+            <version>1.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/v1_17_R1-1.1-SNAPSHOT.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.mongodb</groupId>
@@ -175,12 +194,6 @@
             <version>0.5.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.github.NoSequel</groupId>
-            <artifactId>TabAPI</artifactId>
-            <version>c51f5f5b3f</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
             <version>1.1.1</version>
@@ -197,6 +210,7 @@
             <artifactId>commons-pool2</artifactId>
             <version>2.6.0</version>
         </dependency>
+
     </dependencies>
 
 </project>

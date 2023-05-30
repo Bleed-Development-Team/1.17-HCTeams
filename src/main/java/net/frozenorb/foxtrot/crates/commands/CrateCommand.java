@@ -2,7 +2,7 @@ package net.frozenorb.foxtrot.crates.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.crates.Crate;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -23,7 +23,7 @@ public class CrateCommand extends BaseCommand {
         ItemMeta itemMeta = enderChest.getItemMeta();
 
         try {
-            Crate crate = Foxtrot.getInstance().getCrateHandler().getCrates().get(kit.toLowerCase());
+            Crate crate = HCF.getInstance().getCrateHandler().getCrates().get(kit.toLowerCase());
 
             itemMeta.setDisplayName(crate.getKitName());
             itemMeta.setLore(crate.getLore());
@@ -43,7 +43,7 @@ public class CrateCommand extends BaseCommand {
         ItemMeta itemMeta = enderChest.getItemMeta();
 
         try {
-            Crate crate = Foxtrot.getInstance().getCrateHandler().getCrates().get(kit.toLowerCase());
+            Crate crate = HCF.getInstance().getCrateHandler().getCrates().get(kit.toLowerCase());
 
             assert itemMeta != null;
             itemMeta.setDisplayName(crate.getKitName());
@@ -62,20 +62,20 @@ public class CrateCommand extends BaseCommand {
     public static void onCreate(Player player, @Name("kit") String kit) {
         Crate crate = new Crate(kit);
 
-        Foxtrot.getInstance().getCrateHandler().getCrates().put(kit.toLowerCase(), crate);
+        HCF.getInstance().getCrateHandler().getCrates().put(kit.toLowerCase(), crate);
         player.sendMessage(GREEN + "Created an empty crate for kit `" + crate.getKitName() + "`");
     }
 
     @Subcommand("edit")
     public static void onEdit(Player player, @Name("kit") String kit) {
-        Crate crate = Foxtrot.getInstance().getCrateHandler().getCrates().get(kit.toLowerCase());
+        Crate crate = HCF.getInstance().getCrateHandler().getCrates().get(kit.toLowerCase());
 
         if (crate == null) {
             player.sendMessage(RED + "Cannot edit crate for kit `" + kit + "`");
             return;
         }
 
-        Foxtrot.getInstance().getCrateHandler().updateCrate(player, crate);
+        HCF.getInstance().getCrateHandler().updateCrate(player, crate);
 
         player.sendMessage(GREEN + "Updated crate items for kit `" + crate.getKitName() + "`");
     }

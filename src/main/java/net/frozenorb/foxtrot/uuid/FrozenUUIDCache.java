@@ -1,7 +1,7 @@
 package net.frozenorb.foxtrot.uuid;
 
 import com.google.common.base.Preconditions;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 
 import java.util.UUID;
 
@@ -18,11 +18,11 @@ public final class FrozenUUIDCache {
         Preconditions.checkState(!initiated);
         initiated = true;
         try {
-            impl = (UUIDCache)Class.forName(Foxtrot.getInstance().getConfig().getString("UUIDCache.Backend", "net.frozenorb.foxtrot.uuid.impl.RedisUUIDCache")).newInstance();
+            impl = (UUIDCache)Class.forName(HCF.getInstance().getConfig().getString("UUIDCache.Backend", "net.frozenorb.foxtrot.uuid.impl.RedisUUIDCache")).newInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Foxtrot.getInstance().getServer().getPluginManager().registerEvents(new UUIDListener(), Foxtrot.getInstance());
+        HCF.getInstance().getServer().getPluginManager().registerEvents(new UUIDListener(), HCF.getInstance());
     }
 
     public static UUID uuid(String name) {

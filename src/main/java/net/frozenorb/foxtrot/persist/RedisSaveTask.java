@@ -1,7 +1,7 @@
 package net.frozenorb.foxtrot.persist;
 
 import com.mongodb.DBCollection;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.team.Team;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -17,13 +17,13 @@ public class RedisSaveTask extends BukkitRunnable {
 
     public static int save(final CommandSender issuer, final boolean forceAll) {
         long startMs = System.currentTimeMillis();
-        int teamsSaved = Foxtrot.getInstance().runRedisCommand(redis -> {
+        int teamsSaved = HCF.getInstance().runRedisCommand(redis -> {
 
-            DBCollection teamsCollection = Foxtrot.getInstance().getMongoPool().getDB(Foxtrot.MONGO_DB_NAME).getCollection("Teams");
+            DBCollection teamsCollection = HCF.getInstance().getMongoPool().getDB(HCF.MONGO_DB_NAME).getCollection("Teams");
             
             int changed = 0;
 
-            for (Team team : Foxtrot.getInstance().getTeamHandler().getTeams()) {
+            for (Team team : HCF.getInstance().getTeamHandler().getTeams()) {
                 if (team.isNeedsSave() || forceAll) {
                     changed++;
 
@@ -33,12 +33,12 @@ public class RedisSaveTask extends BukkitRunnable {
                 
                 if (forceAll) {
                     for (UUID member : team.getMembers()) {
-                        Foxtrot.getInstance().getTeamHandler().setTeam(member, team, true);
+                        HCF.getInstance().getTeamHandler().setTeam(member, team, true);
                     }
                 }
             }
 
-            redis.set("RostersLocked", String.valueOf(Foxtrot.getInstance().getTeamHandler().isRostersLocked()));
+            redis.set("RostersLocked", String.valueOf(HCF.getInstance().getTeamHandler().isRostersLocked()));
             if (issuer != null && forceAll) redis.save();
             return (changed);
         });

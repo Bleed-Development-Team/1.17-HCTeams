@@ -2,6 +2,7 @@ package net.frozenorb.foxtrot.util;
 
 import com.google.common.base.Strings;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -12,23 +13,30 @@ import java.util.regex.Pattern;
 
 public class CC {
 
-    public static String translate(String msg){
-        Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
-        Matcher matcher = pattern.matcher(msg);
-        while (matcher.find()) {
-            String hexCode = msg.substring(matcher.start(), matcher.end());
-            String replaceSharp = hexCode.replace('#', 'x');
+    private static final Pattern PATTERN = Pattern.compile(
+            "<(#[a-f0-9]{6}|aqua|black|blue|dark_(aqua|blue|gray|green|purple|red)|gray|gold|green|light_purple|red|white|yellow)>",
+            Pattern.CASE_INSENSITIVE
+    );
 
-            char[] ch = replaceSharp.toCharArray();
-            StringBuilder builder = new StringBuilder("");
-            for (char c : ch) {
-                builder.append("&").append(c);
-            }
-
-            msg = msg.replace(hexCode, builder.toString());
-            matcher = pattern.matcher(msg);
+    public static String translate(String text) {
+        if (text == null || text.isEmpty()) {
+            return "";
         }
-        return ChatColor.translateAlternateColorCodes('&', msg);
+
+        final Matcher matcher = PATTERN.matcher(text);
+
+        text = text.replaceAll("&#", "#");
+
+        while (matcher.find()) {
+            try {
+                final ChatColor chatColor = ChatColor.valueOf(matcher.group(1));
+
+                text = StringUtils.replace(text, matcher.group(), chatColor.toString());
+            } catch (IllegalArgumentException ignored) { }
+        }
+
+
+        return ChatColor.translateAlternateColorCodes('&', text);
     }
 
     public static List<String> translate(List<String> msg){
@@ -64,6 +72,7 @@ public class CC {
             message = message.replace(hexCode, builder.toString());
             matcher = pattern.matcher(message);
         }
+
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 

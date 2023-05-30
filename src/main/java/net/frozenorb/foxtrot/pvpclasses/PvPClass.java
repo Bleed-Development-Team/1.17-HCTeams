@@ -4,7 +4,7 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -27,12 +27,12 @@ public abstract class PvPClass implements Listener {
 
     public PvPClass(String name, int warmup, List<Material> consumables) {
         this.name = name;
-        this.siteLink = "www." + Foxtrot.getInstance().getServerHandler().getNetworkWebsite() + "/" + name.toLowerCase().replaceAll(" ", "-");
+        this.siteLink = "www." + HCF.getInstance().getServerHandler().getNetworkWebsite() + "/" + name.toLowerCase().replaceAll(" ", "-");
         this.warmup = warmup;
         this.consumables = consumables;
 
         // Reduce warmup on kit maps
-        if (Foxtrot.getInstance().getMapHandler().isKitMap() || Foxtrot.getInstance().getServerHandler().isVeltKitMap()) {
+        if (HCF.getInstance().getMapHandler().isKitMap() || HCF.getInstance().getServerHandler().isVeltKitMap()) {
             this.warmup = 5;
         }
     }

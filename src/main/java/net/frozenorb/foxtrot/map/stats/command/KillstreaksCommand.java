@@ -6,7 +6,7 @@ import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Subcommand;
 import com.google.common.collect.Lists;
 import mkremins.fanciful.FancyMessage;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.map.killstreaks.Killstreak;
 import net.frozenorb.foxtrot.map.killstreaks.PersistentKillstreak;
 import net.frozenorb.foxtrot.map.stats.StatsEntry;
@@ -14,7 +14,6 @@ import net.frozenorb.foxtrot.team.Team;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -24,15 +23,15 @@ public class KillstreaksCommand extends BaseCommand {
 
 	@Default
 	public static void killstreaks(Player sender) {
-		if (!Foxtrot.getInstance().getServerHandler().isVeltKitMap()) {
+		if (!HCF.getInstance().getServerHandler().isVeltKitMap()) {
 			sender.sendMessage(ChatColor.RED + "You cannot perform this command on this server.");
 			return;
 		}
 
 		sender.sendMessage(ChatColor.RED.toString() + ChatColor.STRIKETHROUGH + StringUtils.repeat('-', 53));
 
-		List<Object> streaks = Lists.newArrayList(Foxtrot.getInstance().getMapHandler().getKillstreakHandler().getKillstreaks());
-		streaks.addAll(Foxtrot.getInstance().getMapHandler().getKillstreakHandler().getPersistentKillstreaks());
+		List<Object> streaks = Lists.newArrayList(HCF.getInstance().getMapHandler().getKillstreakHandler().getKillstreaks());
+		streaks.addAll(HCF.getInstance().getMapHandler().getKillstreakHandler().getPersistentKillstreaks());
 
 		streaks.sort((first, second) -> {
 
@@ -59,7 +58,7 @@ public class KillstreaksCommand extends BaseCommand {
 
 	@Subcommand("active")
 	public static void killstreaksActive(Player sender) {
-		if (!Foxtrot.getInstance().getServerHandler().isVeltKitMap()) {
+		if (!HCF.getInstance().getServerHandler().isVeltKitMap()) {
 			sender.sendMessage(ChatColor.RED + "You cannot perform this command on this server.");
 			return;
 		}
@@ -80,7 +79,7 @@ public class KillstreaksCommand extends BaseCommand {
 
 				index++;
 
-				Team team = Foxtrot.getInstance().getTeamHandler().getTeam(entry.getKey());
+				Team team = HCF.getInstance().getTeamHandler().getTeam(entry.getKey());
 
 				FancyMessage playerMessage = new FancyMessage();
 				playerMessage.text(index + ". ").color(ChatColor.GRAY).then();
@@ -99,7 +98,7 @@ public class KillstreaksCommand extends BaseCommand {
 		Map<Player, Integer> playerKillstreaks = new HashMap<>();
 
 		for (Player player : Bukkit.getOnlinePlayers()) {
-			StatsEntry stats = Foxtrot.getInstance().getMapHandler().getStatsHandler().getStats(player.getUniqueId());
+			StatsEntry stats = HCF.getInstance().getMapHandler().getStatsHandler().getStats(player.getUniqueId());
 
 			if (stats.getKillstreak() > 0) {
 				playerKillstreaks.put(player, stats.getKillstreak());

@@ -32,7 +32,7 @@ public class EntityTracker implements Listener {
         }
 
         public String getDeathMessage() {
-            return (wrapName(getDamaged()) + " was slain by a " + ChatColor.RED + EntityUtils.getName(getMobType()) + ChatColor.YELLOW + ".");
+            return (wrapName(getDamaged()) + " was slain by a " + ChatColor.RED + EntityUtils.getName(getMobType()) + ChatColor.WHITE + ".");
         }
 
     }

@@ -1,6 +1,6 @@
 package net.frozenorb.foxtrot.deathmessage;
 
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.deathmessage.listeners.DamageListener;
 import net.frozenorb.foxtrot.deathmessage.objects.Damage;
 import net.frozenorb.foxtrot.deathmessage.trackers.*;
@@ -16,15 +16,15 @@ public class DeathMessageHandler {
     private static Map<String, List<Damage>> damage = new HashMap<>();
 
     public static void init() {
-        Foxtrot.getInstance().getServer().getPluginManager().registerEvents(new DamageListener(), Foxtrot.getInstance());
+        HCF.getInstance().getServer().getPluginManager().registerEvents(new DamageListener(), HCF.getInstance());
 
-        Foxtrot.getInstance().getServer().getPluginManager().registerEvents(new GeneralTracker(), Foxtrot.getInstance());
-        Foxtrot.getInstance().getServer().getPluginManager().registerEvents(new PVPTracker(), Foxtrot.getInstance());
-        Foxtrot.getInstance().getServer().getPluginManager().registerEvents(new EntityTracker(), Foxtrot.getInstance());
-        Foxtrot.getInstance().getServer().getPluginManager().registerEvents(new FallTracker(), Foxtrot.getInstance());
-        Foxtrot.getInstance().getServer().getPluginManager().registerEvents(new ArrowTracker(), Foxtrot.getInstance());
-        Foxtrot.getInstance().getServer().getPluginManager().registerEvents(new VoidTracker(), Foxtrot.getInstance());
-        Foxtrot.getInstance().getServer().getPluginManager().registerEvents(new BurnTracker(), Foxtrot.getInstance());
+        HCF.getInstance().getServer().getPluginManager().registerEvents(new GeneralTracker(), HCF.getInstance());
+        HCF.getInstance().getServer().getPluginManager().registerEvents(new PVPTracker(), HCF.getInstance());
+        HCF.getInstance().getServer().getPluginManager().registerEvents(new EntityTracker(), HCF.getInstance());
+        HCF.getInstance().getServer().getPluginManager().registerEvents(new FallTracker(), HCF.getInstance());
+        HCF.getInstance().getServer().getPluginManager().registerEvents(new ArrowTracker(), HCF.getInstance());
+        HCF.getInstance().getServer().getPluginManager().registerEvents(new VoidTracker(), HCF.getInstance());
+        HCF.getInstance().getServer().getPluginManager().registerEvents(new BurnTracker(), HCF.getInstance());
     }
 
     public static List<Damage> getDamage(Player player) {
@@ -33,7 +33,7 @@ public class DeathMessageHandler {
 
     public static void addDamage(Player player, Damage addedDamage) {
         if (!damage.containsKey(player.getName())) {
-            damage.put(player.getName(), new ArrayList<Damage>());
+            damage.put(player.getName(), new ArrayList<>());
         }
 
         List<Damage> damageList = damage.get(player.getName());

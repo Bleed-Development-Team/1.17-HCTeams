@@ -4,7 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import com.lunarclient.bukkitapi.LunarClientAPI;
 import com.lunarclient.bukkitapi.object.LCWaypoint;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.team.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,7 +18,7 @@ public class ForceKickCommand extends BaseCommand {
     @Default
     @Description("Force a player to leave your team")
     public static void forceKick(Player sender, @Name("target") Player player) {
-        Team team = Foxtrot.getInstance().getTeamHandler().getTeam(player.getUniqueId());
+        Team team = HCF.getInstance().getTeamHandler().getTeam(player.getUniqueId());
 
         if (team == null) {
             sender.sendMessage(ChatColor.RED + player.getName() + " is not on a team!");
@@ -58,7 +58,7 @@ public class ForceKickCommand extends BaseCommand {
         }
 
         team.removeMember(player.getUniqueId());
-        Foxtrot.getInstance().getTeamHandler().setTeam(player.getUniqueId(), null);
+        HCF.getInstance().getTeamHandler().setTeam(player.getUniqueId(), null);
 
         Player bukkitPlayer = Bukkit.getPlayer(player.getUniqueId());
         if (bukkitPlayer != null && bukkitPlayer.isOnline()) {

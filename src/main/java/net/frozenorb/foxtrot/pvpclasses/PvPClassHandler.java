@@ -1,11 +1,11 @@
 package net.frozenorb.foxtrot.pvpclasses;
 
 import lombok.Getter;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.pvpclasses.event.BardRestoreEvent;
 import net.frozenorb.foxtrot.pvpclasses.pvpclasses.*;
+import net.frozenorb.foxtrot.util.CC;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -29,39 +29,41 @@ public class PvPClassHandler implements Listener, Runnable {
     public PvPClassHandler() {
         pvpClasses.add(new MinerClass());
 
-        if (Foxtrot.getInstance().getConfig().getBoolean("pvpClasses.archer")) {
+        if (HCF.getInstance().getConfig().getBoolean("pvpClasses.archer")) {
             pvpClasses.add(new ArcherClass());
         }
 
-        //pvpClasses.add(new MageClass());
+        pvpClasses.add(new MageClass());
 
-        if (Foxtrot.getInstance().getConfig().getBoolean("pvpClasses.bard")) {
+        if (HCF.getInstance().getConfig().getBoolean("pvpClasses.bard")) {
             pvpClasses.add(new BardClass());
         }
 
-        if (Foxtrot.getInstance().getConfig().getBoolean("pvpClasses.rogue")) {
+        if (HCF.getInstance().getConfig().getBoolean("pvpClasses.rogue")) {
             pvpClasses.add(new RogueClass());
         }
 
 
         for (PvPClass pvpClass : pvpClasses) {
-            Foxtrot.getInstance().getServer().getPluginManager().registerEvents(pvpClass, Foxtrot.getInstance());
+            HCF.getInstance().getServer().getPluginManager().registerEvents(pvpClass, HCF.getInstance());
         }
 
-        Foxtrot.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(Foxtrot.getInstance(), this, 2L, 2L);
-        Foxtrot.getInstance().getServer().getPluginManager().registerEvents(this, Foxtrot.getInstance());
+        HCF.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(HCF.getInstance(), this, 2L, 2L);
+        HCF.getInstance().getServer().getPluginManager().registerEvents(this, HCF.getInstance());
     }
 
     @Override
     public void run() {
-        for (Player player : Foxtrot.getInstance().getServer().getOnlinePlayers()) {
+        for (Player player : HCF.getInstance().getServer().getOnlinePlayers()) {
             // Remove kit if player took off armor, otherwise .tick();
             if (equippedKits.containsKey(player.getName())) {
                 PvPClass equippedPvPClass = equippedKits.get(player.getName());
 
                 if (!equippedPvPClass.qualifies(player.getInventory())) {
                     equippedKits.remove(player.getName());
-                    player.sendMessage(ChatColor.AQUA + "Class: " + ChatColor.BOLD + equippedPvPClass.getName() + ChatColor.GRAY + " --> " + ChatColor.RED + "Disabled!");
+
+                    player.sendMessage(CC.translate("&b&l| &fYou have &cdisabled &fthe &b&l" + equippedPvPClass.getName() + " &fclass."));
+
                     equippedPvPClass.remove(player);
                     PvPClass.removeInfiniteEffects(player);
                 } else if (!player.hasMetadata("frozen")) {
@@ -74,8 +76,7 @@ public class PvPClassHandler implements Listener, Runnable {
                         pvpClass.apply(player);
                         PvPClassHandler.getEquippedKits().put(player.getName(), pvpClass);
 
-                        player.sendMessage(ChatColor.AQUA + "Class: " + ChatColor.BOLD + pvpClass.getName() + ChatColor.GRAY + " --> " + ChatColor.GREEN + "Enabled!");
-                        player.sendMessage(ChatColor.AQUA + "Class Info: " + ChatColor.GREEN + pvpClass.getSiteLink());
+                        player.sendMessage(CC.translate("&b&l| &fYou have &aenabled &fthe &b&l" + pvpClass.getName() + " &fclass."));
 
                         break;
                     }

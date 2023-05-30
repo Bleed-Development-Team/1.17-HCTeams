@@ -1,7 +1,7 @@
 package net.frozenorb.foxtrot.team.commands;
 
 import co.aikar.commands.BaseCommand;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.team.Team;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -13,7 +13,7 @@ public class RecalculatePointsCommand extends BaseCommand {//TODO Put this insid
     public static void recalculate(CommandSender sender) {
         int changed = 0;
         
-        for (Team team : Foxtrot.getInstance().getTeamHandler().getTeams()) {
+        for (Team team : HCF.getInstance().getTeamHandler().getTeams()) {
             int oldPoints = team.getPoints();
             team.recalculatePoints();
             if (team.getPoints() != oldPoints) {

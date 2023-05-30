@@ -2,7 +2,7 @@ package net.frozenorb.foxtrot.map.killstreaks;
 
 import com.google.common.collect.Lists;
 import lombok.Getter;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.deathmessage.event.PlayerKilledEvent;
 import net.frozenorb.foxtrot.map.stats.StatsEntry;
 import net.frozenorb.foxtrot.team.Team;
@@ -20,7 +20,7 @@ public class KillstreakHandler implements Listener {
     @Getter private List<PersistentKillstreak> persistentKillstreaks = Lists.newArrayList();
 
     public KillstreakHandler() {
-        Foxtrot.getInstance().getServer().getPluginManager().registerEvents(this, Foxtrot.getInstance());
+        HCF.getInstance().getServer().getPluginManager().registerEvents(this, HCF.getInstance());
 
         killstreaks.sort((first, second) -> {
             int firstNumber = first.getKills()[0];
@@ -68,8 +68,8 @@ public class KillstreakHandler implements Listener {
 
     @EventHandler
     public void onPlayerKilledEvent(PlayerKilledEvent event) {
-        StatsEntry killerStats = Foxtrot.getInstance().getMapHandler().getStatsHandler().getStats(event.getKiller());
-        Team killerTeam = Foxtrot.getInstance().getTeamHandler().getTeam(event.getKiller());
+        StatsEntry killerStats = HCF.getInstance().getMapHandler().getStatsHandler().getStats(event.getKiller());
+        Team killerTeam = HCF.getInstance().getTeamHandler().getTeam(event.getKiller());
 
         if (killerTeam != null) {
             // Check for team killstreak points rewards

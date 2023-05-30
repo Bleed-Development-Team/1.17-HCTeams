@@ -9,10 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InventoryUtils {
 
@@ -197,7 +194,7 @@ public class InventoryUtils {
         lore.add(ChatColor.WHITE + " - " + ChatColor.AQUA + "Time: " + ChatColor.YELLOW + "{" + ChatColor.BLUE + sdf.format(new Date()).replace(" AM", "").replace(" PM", "") + ChatColor.YELLOW + "}");
         lore.add(ChatColor.WHITE + " - " + ChatColor.AQUA + "Tier: " + ChatColor.YELLOW + "{" + tier + "}");
 
-        return (lore);
+        return lore;
     }
 
     public static ItemStack generateKOTHRewardKey(String koth, int tier) {

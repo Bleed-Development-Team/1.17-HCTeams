@@ -2,7 +2,7 @@ package net.frozenorb.foxtrot.persist;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Map;
@@ -23,7 +23,7 @@ public abstract class StringPersistMap<T> {
     }
 
     public void loadFromRedis() {
-        Foxtrot.getInstance().runRedisCommand(redis -> {
+        HCF.getInstance().runRedisCommand(redis -> {
             Map<String, String> results = redis.hgetAll(keyPrefix);
 
             for (Map.Entry<String, String> resultEntry : results.entrySet()) {
@@ -41,7 +41,7 @@ public abstract class StringPersistMap<T> {
     protected void wipeValues() {
         wrappedMap.clear();
 
-        Foxtrot.getInstance().runRedisCommand(redis -> {
+        HCF.getInstance().runRedisCommand(redis -> {
             redis.del(keyPrefix);
             return (null);
         });
@@ -50,10 +50,10 @@ public abstract class StringPersistMap<T> {
     protected void updateValueSync(final String key, final T value) {
         wrappedMap.put(key, value);
 
-        Foxtrot.getInstance().runRedisCommand(redis -> {
+        HCF.getInstance().runRedisCommand(redis -> {
             redis.hset(keyPrefix, key, getRedisValue(getValue(key)));
 
-            DBCollection playersCollection = Foxtrot.getInstance().getMongoPool().getDB(Foxtrot.MONGO_DB_NAME).getCollection("Players");
+            DBCollection playersCollection = HCF.getInstance().getMongoPool().getDB(HCF.MONGO_DB_NAME).getCollection("Players");
             BasicDBObject player = new BasicDBObject("_id", key.toString().replace("-", ""));
 
             playersCollection.update(player, new BasicDBObject("$set", new BasicDBObject(mongoName, getMongoValue(getValue(key)))), true, false);
@@ -67,10 +67,10 @@ public abstract class StringPersistMap<T> {
         new BukkitRunnable() {
 
             public void run() {
-                Foxtrot.getInstance().runRedisCommand(redis -> {
+                HCF.getInstance().runRedisCommand(redis -> {
                     redis.hset(keyPrefix, key, getRedisValue(getValue(key)));
 
-                    DBCollection playersCollection = Foxtrot.getInstance().getMongoPool().getDB(Foxtrot.MONGO_DB_NAME).getCollection("Players");
+                    DBCollection playersCollection = HCF.getInstance().getMongoPool().getDB(HCF.MONGO_DB_NAME).getCollection("Players");
                     BasicDBObject player = new BasicDBObject("_id", key.replace("-", ""));
 
                     playersCollection.update(player, new BasicDBObject("$set", new BasicDBObject(mongoName, getMongoValue(getValue(key)))), true, false);
@@ -78,7 +78,7 @@ public abstract class StringPersistMap<T> {
                 });
             }
 
-        }.runTaskAsynchronously(Foxtrot.getInstance());
+        }.runTaskAsynchronously(HCF.getInstance());
     }
 
     protected T getValue(String key) {

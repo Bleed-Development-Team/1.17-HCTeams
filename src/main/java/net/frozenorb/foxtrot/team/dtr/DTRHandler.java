@@ -1,7 +1,8 @@
 package net.frozenorb.foxtrot.team.dtr;
 
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.team.Team;
+import net.frozenorb.foxtrot.team.event.TeamRegenerateEvent;
 import org.bson.types.ObjectId;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -32,7 +33,7 @@ public class DTRHandler extends BukkitRunnable {
     private static Set<ObjectId> wasOnCooldown = new HashSet<>();
 
     public static void loadDTR() {
-        if (Foxtrot.getInstance().getServerHandler().isSquads()) {
+        if (HCF.getInstance().getServerHandler().isSquads()) {
             MAX_DTR = new double[] {
                     1.01, 1.44, 1.80, 2.20, // 1 to 4
                     2.60, 3.00, 3.40, 3.80, // 5 to 8
@@ -49,7 +50,7 @@ public class DTRHandler extends BukkitRunnable {
     // We're using this instead of changing the array incase we need to change this value
     // In the future.
     public static double getBaseDTRIncrement(int teamsize) {
-        return (teamsize == 0 ? 0 : BASE_DTR_INCREMENT[teamsize - 1] * Foxtrot.getInstance().getMapHandler().getDtrIncrementMultiplier());
+        return (teamsize == 0 ? 0 : BASE_DTR_INCREMENT[teamsize - 1] * HCF.getInstance().getMapHandler().getDtrIncrementMultiplier());
     }
 
     public static double getMaxDTR(int teamsize) {
@@ -72,12 +73,12 @@ public class DTRHandler extends BukkitRunnable {
     public void run() {
         Map<Team, Integer> playerOnlineMap = new HashMap<>();
 
-        for (Player player : Foxtrot.getInstance().getServer().getOnlinePlayers()) {
+        for (Player player : HCF.getInstance().getServer().getOnlinePlayers()) {
             if (player.hasMetadata("invisible")) {
                 continue;
             }
 
-            Team playerTeam = Foxtrot.getInstance().getTeamHandler().getTeam(player);
+            Team playerTeam = HCF.getInstance().getTeamHandler().getTeam(player);
 
             if (playerTeam != null && playerTeam.getOwner() != null) {
                 playerOnlineMap.put(playerTeam, playerOnlineMap.getOrDefault(playerTeam, 0) + 1);
@@ -96,12 +97,18 @@ public class DTRHandler extends BukkitRunnable {
                     team.sendMessage(ChatColor.GREEN.toString() + ChatColor.BOLD + "Your team is now regenerating DTR!");
                 }
 
+                boolean wasRaidable = team.isRaidable();
+                double oldDTR = team.getDTR();
+
                 double incrementedDtr = team.getDTR() + team.getDTRIncrement(onlineCount);
                 double maxDtr = team.getMaxDTR();
                 double newDtr = Math.min(incrementedDtr, maxDtr);
                 team.setDTR(newDtr);
+
+                final TeamRegenerateEvent teamRegenerateEvent = new TeamRegenerateEvent(team, oldDTR, team.getDTR(), wasRaidable);
+                HCF.getInstance().getServer().getPluginManager().callEvent(teamRegenerateEvent);
             } catch (Exception ex) {
-                Foxtrot.getInstance().getLogger().warning("Error regenerating DTR for team " + team.getName() + ".");
+                HCF.getInstance().getLogger().warning("Error regenerating DTR for team " + team.getName() + ".");
                 ex.printStackTrace();
             }
         });

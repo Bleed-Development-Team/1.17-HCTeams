@@ -2,8 +2,8 @@ package net.frozenorb.foxtrot.persist;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
-import net.frozenorb.foxtrot.Foxtrot;
-import net.frozenorb.foxtrot.redis.RedisCommand;
+import net.frozenorb.foxtrot.HCF;
+import net.frozenorb.foxtrot.util.redis.RedisCommand;
 import net.frozenorb.foxtrot.util.UUIDUtils;
 import org.bukkit.scheduler.BukkitRunnable;
 import redis.clients.jedis.Jedis;
@@ -33,7 +33,7 @@ public abstract class PersistMap<T> {
     }
     
     public void loadFromRedis() {
-        Foxtrot.getInstance().runRedisCommand(redis -> {
+        HCF.getInstance().runRedisCommand(redis -> {
             Map<String, String> results = redis.hgetAll(keyPrefix);
 
             for (Map.Entry<String, String> resultEntry : results.entrySet()) {
@@ -51,7 +51,7 @@ public abstract class PersistMap<T> {
     protected void wipeValues() {
         wrappedMap.clear();
 
-        Foxtrot.getInstance().runRedisCommand(new RedisCommand<Object>() {
+        HCF.getInstance().runRedisCommand(new RedisCommand<Object>() {
             @Override
             public Object execute(Jedis redis) {
                 redis.del(keyPrefix);
@@ -63,7 +63,7 @@ public abstract class PersistMap<T> {
     protected void updateValueSync(final UUID key, final T value) {
         wrappedMap.put(key, value);
 
-        Foxtrot.getInstance().runRedisCommand(new RedisCommand<T>() {
+        HCF.getInstance().runRedisCommand(new RedisCommand<T>() {
             @Override
             public T execute(Jedis redis) {
                 redis.hset(keyPrefix, key.toString(), getRedisValue(getValue(key)));
@@ -72,7 +72,7 @@ public abstract class PersistMap<T> {
                 int tries = 0;
                 while (useMongo && !succeeded && tries++ < 5) {
                     try {
-                        DBCollection playersCollection = Foxtrot.getInstance().getMongoPool().getDB(Foxtrot.MONGO_DB_NAME).getCollection("Players");
+                        DBCollection playersCollection = HCF.getInstance().getMongoPool().getDB(HCF.MONGO_DB_NAME).getCollection("Players");
                         BasicDBObject player = new BasicDBObject("_id", key.toString().replace("-", ""));
                         
                         BasicDBObject toSet = new BasicDBObject(mongoName, getMongoValue(getValue(key)));
@@ -100,7 +100,7 @@ public abstract class PersistMap<T> {
         new BukkitRunnable() {
 
             public void run() {
-                Foxtrot.getInstance().runRedisCommand(new RedisCommand<Object>() {
+                HCF.getInstance().runRedisCommand(new RedisCommand<Object>() {
                     
                     @Override
                     public Object execute(Jedis redis) {
@@ -110,7 +110,7 @@ public abstract class PersistMap<T> {
                         int tries = 0;
                         while (useMongo && !succeeded && tries++ < 5) {
                             try {
-                                DBCollection playersCollection = Foxtrot.getInstance().getMongoPool().getDB(Foxtrot.MONGO_DB_NAME).getCollection("Players");
+                                DBCollection playersCollection = HCF.getInstance().getMongoPool().getDB(HCF.MONGO_DB_NAME).getCollection("Players");
                                 BasicDBObject player = new BasicDBObject("_id", key.toString().replace("-", ""));
                                 
                                 BasicDBObject toSet = new BasicDBObject(mongoName, getMongoValue(getValue(key)));
@@ -132,7 +132,7 @@ public abstract class PersistMap<T> {
                 });
             }
             
-        }.runTaskAsynchronously(Foxtrot.getInstance());
+        }.runTaskAsynchronously(HCF.getInstance());
     }
     
     protected T getValue(UUID key) {

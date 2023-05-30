@@ -2,16 +2,10 @@ package net.frozenorb.foxtrot.team;
 
 import co.aikar.commands.*;
 import co.aikar.commands.contexts.ContextResolver;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.util.UUIDUtils;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TeamType implements ContextResolver<Team, BukkitCommandExecutionContext> {
 
@@ -21,7 +15,7 @@ public class TeamType implements ContextResolver<Team, BukkitCommandExecutionCon
         String source = arg.popFirstArg();
 
         if (sender != null && (source.equalsIgnoreCase("self") || source.equals(""))) {
-            Team team = Foxtrot.getInstance().getTeamHandler().getTeam(sender.getUniqueId());
+            Team team = HCF.getInstance().getTeamHandler().getTeam(sender.getUniqueId());
 
             if (team == null) {
                 throw new InvalidCommandArgument(ChatColor.RESET + ChatColor.GRAY.toString() + "You're not on a team!");
@@ -30,28 +24,28 @@ public class TeamType implements ContextResolver<Team, BukkitCommandExecutionCon
             return (team);
         }
 
-        Team byName = Foxtrot.getInstance().getTeamHandler().getTeam(source);
+        Team byName = HCF.getInstance().getTeamHandler().getTeam(source);
 
         if (byName != null) {
             return (byName);
         }
 
-        Player bukkitPlayer = Foxtrot.getInstance().getServer().getPlayer(source);
+        Player bukkitPlayer = HCF.getInstance().getServer().getPlayer(source);
 
         if (bukkitPlayer != null) {
-            Team byMemberBukkitPlayer = Foxtrot.getInstance().getTeamHandler().getTeam(bukkitPlayer.getUniqueId());
+            Team byMemberBukkitPlayer = HCF.getInstance().getTeamHandler().getTeam(bukkitPlayer.getUniqueId());
 
             if (byMemberBukkitPlayer != null) {
                 return (byMemberBukkitPlayer);
             }
         }
 
-        Team byMemberUUID = Foxtrot.getInstance().getTeamHandler().getTeam(UUIDUtils.uuid(source));
+        Team byMemberUUID = HCF.getInstance().getTeamHandler().getTeam(UUIDUtils.uuid(source));
 
         if (byMemberUUID != null) {
             return (byMemberUUID);
         }
 
         throw new InvalidCommandArgument("No team or member with the name " + source + " found.");
-    }
+    }	
 }

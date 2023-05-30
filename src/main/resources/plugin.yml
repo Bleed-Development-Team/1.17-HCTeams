@@ -1,8 +1,7 @@
 name: HCTeams
-main: net.frozenorb.foxtrot.Foxtrot
+main: net.frozenorb.foxtrot.HCF
 version: 1.0
 authors: [Embry_, Nopox, FrozenOrb]
-api-version: 1.17
+api-version: 1.16
 depend:
   - ProtocolLib
-  - Alchemist

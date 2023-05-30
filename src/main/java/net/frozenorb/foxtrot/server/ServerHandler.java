@@ -7,19 +7,16 @@ import com.mongodb.util.JSON;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import net.frozenorb.foxtrot.Foxtrot;
-import net.frozenorb.foxtrot.economy.FrozenEconomyHandler;
-import net.frozenorb.foxtrot.events.Event;
-import net.frozenorb.foxtrot.events.EventType;
-import net.frozenorb.foxtrot.server.idle.IdleCheckRunnable;
-import net.frozenorb.foxtrot.server.uhc.UHCListener;
+import net.frozenorb.foxtrot.HCF;
+import net.frozenorb.foxtrot.economy.EconomyHandler;
+import net.frozenorb.foxtrot.gameplay.events.Event;
+import net.frozenorb.foxtrot.gameplay.events.EventType;
+import net.frozenorb.foxtrot.server.region.RegionData;
+import net.frozenorb.foxtrot.server.region.RegionType;
 import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.claims.LandBoard;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
-import net.frozenorb.foxtrot.util.Betrayer;
-import net.frozenorb.foxtrot.util.InventoryUtils;
-import net.frozenorb.foxtrot.util.ItemUtils;
-import net.frozenorb.foxtrot.util.Logout;
+import net.frozenorb.foxtrot.util.*;
 import net.frozenorb.foxtrot.uuid.FrozenUUIDCache;
 import org.bukkit.*;
 import org.bukkit.World.Environment;
@@ -53,7 +50,7 @@ import java.util.concurrent.TimeUnit;
 public class ServerHandler {
 
     public static int WARZONE_RADIUS = 100;
-    public static int WARZONE_BORDER = 100;
+    public static int WARZONE_BORDER = 1000;
 
     // NEXT MAP //
     // http://minecraft.gamepedia.com/Potion#Data_value_table
@@ -106,7 +103,7 @@ public class ServerHandler {
 
     public ServerHandler() {
         try {
-            File f = new File(Foxtrot.getInstance().getDataFolder(), "betrayers.json");
+            File f = new File(HCF.getInstance().getDataFolder(), "betrayers.json");
 
             if (!f.exists()) {
                 f.createNewFile();
@@ -134,72 +131,64 @@ public class ServerHandler {
             e.printStackTrace();
         }
 
-        serverName = Foxtrot.getInstance().getConfig().getString("serverName");
-        networkWebsite = Foxtrot.getInstance().getConfig().getString("networkWebsite");
-        statsWebsiteRoot = Foxtrot.getInstance().getConfig().getString("statsRoot");
+        serverName = HCF.getInstance().getConfig().getString("serverName");
+        networkWebsite = HCF.getInstance().getConfig().getString("networkWebsite");
+        statsWebsiteRoot = HCF.getInstance().getConfig().getString("statsRoot");
 
-        tabServerName = Foxtrot.getInstance().getConfig().getString("tab.serverName");
-        tabSectionColor = Foxtrot.getInstance().getConfig().getString("tab.sectionColor");
-        tabInfoColor = Foxtrot.getInstance().getConfig().getString("tab.infoColor");
+        tabServerName = HCF.getInstance().getConfig().getString("tab.serverName");
+        tabSectionColor = HCF.getInstance().getConfig().getString("tab.sectionColor");
+        tabInfoColor = HCF.getInstance().getConfig().getString("tab.infoColor");
 
-        squads = Foxtrot.getInstance().getConfig().getBoolean("squads");
-        idleCheckEnabled = Foxtrot.getInstance().getConfig().getBoolean("idleCheck");
-        startingTimerEnabled = Foxtrot.getInstance().getConfig().getBoolean("startingTimer");
-        forceInvitesEnabled = Foxtrot.getInstance().getConfig().getBoolean("forceInvites");
-        uhcHealing = Foxtrot.getInstance().getConfig().getBoolean("uhcHealing");
-        passiveTagEnabled = Foxtrot.getInstance().getConfig().getBoolean("passiveTag");
-        allowBoosting = Foxtrot.getInstance().getConfig().getBoolean("allowBoosting");
-        waterPlacementInClaimsAllowed = Foxtrot.getInstance().getConfig().getBoolean("waterPlacementInClaims");
-        blockRemovalEnabled = Foxtrot.getInstance().getConfig().getBoolean("blockRemoval");
+        squads = HCF.getInstance().getConfig().getBoolean("squads");
+        idleCheckEnabled = HCF.getInstance().getConfig().getBoolean("idleCheck");
+        startingTimerEnabled = HCF.getInstance().getConfig().getBoolean("startingTimer");
+        forceInvitesEnabled = HCF.getInstance().getConfig().getBoolean("forceInvites");
+        uhcHealing = HCF.getInstance().getConfig().getBoolean("uhcHealing");
+        passiveTagEnabled = HCF.getInstance().getConfig().getBoolean("passiveTag");
+        allowBoosting = HCF.getInstance().getConfig().getBoolean("allowBoosting");
+        waterPlacementInClaimsAllowed = HCF.getInstance().getConfig().getBoolean("waterPlacementInClaims");
+        blockRemovalEnabled = HCF.getInstance().getConfig().getBoolean("blockRemoval");
 
-        rodPrevention = Foxtrot.getInstance().getConfig().getBoolean("rodPrevention", true);
-        skybridgePrevention = Foxtrot.getInstance().getConfig().getBoolean("skybridgePrevention", true);
+        rodPrevention = HCF.getInstance().getConfig().getBoolean("rodPrevention", true);
+        skybridgePrevention = HCF.getInstance().getConfig().getBoolean("skybridgePrevention", true);
 
-        teamHQInEnemyClaims = Foxtrot.getInstance().getConfig().getBoolean("teamHQInEnemyClaims", true);
+        teamHQInEnemyClaims = HCF.getInstance().getConfig().getBoolean("teamHQInEnemyClaims", true);
 
         for (PotionType type : PotionType.values()) {
             if (type == PotionType.WATER) {
                 continue;
             }
 
-            PotionStatus status = new PotionStatus(Foxtrot.getInstance().getConfig().getBoolean("potions." + type + ".drinkables"), Foxtrot.getInstance().getConfig().getBoolean("potions." + type + ".splash"), Foxtrot.getInstance().getConfig().getInt("potions." + type + ".maxLevel", -1));
+            PotionStatus status = new PotionStatus(HCF.getInstance().getConfig().getBoolean("potions." + type + ".drinkables"), HCF.getInstance().getConfig().getBoolean("potions." + type + ".splash"), HCF.getInstance().getConfig().getInt("potions." + type + ".maxLevel", -1));
             potionStatus.put(type, status);
         }
 
-        if (idleCheckEnabled) {
-            new IdleCheckRunnable().runTaskTimer(Foxtrot.getInstance(), 60 * 20L, 60 * 20L);
-        }
+        this.reduceArmorDamage = HCF.getInstance().getConfig().getBoolean("reduceArmorDamage", true);
+        this.blockEntitiesThroughPortals = HCF.getInstance().getConfig().getBoolean("blockEntitiesThroughPortals", true);
 
-        if (uhcHealing) {
-            Bukkit.getPluginManager().registerEvents(new UHCListener(), Foxtrot.getInstance());
-        }
+        this.archerTagColor = ChatColor.valueOf(HCF.getInstance().getConfig().getString("archerTagColor", "YELLOW"));
+        this.stunTagColor = ChatColor.valueOf(HCF.getInstance().getConfig().getString("stunTagColor", "BLUE"));
+        this.defaultRelationColor = ChatColor.valueOf(HCF.getInstance().getConfig().getString("defaultRelationColor", "RED"));
 
-        this.reduceArmorDamage = Foxtrot.getInstance().getConfig().getBoolean("reduceArmorDamage", true);
-        this.blockEntitiesThroughPortals = Foxtrot.getInstance().getConfig().getBoolean("blockEntitiesThroughPortals", true);
-
-        this.archerTagColor = ChatColor.valueOf(Foxtrot.getInstance().getConfig().getString("archerTagColor", "YELLOW"));
-        this.stunTagColor = ChatColor.valueOf(Foxtrot.getInstance().getConfig().getString("stunTagColor", "BLUE"));
-        this.defaultRelationColor = ChatColor.valueOf(Foxtrot.getInstance().getConfig().getString("defaultRelationColor", "RED"));
-
-        this.velt = Foxtrot.getInstance().getConfig().getBoolean("velt", false);
+        this.velt = HCF.getInstance().getConfig().getBoolean("velt", false);
         if (this.velt) {
             Bukkit.getLogger().info("Velt mode enabled!");
         }
-        this.veltKitMap = Foxtrot.getInstance().getConfig().getBoolean("veltKitMap", false);
+        this.veltKitMap = HCF.getInstance().getConfig().getBoolean("veltKitMap", false);
         if (this.veltKitMap) {
         	    Bukkit.getLogger().info("Velt KitMap mode enabled!");
         }
 
-        this.hardcore = Foxtrot.getInstance().getConfig().getBoolean("hardcore", false);
+        this.hardcore = HCF.getInstance().getConfig().getBoolean("hardcore", false);
         
-        this.placeBlocksInCombat = Foxtrot.getInstance().getConfig().getBoolean("placeBlocksInCombat", true);
+        this.placeBlocksInCombat = HCF.getInstance().getConfig().getBoolean("placeBlocksInCombat", true);
         
-        registerPlayerDamageRestrictionListener();
+        //registerPlayerDamageRestrictionListener();
     }
 
     public void save() {
         try {
-            File f = new File(Foxtrot.getInstance().getDataFolder(), "betrayers.json");
+            File f = new File(HCF.getInstance().getDataFolder(), "betrayers.json");
 
             if (!f.exists()) {
                 f.createNewFile();
@@ -215,7 +204,7 @@ public class ServerHandler {
                 dbo.put(betrayer.getUuid().toString(), details);
             }
 
-            FileUtils.write(f, Foxtrot.GSON.toJson(new JsonParser().parse(dbo.toString())));
+            FileUtils.write(f, HCF.GSON.toJson(new JsonParser().parse(dbo.toString())));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -225,7 +214,7 @@ public class ServerHandler {
         if (Enchantment.DAMAGE_ALL.getMaxLevel() == 0 && Enchantment.PROTECTION_ENVIRONMENTAL.getMaxLevel() == 0) {
             return "No Enchants";
         } else {
-            return "Prot " + Integer.toString(Enchantment.PROTECTION_ENVIRONMENTAL.getMaxLevel()) + ", Sharp " + Integer.toString(Enchantment.DAMAGE_ALL.getMaxLevel());
+            return "Prot " + Enchantment.PROTECTION_ENVIRONMENTAL.getMaxLevel() + ", Sharp " + Enchantment.DAMAGE_ALL.getMaxLevel();
         }
     }
 
@@ -234,8 +223,8 @@ public class ServerHandler {
             return (false);
         }
 
-        int WARZONE_RADIUS2 = 500;
-        int WARZONE_BORDER2 = 1000;
+        int WARZONE_RADIUS2 = 84;
+        int WARZONE_BORDER2 = 3000;
 
 
         return (Math.abs(loc.getBlockX()) <= WARZONE_RADIUS2 && Math.abs(loc.getBlockZ()) <= WARZONE_RADIUS2) || ((Math.abs(loc.getBlockX()) > WARZONE_BORDER2 || Math.abs(loc.getBlockZ()) > WARZONE_BORDER2));
@@ -254,7 +243,7 @@ public class ServerHandler {
     }
 
     public void startLogoutSequence(final Player player) {
-        player.sendMessage(ChatColor.YELLOW.toString() + ChatColor.BOLD + "Logging out... " +ChatColor.YELLOW + "Please wait" + ChatColor.RED+ " 30" + ChatColor.YELLOW + " seconds.");
+        player.sendMessage(CC.translate("&fPlease wait &b30 &fseconds for to &3logout&f."));
 
         BukkitTask taskid = new BukkitRunnable() {
 
@@ -263,7 +252,7 @@ public class ServerHandler {
             @Override
             public void run() {
                 if (player.hasMetadata("frozen")) {
-                    player.sendMessage(ChatColor.YELLOW.toString() + ChatColor.BOLD + "LOGOUT " + ChatColor.RED.toString() + ChatColor.BOLD + "CANCELLED!");
+                    player.sendMessage(CC.translate("&fYour &blogout &fhas been &3cancelled&f."));
                     cancel();
                     return;
                 }
@@ -274,14 +263,14 @@ public class ServerHandler {
                 if (seconds == 0) {
                     if (tasks.containsKey(player.getName())) {
                         tasks.remove(player.getName());
-                        player.setMetadata("loggedout", new FixedMetadataValue(Foxtrot.getInstance(), true));
-                        player.kickPlayer("§cYou have been safely logged out of the server!");
+                        player.setMetadata("loggedout", new FixedMetadataValue(HCF.getInstance(), true));
+                        player.sendMessage(CC.translate("&fYou have &asuccessfully &flogged out!"));
                         cancel();
                     }
                 }
 
             }
-        }.runTaskTimer(Foxtrot.getInstance(), 20L, 20L);
+        }.runTaskTimer(HCF.getInstance(), 20L, 20L);
 
         tasks.put(player.getName(), new Logout(taskid.getTaskId(), System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(30)));
     }
@@ -319,7 +308,7 @@ public class ServerHandler {
     }
 
     public Location getSpawnLocation() {
-        return new Location(Bukkit.getWorld("world"), -0.500, 73, -0.500);
+        return new Location(Bukkit.getWorld(HCF.world), 0, 72, 0);
     }
 
     public boolean isUnclaimedOrRaidable(Location loc) {
@@ -334,16 +323,16 @@ public class ServerHandler {
     public double getDTRLoss(Location location) {
         double dtrLoss = 1.00D;
 
-        if (Foxtrot.getInstance().getMapHandler().isKitMap() || Foxtrot.getInstance().getServerHandler().isVeltKitMap()) {
+        if (HCF.getInstance().getMapHandler().isKitMap() || HCF.getInstance().getServerHandler().isVeltKitMap()) {
             dtrLoss = Math.min(dtrLoss, 0.01D);
         }
 
         Team ownerTo = LandBoard.getInstance().getTeam(location);
-        if (Foxtrot.getInstance().getConquestHandler().getGame() != null && location.getWorld().getEnvironment() == Environment.THE_END && ownerTo != null && ownerTo.hasDTRBitmask(DTRBitmask.CONQUEST)) {
+        if (HCF.getInstance().getConquestHandler().getGame() != null && location.getWorld().getEnvironment() == Environment.THE_END && ownerTo != null && ownerTo.hasDTRBitmask(DTRBitmask.CONQUEST)) {
             dtrLoss = Math.min(dtrLoss, 0.50D);
         }
 
-        if (Foxtrot.getInstance().getConfig().getBoolean("legions")) {
+        if (HCF.getInstance().getConfig().getBoolean("legions")) {
             if (Objects.requireNonNull(location.getWorld()).getEnvironment() == Environment.THE_END) {
                 dtrLoss = Math.min(dtrLoss, 0.50D);
             } else if (location.getWorld().getEnvironment() == Environment.NETHER) {
@@ -381,18 +370,18 @@ public class ServerHandler {
         // Things we already know and can easily eliminate.
         if (isPreEOTW()) {
             return (TimeUnit.DAYS.toSeconds(1000));
-        } else if (Foxtrot.getInstance().getMapHandler().isKitMap() || Foxtrot.getInstance().getServerHandler().isVeltKitMap()) {
+        } else if (HCF.getInstance().getMapHandler().isKitMap() || HCF.getInstance().getServerHandler().isVeltKitMap()) {
             return (TimeUnit.SECONDS.toSeconds(5));
         } else if (getBetrayer(playerUUID) != null) {
             return (TimeUnit.DAYS.toSeconds(1));
         }
 
         Team ownerTo = LandBoard.getInstance().getTeam(location);
-        Player player = Foxtrot.getInstance().getServer().getPlayer(playerUUID); // Used in various checks down below.
+        Player player = HCF.getInstance().getServer().getPlayer(playerUUID); // Used in various checks down below.
 
         // Check DTR flags, which will also take priority over playtime.
         if (ownerTo != null && ownerTo.getOwner() == null) {
-            Event linkedKOTH = Foxtrot.getInstance().getEventHandler().getEvent(ownerTo.getName());
+            Event linkedKOTH = HCF.getInstance().getEventHandler().getEvent(ownerTo.getName());
 
             // Only respect the reduced deathban if
             // The KOTH is non-existant (in which case we're probably
@@ -411,10 +400,10 @@ public class ServerHandler {
 
         int max = Deathban.getDeathbanSeconds(player);
 
-        long ban = Foxtrot.getInstance().getPlaytimeMap().getPlaytime(playerUUID);
+        long ban = HCF.getInstance().getPlaytimeMap().getPlaytime(playerUUID);
 
-        if (player != null && Foxtrot.getInstance().getPlaytimeMap().hasPlayed(playerUUID)) {
-            ban += Foxtrot.getInstance().getPlaytimeMap().getCurrentSession(playerUUID) / 1000L;
+        if (player != null && HCF.getInstance().getPlaytimeMap().hasPlayed(playerUUID)) {
+            ban += HCF.getInstance().getPlaytimeMap().getCurrentSession(playerUUID) / 1000L;
         }
 
         return (Math.min(max, ban));
@@ -429,7 +418,7 @@ public class ServerHandler {
         }
 
         if (inClaim != null) {
-            if (Foxtrot.getInstance().getServerHandler().isHardcore() && inClaim.getOwner() != null && !inClaim.isMember(player.getUniqueId())) {
+            if (HCF.getInstance().getServerHandler().isHardcore() && inClaim.getOwner() != null && !inClaim.isMember(player.getUniqueId())) {
                 player.sendMessage(ChatColor.RED + "You may not go to your team headquarters from an enemy's claim! Use '/team stuck' first.");
                 return;
             }
@@ -459,7 +448,7 @@ public class ServerHandler {
         boolean isSpawn = inClaim != null && inClaim.hasDTRBitmask(DTRBitmask.SAFE_ZONE);
         
         if (charge && !isSpawn) {
-            team.setBalance(team.getBalance() - (Foxtrot.getInstance().getServerHandler().isHardcore() ? 20 : 50));
+            team.setBalance(team.getBalance() - (HCF.getInstance().getServerHandler().isHardcore() ? 20 : 50));
         }
 
         player.sendMessage(ChatColor.YELLOW + "Teleporting to your team's HQ in " + ChatColor.LIGHT_PURPLE + warmup + " seconds" + ChatColor.YELLOW + "... Stay still and do not take damage.");
@@ -467,7 +456,7 @@ public class ServerHandler {
         /**
          * Give player heads up now. They should have 10 seconds to move even just an inch to cancel the tp if they want
          */
-        if (Foxtrot.getInstance().getPvPTimerMap().hasTimer(player.getUniqueId())) {
+        if (HCF.getInstance().getPvPTimerMap().hasTimer(player.getUniqueId())) {
             player.sendMessage(ChatColor.RED + "Your PvP Timer will be removed if the teleport is not cancelled.");
         }
 
@@ -497,8 +486,8 @@ public class ServerHandler {
 
                 // Prevent server lag from making the home time inaccurate.
                 if (homeTimer.containsKey(player.getName()) && homeTimer.get(player.getName()) <= System.currentTimeMillis()) {
-                    if (Foxtrot.getInstance().getPvPTimerMap().hasTimer(player.getUniqueId())) {
-                        Foxtrot.getInstance().getPvPTimerMap().removeTimer(player.getUniqueId());
+                    if (HCF.getInstance().getPvPTimerMap().hasTimer(player.getUniqueId())) {
+                        HCF.getInstance().getPvPTimerMap().removeTimer(player.getUniqueId());
                     }
 
                     for (EnderPearl enderPearl : player.getWorld().getEntitiesByClass(EnderPearl.class)) {
@@ -516,8 +505,8 @@ public class ServerHandler {
 
                 if (time == 0) {
                     // Remove their PvP timer.
-                    if (Foxtrot.getInstance().getPvPTimerMap().hasTimer(player.getUniqueId())) {
-                        Foxtrot.getInstance().getPvPTimerMap().removeTimer(player.getUniqueId());
+                    if (HCF.getInstance().getPvPTimerMap().hasTimer(player.getUniqueId())) {
+                        HCF.getInstance().getPvPTimerMap().removeTimer(player.getUniqueId());
                     }
 
                     for (EnderPearl enderPearl : player.getWorld().getEntitiesByClass(EnderPearl.class)) {
@@ -533,7 +522,7 @@ public class ServerHandler {
                 }
             }
 
-        }.runTaskTimer(Foxtrot.getInstance(), 20L, 20L);
+        }.runTaskTimer(HCF.getInstance(), 20L, 20L);
     }
 
     private Map<UUID, Long> playerDamageRestrictMap = Maps.newHashMap();
@@ -547,12 +536,12 @@ public class ServerHandler {
     }
 
     private void registerPlayerDamageRestrictionListener() {
-    		Foxtrot.getInstance().getServer().getPluginManager().registerEvents(new Listener() {
+    		HCF.getInstance().getServer().getPluginManager().registerEvents(new Listener() {
     			@EventHandler(ignoreCancelled = true)
     			public void onDamage(EntityDamageByEntityEvent event) {
     				Long expiry = playerDamageRestrictMap.get(event.getDamager().getUniqueId());
     				if (expiry != null && System.currentTimeMillis() < expiry) {
-    					event.setCancelled(true);
+    					//event.setCancelled(true);
     				}
     			}
 
@@ -560,7 +549,7 @@ public class ServerHandler {
     			public void onQuit(PlayerQuitEvent event) {
     				playerDamageRestrictMap.remove(event.getPlayer().getUniqueId());
     			}
-    		}, Foxtrot.getInstance());
+    		}, HCF.getInstance());
     }
 
     public boolean isSpawnBufferZone(Location loc) {
@@ -568,7 +557,7 @@ public class ServerHandler {
             return (false);
         }
 
-        int radius = Foxtrot.getInstance().getMapHandler().getWorldBuffer();
+        int radius = HCF.getInstance().getMapHandler().getWorldBuffer();
         int x = loc.getBlockX();
         int z = loc.getBlockZ();
 
@@ -580,7 +569,7 @@ public class ServerHandler {
             return (false);
         }
 
-        int radius = Foxtrot.getInstance().getMapHandler().getNetherBuffer();
+        int radius = HCF.getInstance().getMapHandler().getNetherBuffer();
         int x = loc.getBlockX();
         int z = loc.getBlockZ();
 
@@ -610,23 +599,23 @@ public class ServerHandler {
                 return;
             }
 
-            if (FrozenEconomyHandler.getBalance(player.getUniqueId()) >= price) {
+            if (EconomyHandler.getBalance(player.getUniqueId()) >= price) {
 
-                if (FrozenEconomyHandler.getBalance(player.getUniqueId()) > 100000) {
+                if (EconomyHandler.getBalance(player.getUniqueId()) > 100000) {
                     player.sendMessage("§cYour balance is too high. Please contact an admin to do this.");
                     Bukkit.getLogger().severe("[ECONOMY] " + player.getName() + " tried to buy shit at spawn with over 100K." );
                     return;
                 }
 
 
-                if (Double.isNaN(FrozenEconomyHandler.getBalance(player.getUniqueId()))) {
-                    FrozenEconomyHandler.setBalance(player.getUniqueId(), 0);
+                if (Double.isNaN(EconomyHandler.getBalance(player.getUniqueId()))) {
+                    EconomyHandler.setBalance(player.getUniqueId(), 0);
                     player.sendMessage("§cYour balance was fucked, but we unfucked it.");
                     return;
                 }
 
                 if (player.getInventory().firstEmpty() != -1) {
-                    FrozenEconomyHandler.withdraw(player.getUniqueId(), price);
+                    EconomyHandler.withdraw(player.getUniqueId(), price);
 
                     itemStack.setAmount(amount);
                     player.getInventory().addItem(itemStack);
@@ -636,7 +625,7 @@ public class ServerHandler {
                             "§aBOUGHT§r " + amount,
                             "for §a$" + NumberFormat.getNumberInstance(Locale.US).format(price),
                             "New Balance:",
-                            "§a$" + NumberFormat.getNumberInstance(Locale.US).format((int) FrozenEconomyHandler.getBalance(player.getUniqueId()))
+                            "§a$" + NumberFormat.getNumberInstance(Locale.US).format((int) EconomyHandler.getBalance(player.getUniqueId()))
                     );
                 } else {
                     showSignPacket(player, sign,
@@ -682,13 +671,13 @@ public class ServerHandler {
                 removeItem(player, itemStack, amountInInventory);
                 player.updateInventory();
 
-                FrozenEconomyHandler.deposit(player.getUniqueId(), totalPrice);
+                EconomyHandler.deposit(player.getUniqueId(), totalPrice);
 
                 showSignPacket(player, sign,
                         "§aSOLD§r " + amountInInventory,
                         "for §a$" + NumberFormat.getNumberInstance(Locale.US).format(totalPrice),
                         "New Balance:",
-                        "§a$" + NumberFormat.getNumberInstance(Locale.US).format((int) FrozenEconomyHandler.getBalance(player.getUniqueId()))
+                        "§a$" + NumberFormat.getNumberInstance(Locale.US).format((int) EconomyHandler.getBalance(player.getUniqueId()))
                 );
             }
         }
@@ -698,7 +687,7 @@ public class ServerHandler {
         String kit = ChatColor.stripColor(sign.getLine(1));
 
         if (kit.equalsIgnoreCase("Fishing")){
-            int uses = Foxtrot.getInstance().getFishingKitMap().getUses(player.getUniqueId());
+            int uses = HCF.getInstance().getFishingKitMap().getUses(player.getUniqueId());
 
             if (uses == 3){
                 showSignPacket(player, sign, "§aFishing Kit:", "", "§cAlready used", "§c3/3 times!");
@@ -709,7 +698,7 @@ public class ServerHandler {
                 player.getInventory().addItem(rod);
                 player.updateInventory();
                 player.sendMessage(ChatColor.GOLD + "Equipped the " + ChatColor.WHITE + "Fishing" + ChatColor.GOLD + " kit!");
-                Foxtrot.getInstance().getFishingKitMap().setUses(player.getUniqueId(), uses + 1);
+                HCF.getInstance().getFishingKitMap().setUses(player.getUniqueId(), uses + 1);
                 showSignPacket(player, sign, "§aFishing Kit:", "§bEquipped!", "", "§dUses: §e" + (uses + 1) + "/3");
             }
         }
@@ -798,7 +787,7 @@ public class ServerHandler {
         };
 
         showSignTasks.put(sign, br);
-        br.runTaskLater(Foxtrot.getInstance(), 90L);
+        br.runTaskLater(HCF.getInstance(), 90L);
     }
 
     public int countItems(Player player, Material material, int damageValue) {

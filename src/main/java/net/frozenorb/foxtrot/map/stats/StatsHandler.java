@@ -6,11 +6,10 @@ import com.google.common.reflect.TypeToken;
 import com.mongodb.BasicDBObject;
 import com.mongodb.util.JSON;
 import lombok.Getter;
-import net.frozenorb.foxtrot.Foxtrot;
-import net.frozenorb.foxtrot.commands.CustomTimerCreateCommand;
+import net.frozenorb.foxtrot.HCF;
+import net.frozenorb.foxtrot.commands.op.CustomTimerCreateCommand;
 import net.frozenorb.foxtrot.map.stats.command.StatsTopCommand.StatsObjective;
-import net.frozenorb.foxtrot.serialization.LocationSerializer;
-import net.frozenorb.foxtrot.team.Team;
+import net.frozenorb.foxtrot.util.serialization.LocationSerializer;
 import net.frozenorb.foxtrot.util.UUIDUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -40,10 +39,10 @@ public class StatsHandler implements Listener {
     private boolean firstUpdateComplete = false;
     
     public StatsHandler() {
-        Foxtrot.getInstance().runRedisCommand(redis -> {
+        HCF.getInstance().runRedisCommand(redis -> {
             for (String key : redis.keys(Bukkit.getServer().getName() + ":" + "stats:*")) {
                 UUID uuid = UUID.fromString(key.split(":")[2]);
-                StatsEntry entry = Foxtrot.PLAIN_GSON.fromJson(redis.get(key), StatsEntry.class);
+                StatsEntry entry = HCF.PLAIN_GSON.fromJson(redis.get(key), StatsEntry.class);
 
                 stats.put(uuid, entry);
             }
@@ -51,7 +50,7 @@ public class StatsHandler implements Listener {
             Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[Kit Map] Loaded " + stats.size() + " stats.");
 
             if (redis.exists(Bukkit.getServer().getName() + ":" + "leaderboardSigns")) {
-                List<String> serializedSigns = Foxtrot.PLAIN_GSON.fromJson(redis.get(Bukkit.getServer().getName() + ":" + "leaderboardSigns"), new TypeToken<List<String>>() {}.getType());
+                List<String> serializedSigns = HCF.PLAIN_GSON.fromJson(redis.get(Bukkit.getServer().getName() + ":" + "leaderboardSigns"), new TypeToken<List<String>>() {}.getType());
 
                 for (String sign : serializedSigns) {
                     Location location = LocationSerializer.deserialize((BasicDBObject) JSON.parse(sign.split("----")[0]));
@@ -64,7 +63,7 @@ public class StatsHandler implements Listener {
             }
 
             if (redis.exists(Bukkit.getServer().getName() + ":" + "leaderboardHeads")) {
-                List<String> serializedHeads = Foxtrot.PLAIN_GSON.fromJson(redis.get(Bukkit.getServer().getName() + ":" + "leaderboardHeads"), new TypeToken<List<String>>() {}.getType());
+                List<String> serializedHeads = HCF.PLAIN_GSON.fromJson(redis.get(Bukkit.getServer().getName() + ":" + "leaderboardHeads"), new TypeToken<List<String>>() {}.getType());
 
                 for (String sign : serializedHeads) {
                     Location location = LocationSerializer.deserialize((BasicDBObject) JSON.parse(sign.split("----")[0]));
@@ -77,7 +76,7 @@ public class StatsHandler implements Listener {
             }
             
             if (redis.exists(Bukkit.getServer().getName() + ":" + "objectives")) {
-                List<String> serializedObjectives = Foxtrot.PLAIN_GSON.fromJson(redis.get(Bukkit.getServer().getName() + ":" + "objectives"), new TypeToken<List<String>>() {}.getType());
+                List<String> serializedObjectives = HCF.PLAIN_GSON.fromJson(redis.get(Bukkit.getServer().getName() + ":" + "objectives"), new TypeToken<List<String>>() {}.getType());
 
                 for (String objective : serializedObjectives) {
                     Location location = LocationSerializer.deserialize((BasicDBObject) JSON.parse(objective.split("----")[0]));
@@ -92,29 +91,29 @@ public class StatsHandler implements Listener {
             return null;
         });
 
-        Bukkit.getPluginManager().registerEvents(this, Foxtrot.getInstance());
+        Bukkit.getPluginManager().registerEvents(this, HCF.getInstance());
 
 
-        Bukkit.getScheduler().scheduleAsyncRepeatingTask(Foxtrot.getInstance(), this::save, 30 * 20L, 30 * 20L);
-        if (Foxtrot.getInstance().getMapHandler().isKitMap()){
-            Bukkit.getScheduler().scheduleAsyncRepeatingTask(Foxtrot.getInstance(), this::updateTopKillsMap, 30 * 20L, 30 * 20L);
+        Bukkit.getScheduler().scheduleAsyncRepeatingTask(HCF.getInstance(), this::save, 30 * 20L, 30 * 20L);
+        if (HCF.getInstance().getMapHandler().isKitMap()){
+            Bukkit.getScheduler().scheduleAsyncRepeatingTask(HCF.getInstance(), this::updateTopKillsMap, 30 * 20L, 30 * 20L);
         }
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(Foxtrot.getInstance(), this::updatePhysicalLeaderboards, 60 * 20L, 60 * 20L);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(HCF.getInstance(), this::updatePhysicalLeaderboards, 60 * 20L, 60 * 20L);
     }
 
     public void save() {
-        Foxtrot.getInstance().runRedisCommand(redis -> {
+        HCF.getInstance().runRedisCommand(redis -> {
             List<String> serializedSigns = leaderboardSigns.entrySet().stream().map(entry -> LocationSerializer.serialize(entry.getKey()).toString() + "----" + entry.getValue()).collect(Collectors.toList());
             List<String> serializedHeads = leaderboardHeads.entrySet().stream().map(entry -> LocationSerializer.serialize(entry.getKey()).toString() + "----" + entry.getValue()).collect(Collectors.toList());
             List<String> serializedObjectives = objectives.entrySet().stream().map(entry -> LocationSerializer.serialize(entry.getKey()).toString() + "----" + entry.getValue().name()).collect(Collectors.toList());
 
-            redis.set(Bukkit.getServer().getName() + ":" + "leaderboardSigns", Foxtrot.PLAIN_GSON.toJson(serializedSigns));
-            redis.set(Bukkit.getServer().getName() + ":" + "leaderboardHeads", Foxtrot.PLAIN_GSON.toJson(serializedHeads));
-            redis.set(Bukkit.getServer().getName() + ":" + "objectives", Foxtrot.PLAIN_GSON.toJson(serializedObjectives));
+            redis.set(Bukkit.getServer().getName() + ":" + "leaderboardSigns", HCF.PLAIN_GSON.toJson(serializedSigns));
+            redis.set(Bukkit.getServer().getName() + ":" + "leaderboardHeads", HCF.PLAIN_GSON.toJson(serializedHeads));
+            redis.set(Bukkit.getServer().getName() + ":" + "objectives", HCF.PLAIN_GSON.toJson(serializedObjectives));
 
             // stats
             for (StatsEntry entry : stats.values()) {
-                redis.set(Bukkit.getServer().getName() + ":" + "stats:" + entry.getOwner().toString(), Foxtrot.PLAIN_GSON.toJson(entry));
+                redis.set(Bukkit.getServer().getName() + ":" + "stats:" + entry.getOwner().toString(), HCF.PLAIN_GSON.toJson(entry));
             }
             return null;
         });
@@ -221,7 +220,6 @@ public class StatsHandler implements Listener {
         return switch (objective) {
             case DEATHS -> "Top Deaths";
             case HIGHEST_KILLSTREAK -> "Top KillStreak";
-            case KD -> "Top KDR";
             case KILLS -> "Top Kills";
             default -> "Error";
         };
@@ -252,7 +250,7 @@ public class StatsHandler implements Listener {
         int index = 0;
         for (Map.Entry<StatsEntry, Number> entry : ordered.entrySet()) {
             
-            if (entry.getKey().getDeaths() < 10 && objective == StatsObjective.KD) {
+            if (entry.getKey().getDeaths() < 10) {
                 continue;
             }
             
@@ -274,7 +272,7 @@ public class StatsHandler implements Listener {
 
     public void clearAll() {
         stats.clear();
-        Bukkit.getScheduler().scheduleAsyncDelayedTask(Foxtrot.getInstance(), this::save);
+        Bukkit.getScheduler().scheduleAsyncDelayedTask(HCF.getInstance(), this::save);
     }
 
     public void clearLeaderboards() {
@@ -282,11 +280,11 @@ public class StatsHandler implements Listener {
         leaderboardSigns.clear();
         objectives.clear();
 
-        Bukkit.getScheduler().scheduleAsyncDelayedTask(Foxtrot.getInstance(), this::save);
+        Bukkit.getScheduler().scheduleAsyncDelayedTask(HCF.getInstance(), this::save);
     }
 
     public Map<StatsEntry, String> getLeaderboards(StatsObjective objective, int range) {
-        if (objective != StatsObjective.KD) {
+        if (true == true) {
             Map<StatsEntry, Number> base = Maps.newHashMap();
 
             for (StatsEntry entry : stats.values()) {
@@ -336,13 +334,7 @@ public class StatsHandler implements Listener {
 
             int index = 0;
             for (Map.Entry<StatsEntry, Double> entry : ordered.entrySet()) {
-                if (entry.getKey().getDeaths() < 10) {
-                    continue;
-                }
 
-                String kd = Team.DTR_FORMAT.format((double) entry.getKey().getKills() / (double) entry.getKey().getDeaths());
-
-                leaderboards.put(entry.getKey(), kd);
 
                 index++;
 
@@ -363,14 +355,14 @@ public class StatsHandler implements Listener {
             leaderboardHeads.remove(event.getBlock().getLocation());
             player.sendMessage(ChatColor.YELLOW + "Removed this skull from leaderboards.");
 
-            Bukkit.getScheduler().scheduleAsyncDelayedTask(Foxtrot.getInstance(), this::save);
+            Bukkit.getScheduler().scheduleAsyncDelayedTask(HCF.getInstance(), this::save);
         }
 
         if (leaderboardSigns.containsKey(event.getBlock().getLocation())) {
             leaderboardSigns.remove(event.getBlock().getLocation());
             player.sendMessage(ChatColor.YELLOW + "Removed this sign from leaderboards.");
 
-            Bukkit.getScheduler().scheduleAsyncDelayedTask(Foxtrot.getInstance(), this::save);
+            Bukkit.getScheduler().scheduleAsyncDelayedTask(HCF.getInstance(), this::save);
         }
     }
 

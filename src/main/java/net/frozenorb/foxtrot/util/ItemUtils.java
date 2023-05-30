@@ -4,7 +4,7 @@ package net.frozenorb.foxtrot.util;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -93,6 +93,37 @@ public class ItemUtils {
             name = WordUtils.capitalize((String)item.getType().toString().toLowerCase().replace("_", " "));
         }
         return name;
+    }
+
+    public static boolean isSimilarTo(ItemStack item, ItemStack compareTo){
+
+        boolean hasItemMeta = item.hasItemMeta();
+        boolean compareToHasItemMeta = compareTo.hasItemMeta();
+
+        boolean itemHasDisplayName = false;
+        boolean compareToHasDisplayName = false;
+
+        String itemDisplayName = "";
+
+        String compareToDisplayName = "";
+
+        List<String> itemLore = new ArrayList<>();
+        List<String> compareToLore = new ArrayList<>();
+
+        if(hasItemMeta && compareToHasItemMeta){
+            itemHasDisplayName = item.getItemMeta().hasDisplayName();
+            compareToHasDisplayName = item.getItemMeta().hasDisplayName();
+            if(itemHasDisplayName) itemDisplayName = item.getItemMeta().getDisplayName();
+            if(compareToHasDisplayName) compareToDisplayName = compareTo.getItemMeta().getDisplayName();
+            if(item.getItemMeta().hasLore()) itemLore = item.getItemMeta().getLore();
+            if(compareTo.getItemMeta().hasLore()) compareToLore = compareTo.getItemMeta().getLore();
+        }
+
+        return item.getType() == compareTo.getType() &&
+                hasItemMeta &&
+                itemHasDisplayName &&
+                compareToHasDisplayName &&
+                itemDisplayName.equals(compareToDisplayName) && itemLore.containsAll(compareToLore);
     }
 
     public static final class ItemBuilder {

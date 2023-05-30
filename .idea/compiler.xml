@@ -10,6 +10,7 @@
         <module name="BleedHCTeams" />
         <module name="Indium" />
         <module name="HCTeams" />
+        <module name="1.17-HCTeams-Frozen-HYPE" />
       </profile>
     </annotationProcessing>
   </component>

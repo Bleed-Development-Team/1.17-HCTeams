@@ -3,7 +3,7 @@ package net.frozenorb.foxtrot.map.stats.command;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 @CommandPermission("op")
 public class ClearAllStatsCommand extends BaseCommand {
     public static void clearallstats(Player sender) {
-        ConversationFactory factory = new ConversationFactory(Foxtrot.getInstance()).withModality(true).withPrefix(new NullConversationPrefix()).withFirstPrompt(new StringPrompt() {
+        ConversationFactory factory = new ConversationFactory(HCF.getInstance()).withModality(true).withPrefix(new NullConversationPrefix()).withFirstPrompt(new StringPrompt() {
 
             public String getPromptText(ConversationContext context) {
                 return "§aAre you sure you want to clear all stats? Type §byes§a to confirm or §cno§a to quit.";
@@ -21,7 +21,7 @@ public class ClearAllStatsCommand extends BaseCommand {
             @Override
             public Prompt acceptInput(ConversationContext cc, String s) {
                 if (s.equalsIgnoreCase("yes")) {
-                    Foxtrot.getInstance().getMapHandler().getStatsHandler().clearAll();
+                    HCF.getInstance().getMapHandler().getStatsHandler().clearAll();
                     cc.getForWhom().sendRawMessage(ChatColor.GREEN + "All stats cleared!");
                     return Prompt.END_OF_CONVERSATION;
                 }

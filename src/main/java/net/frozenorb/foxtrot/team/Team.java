@@ -7,20 +7,22 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import lombok.Getter;
 import lombok.Setter;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.chat.enums.ChatMode;
-import net.frozenorb.foxtrot.economy.FrozenEconomyHandler;
-import net.frozenorb.foxtrot.events.region.cavern.CavernHandler;
-import net.frozenorb.foxtrot.events.region.glowmtn.GlowHandler;
+import net.frozenorb.foxtrot.economy.EconomyHandler;
+import net.frozenorb.foxtrot.gameplay.events.region.cavern.CavernHandler;
+import net.frozenorb.foxtrot.gameplay.events.region.glowmtn.GlowHandler;
 import net.frozenorb.foxtrot.map.stats.StatsHandler;
 import net.frozenorb.foxtrot.persist.maps.DeathbanMap;
-import net.frozenorb.foxtrot.redis.RedisCommand;
-import net.frozenorb.foxtrot.serialization.LocationSerializer;
+import net.frozenorb.foxtrot.team.upgrades.Upgrade;
+import net.frozenorb.foxtrot.util.redis.RedisCommand;
+import net.frozenorb.foxtrot.util.serialization.LocationSerializer;
 import net.frozenorb.foxtrot.team.claims.Claim;
 import net.frozenorb.foxtrot.team.claims.LandBoard;
 import net.frozenorb.foxtrot.team.claims.Subclaim;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import net.frozenorb.foxtrot.team.dtr.DTRHandler;
+import net.frozenorb.foxtrot.team.event.TeamRaidableEvent;
 import net.frozenorb.foxtrot.team.track.TeamActionTracker;
 import net.frozenorb.foxtrot.team.track.TeamActionType;
 import net.frozenorb.foxtrot.util.CC;
@@ -86,7 +88,12 @@ public class Team {
     @Getter private int killstreakPoints = 0;
     @Getter private int playtimePoints = 0;
     @Getter private int spawnersInClaim = 0;
+    @Getter private boolean dq = false;
     @Getter private int spentPoints = 0; // points spent on faction upgrades (kinda aids)
+    @Getter @Setter private boolean friendlyFire = false;
+    @Getter @Setter private boolean claimLocked;
+
+    @Getter private List<Upgrade> factionUpgrades = new ArrayList<>();
 
 	@Getter private Map<String, Integer> upgradeToTier = new HashMap<>();
 
@@ -111,6 +118,10 @@ public class Team {
         setDTR(newDTR, null);
     }
 
+    public boolean getDQ(){
+        return dq;
+    }
+
     public void setDTR(double newDTR, Player actor) {
         if (DTR == newDTR) {
             return;
@@ -126,9 +137,9 @@ public class Team {
 
         if (!isLoading()) {
             if (actor != null) {
-                Foxtrot.getInstance().getLogger().info("[DTR Change] " + getName() + ": " + DTR + " --> " + newDTR + ". Actor: " + actor.getName());
+                HCF.getInstance().getLogger().info("[DTR Change] " + getName() + ": " + DTR + " --> " + newDTR + ". Actor: " + actor.getName());
             } else {
-                Foxtrot.getInstance().getLogger().info("[DTR Change] " + getName() + ": " + DTR + " --> " + newDTR);
+                HCF.getInstance().getLogger().info("[DTR Change] " + getName() + ": " + DTR + " --> " + newDTR);
             }
         }
 
@@ -148,20 +159,18 @@ public class Team {
             return ChatColor.AQUA + "Cavern";
         } else if (owner == null) {
             if (hasDTRBitmask(DTRBitmask.SAFE_ZONE)) {
-                switch (player.getWorld().getEnvironment()) {
-                    case NETHER:
-                        return (ChatColor.GREEN + "Nether Spawn");
-                    case THE_END:
-                        return (ChatColor.GREEN + "The End Safezone");
-                }
+                return switch (player.getWorld().getEnvironment()) {
+                    case NETHER -> (ChatColor.GREEN + "Nether Spawn");
+                    case THE_END -> (ChatColor.GREEN + "The End Safezone");
+                    default -> (ChatColor.GREEN + "Spawn");
+                };
 
-                return (ChatColor.GREEN + "Spawn");
             } else if (hasDTRBitmask(DTRBitmask.KOTH)) {
-                return (ChatColor.AQUA + getName() + ChatColor.GOLD + " KOTH");
+                return (ChatColor.BLUE + getName());
             } else if (hasDTRBitmask(DTRBitmask.CITADEL)) {
                 return (ChatColor.DARK_PURPLE + "Citadel");
             } else if (hasDTRBitmask(DTRBitmask.ROAD)) {
-                return (ChatColor.GOLD + getName().replace("Road", " Road"));
+                return (ChatColor.YELLOW + getName().replace("Road", " Road"));
             } else if (hasDTRBitmask(DTRBitmask.CONQUEST)) {
                 return (ChatColor.YELLOW + "Conquest");
             }
@@ -265,6 +274,11 @@ public class Team {
         flagForSave();
     }
 
+    public void setDQ(boolean bool){
+        dq = bool;
+        flagForSave();
+    }
+
     public void setAnnouncement(String announcement) {
         this.announcement = announcement;
 
@@ -338,16 +352,16 @@ public class Team {
                     refund += Claim.getPrice(claim, this, false);
                 }
 
-                FrozenEconomyHandler.deposit(owner, refund);
-                Foxtrot.getInstance().getWrappedBalanceMap().setBalance(owner, FrozenEconomyHandler.getBalance(owner));
-                Foxtrot.getInstance().getLogger().info("Economy Logger: Depositing " + refund + " into " + UUIDUtils.name(owner) + "'s account: Disbanded team");
+                EconomyHandler.deposit(owner, refund);
+                HCF.getInstance().getWrappedBalanceMap().setBalance(owner, EconomyHandler.getBalance(owner));
+                HCF.getInstance().getLogger().info("Economy Logger: Depositing " + refund + " into " + UUIDUtils.name(owner) + "'s account: Disbanded team");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         for (ObjectId allyId : getAllies()) {
-            Team ally = Foxtrot.getInstance().getTeamHandler().getTeam(allyId);
+            Team ally = HCF.getInstance().getTeamHandler().getTeam(allyId);
 
             if (ally != null) {
                 ally.getAllies().remove(getUniqueId());
@@ -355,25 +369,25 @@ public class Team {
         }
 
         for (UUID uuid : members) {
-            Foxtrot.getInstance().getChatModeMap().setChatMode(uuid, ChatMode.PUBLIC);
+            HCF.getInstance().getChatModeMap().setChatMode(uuid, ChatMode.PUBLIC);
         }
 
-        Foxtrot.getInstance().getTeamHandler().removeTeam(this);
+        HCF.getInstance().getTeamHandler().removeTeam(this);
         LandBoard.getInstance().clear(this);
 
         new BukkitRunnable() {
 
             public void run() {
-                Foxtrot.getInstance().runRedisCommand(redis -> {
+                HCF.getInstance().runRedisCommand(redis -> {
                     redis.del("fox_teams." + name.toLowerCase());
                     return (null);
                 });
 
-                DBCollection teamsCollection = Foxtrot.getInstance().getMongoPool().getDB(Foxtrot.MONGO_DB_NAME).getCollection("Teams");
+                DBCollection teamsCollection = HCF.getInstance().getMongoPool().getDB(HCF.MONGO_DB_NAME).getCollection("Teams");
                 teamsCollection.remove(getJSONIdentifier());
             }
 
-        }.runTaskAsynchronously(Foxtrot.getInstance());
+        }.runTaskAsynchronously(HCF.getInstance());
 
         needsSave = false;
     }
@@ -381,13 +395,13 @@ public class Team {
     public void rename(String newName) {
         final String oldName = name;
 
-        Foxtrot.getInstance().getTeamHandler().removeTeam(this);
+        HCF.getInstance().getTeamHandler().removeTeam(this);
 
         this.name = newName;
 
-        Foxtrot.getInstance().getTeamHandler().setupTeam(this);
+        HCF.getInstance().getTeamHandler().setupTeam(this);
 
-        Foxtrot.getInstance().runRedisCommand(new RedisCommand<Object>() {
+        HCF.getInstance().runRedisCommand(new RedisCommand<>() {
 
             @Override
             public Object execute(Jedis redis) {
@@ -417,7 +431,7 @@ public class Team {
             if (entity instanceof Player) {
                 Player nearbyPlayer = (Player) entity;
 
-                if (Foxtrot.getInstance().getPvPTimerMap().hasTimer(nearbyPlayer.getUniqueId())) {
+                if (HCF.getInstance().getPvPTimerMap().hasTimer(nearbyPlayer.getUniqueId())) {
                     continue;
                 }
 
@@ -444,7 +458,7 @@ public class Team {
             if (entity instanceof Player) {
                 Player nearbyPlayer = (Player) entity;
 
-                if (Foxtrot.getInstance().getPvPTimerMap().hasTimer(nearbyPlayer.getUniqueId())) {
+                if (HCF.getInstance().getPvPTimerMap().hasTimer(nearbyPlayer.getUniqueId())) {
                     continue;
                 }
 
@@ -457,6 +471,42 @@ public class Team {
         }
 
         return (valid);
+    }
+
+    private List<Team> sortTeams(){
+        return HCF.getInstance().getTeamHandler().sortTeams();
+    }
+
+    public String getCustomPrefix() {
+        try {
+            if (sortTeams().get(0) == this){
+                return CC.translate("&5①");
+            } else if (sortTeams().get(1) == this){
+                return CC.translate("&d②");
+            } else if (sortTeams().get(2) == this){
+                return CC.translate("&6③");
+            } else if (getCustomColor().equals("&6")){
+                return CC.translate("&6③");
+            }
+        } catch (IndexOutOfBoundsException e){
+            return "";
+        }
+        return "";
+    }
+
+    public String getCustomColor() {
+        try {
+            if (sortTeams().get(0) == this){
+                return CC.translate("&5");
+            } else if (sortTeams().get(1) == this){
+                return CC.translate("&d");
+            } else if (sortTeams().get(2) == this){
+                return CC.translate("&6");
+            }
+        } catch (IndexOutOfBoundsException e){
+            return "";
+        }
+        return "";
     }
 
 
@@ -562,7 +612,7 @@ public class Team {
 		    public void run() {
 			    setSpawnersInClaim(findSpawners().size());
 		    }
-	    }.runTaskAsynchronously(Foxtrot.getInstance());
+	    }.runTaskAsynchronously(HCF.getInstance());
     }
 
     public List<CreatureSpawner> findSpawners() {
@@ -695,7 +745,7 @@ public class Team {
 
         while (allyIterator.hasNext()) {
             ObjectId ally = allyIterator.next();
-            Team checkTeam = Foxtrot.getInstance().getTeamHandler().getTeam(ally);
+            Team checkTeam = HCF.getInstance().getTeamHandler().getTeam(ally);
 
             if (checkTeam == null) {
                 allyIterator.remove();
@@ -704,7 +754,7 @@ public class Team {
     }
 
     public boolean isAlly(UUID check) {
-        Team checkTeam = Foxtrot.getInstance().getTeamHandler().getTeam(check);
+        Team checkTeam = HCF.getInstance().getTeamHandler().getTeam(check);
         return (checkTeam != null && isAlly(checkTeam));
     }
 
@@ -767,7 +817,7 @@ public class Team {
         int amt = 0;
 
         for (UUID member : getMembers()) {
-            Player exactPlayer = Foxtrot.getInstance().getServer().getPlayer(member);
+            Player exactPlayer = HCF.getInstance().getServer().getPlayer(member);
 
             if (exactPlayer != null && !exactPlayer.hasMetadata("invisible")) {
                 amt++;
@@ -781,7 +831,7 @@ public class Team {
         List<Player> players = new ArrayList<>();
 
         for (UUID member : getMembers()) {
-            Player exactPlayer = Foxtrot.getInstance().getServer().getPlayer(member);
+            Player exactPlayer = HCF.getInstance().getServer().getPlayer(member);
 
             if (exactPlayer != null && !exactPlayer.hasMetadata("invisible")) {
                 players.add(exactPlayer);
@@ -795,7 +845,7 @@ public class Team {
         List<UUID> players = new ArrayList<>();
 
         for (UUID member : getMembers()) {
-            Player exactPlayer = Foxtrot.getInstance().getServer().getPlayer(member);
+            Player exactPlayer = HCF.getInstance().getServer().getPlayer(member);
 
             if (exactPlayer == null || exactPlayer.hasMetadata("invisible")) {
                 players.add(member);
@@ -844,7 +894,7 @@ public class Team {
                 "newDtr", newDTR
         ));
 
-        for (Player player : Foxtrot.getInstance().getServer().getOnlinePlayers()) {
+        for (Player player : HCF.getInstance().getServer().getOnlinePlayers()) {
             if (isMember(player.getUniqueId())) {
                 player.sendMessage(ChatColor.RED + "Member Death: " + ChatColor.WHITE + playerName);
                 player.sendMessage(ChatColor.RED + "DTR: " + ChatColor.WHITE + DTR_FORMAT.format(newDTR));
@@ -853,20 +903,34 @@ public class Team {
 
         if (newDTR < 0.0 && oldDTR > 0.0) {
             if (killer != null){
-                Foxtrot.getInstance().getRaidableTeamsMap().add(killer.getUniqueId(), 1);
+                HCF.getInstance().getRaidableTeamsMap().add(killer.getUniqueId(), 1);
+            }
+
+            Team team = HCF.getInstance().getTeamHandler().getTeam(killer);
+
+            if (team != null) {
+                if (team.getPoints() >= 2 && getPoints() >= 2){
+                    team.setPoints(Math.min(0, getPoints() / 2));
+                    setPoints(Math.min(0, getPoints() / 2));
+                }
+
+                team.sendMessage("&c" + getName() + " &fhas been made raidable by &c" + team.getName() + "&f.");
+
+                final TeamRaidableEvent teamRaidableEvent = new TeamRaidableEvent(HCF.getInstance().getServer().getPlayer(playerName), killer, this, DTR, newDTR, UUIDUtils.uuid(playerName));
+                HCF.getInstance().getServer().getPluginManager().callEvent(teamRaidableEvent);
             }
         }
 
-        Foxtrot.getInstance().getLogger().info("[TeamDeath] " + name + " > " + "Player death: [" + playerName + "]");
+        HCF.getInstance().getLogger().info("[TeamDeath] " + name + " > " + "Player death: [" + playerName + "]");
         setDTR(newDTR);
 
 
 
         if (isRaidable()) {
             TeamActionTracker.logActionAsync(this, TeamActionType.TEAM_NOW_RAIDABLE, ImmutableMap.of());
-            DTRCooldown = System.currentTimeMillis() + Foxtrot.getInstance().getMapHandler().getRegenTimeRaidable();
+            DTRCooldown = System.currentTimeMillis() + HCF.getInstance().getMapHandler().getRegenTimeRaidable();
         } else {
-            DTRCooldown = System.currentTimeMillis() + Foxtrot.getInstance().getMapHandler().getRegenTimeDeath();
+            DTRCooldown = System.currentTimeMillis() + HCF.getInstance().getMapHandler().getRegenTimeDeath();
         }
 
         DTRHandler.markOnDTRCooldown(this);
@@ -1004,7 +1068,7 @@ public class Team {
                 }
             } else if (identifier.equalsIgnoreCase("Allies")) {
                 // Just cancel loading of allies if they're disabled (for switching # of allowed allies mid-map)
-                if (Foxtrot.getInstance().getMapHandler().getAllyLimit() == 0) {
+                if (HCF.getInstance().getMapHandler().getAllyLimit() == 0) {
                     continue;
                 }
 
@@ -1017,7 +1081,7 @@ public class Team {
                 }
             } else if (identifier.equalsIgnoreCase("RequestedAllies")) {
                 // Just cancel loading of allies if they're disabled (for switching # of allowed allies mid-map)
-                if (Foxtrot.getInstance().getMapHandler().getAllyLimit() == 0) {
+                if (HCF.getInstance().getMapHandler().getAllyLimit() == 0) {
                     continue;
                 }
 
@@ -1048,8 +1112,8 @@ public class Team {
                             membersRaw = split[7].trim();
                         }
 
-                        Location location1 = new Location(Foxtrot.getInstance().getServer().getWorld("world"), x1, y1, z1);
-                        Location location2 = new Location(Foxtrot.getInstance().getServer().getWorld("world"), x2, y2, z2);
+                        Location location1 = new Location(HCF.getInstance().getServer().getWorld("world"), x1, y1, z1);
+                        Location location2 = new Location(HCF.getInstance().getServer().getWorld("world"), x2, y2, z2);
                         List<UUID> members = new ArrayList<>();
 
                         for (String uuidString : membersRaw.split(", ")) {
@@ -1108,7 +1172,7 @@ public class Team {
 
         if (uniqueId == null) {
             uniqueId = new ObjectId();
-            Foxtrot.getInstance().getLogger().info("Generating UUID for team " + getName() + "...");
+            HCF.getInstance().getLogger().info("Generating UUID for team " + getName() + "...");
         }
 
         loading = false;
@@ -1285,7 +1349,7 @@ public class Team {
             return (null);
         }
 
-        World world = Foxtrot.getInstance().getServer().getWorld(args[0]);
+        World world = HCF.getInstance().getServer().getWorld(args[0]);
         double x = Double.parseDouble(args[1]);
         double y = Double.parseDouble(args[2]);
         double z = Double.parseDouble(args[3]);
@@ -1296,7 +1360,7 @@ public class Team {
     }
 
     public void sendMessage(String message) {
-        for (Player player : Foxtrot.getInstance().getServer().getOnlinePlayers()) {
+        for (Player player : HCF.getInstance().getServer().getOnlinePlayers()) {
             if (isMember(player.getUniqueId())) {
                 player.sendMessage(CC.translate(message));
             }
@@ -1318,11 +1382,11 @@ public class Team {
             }
 
             if (getName().equalsIgnoreCase("Citadel")) {
-                Set<ObjectId> cappers = Foxtrot.getInstance().getCitadelHandler().getCappers();
+                Set<ObjectId> cappers = HCF.getInstance().getCitadelHandler().getCappers();
                 Set<String> capperNames = new HashSet<>();
 
                 for (ObjectId capper : cappers) {
-                    Team capperTeam = Foxtrot.getInstance().getTeamHandler().getTeam(capper);
+                    Team capperTeam = HCF.getInstance().getTeamHandler().getTeam(capper);
 
                     if (capperTeam != null) {
                         capperNames.add(capperTeam.getName());
@@ -1330,7 +1394,7 @@ public class Team {
                 }
 
                 if (!cappers.isEmpty()) {
-                    player.sendMessage(ChatColor.YELLOW + "Currently captured by: " + ChatColor.RED + Joiner.on(", ").join(capperNames));
+                    player.sendMessage(ChatColor.DARK_PURPLE + "Citadel" +  ChatColor.WHITE + " is currently captured by " + ChatColor.RED + Joiner.on(", ").join(capperNames));
                 }
             }
 
@@ -1339,20 +1403,20 @@ public class Team {
         }
 
         //KillsMap killsMap = Foxtrot.getInstance().getKillsMap();
-        StatsHandler sm = Foxtrot.getInstance().getMapHandler().getStatsHandler();
-        DeathbanMap deathbanMap = Foxtrot.getInstance().getDeathbanMap();
-        Player owner = Foxtrot.getInstance().getServer().getPlayer(getOwner());
+        StatsHandler sm = HCF.getInstance().getMapHandler().getStatsHandler();
+        DeathbanMap deathbanMap = HCF.getInstance().getDeathbanMap();
+        Player owner = HCF.getInstance().getServer().getPlayer(getOwner());
         StringBuilder allies = new StringBuilder();
 
-        ComponentBuilder coleadersJson = new ComponentBuilder("Co-Leaders: ").color(ChatColor.YELLOW.asBungee());
+        ComponentBuilder coleadersJson = new ComponentBuilder("Co-Leaders: ").color(ChatColor.WHITE.asBungee());
 
-        ComponentBuilder captainsJson = new ComponentBuilder("Captains: ").color(ChatColor.YELLOW.asBungee());
+        ComponentBuilder captainsJson = new ComponentBuilder("Captains: ").color(ChatColor.WHITE.asBungee());
 
         if (player.hasPermission("foxtrot.manage")) {
             captainsJson.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/manageteam demote " + getName())).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to demote captains").color(ChatColor.BLUE.asBungee()).create()));
         }
 
-        ComponentBuilder membersJson = new ComponentBuilder("Members:").color(ChatColor.YELLOW.asBungee());
+        ComponentBuilder membersJson = new ComponentBuilder("Members:").color(ChatColor.WHITE.asBungee());
 
         if (player.hasPermission("foxtrot.manage")) {
             membersJson.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/manageteam promote " + getName())).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§bClick to promote members").create()));
@@ -1361,7 +1425,7 @@ public class Team {
         int onlineMembers = 0;
 
         for (ObjectId allyId : getAllies()) {
-            Team ally = Foxtrot.getInstance().getTeamHandler().getTeam(allyId);
+            Team ally = HCF.getInstance().getTeamHandler().getTeam(allyId);
 
             if (ally != null) {
                 allies.append(ally.getName(player)).append(ChatColor.YELLOW).append("[").append(ChatColor.GREEN).append(ally.getOnlineMemberAmount()).append("/").append(ally.getSize()).append(ChatColor.YELLOW).append("]").append(ChatColor.GRAY).append(", ");
@@ -1394,9 +1458,9 @@ public class Team {
                 }
             }
 
-            appendTo.append(onlineMember.getName()).color(ChatColor.GREEN.asBungee()).append("[").color(ChatColor.YELLOW.asBungee());
+            appendTo.append(onlineMember.getName()).color(ChatColor.GREEN.asBungee()).append("[").color(ChatColor.WHITE.asBungee());
             appendTo.append(sm.getStats(onlineMember.getUniqueId()).getKills() + "").color(ChatColor.GREEN.asBungee());
-            appendTo.append("]").color(ChatColor.YELLOW.asBungee());
+            appendTo.append("]").color(ChatColor.WHITE.asBungee());
         }
 
         for (UUID offlineMember : getOfflineMembers()) {
@@ -1422,8 +1486,8 @@ public class Team {
             }
 
             appendTo.append(UUIDUtils.name(offlineMember)).color(deathbanMap.isDeathbanned(offlineMember) ? ChatColor.RED.asBungee() : ChatColor.GRAY.asBungee());
-            appendTo.append("[").color(ChatColor.YELLOW.asBungee()).append("" + sm.getStats(offlineMember).getKills()).color(ChatColor.GREEN.asBungee());
-            appendTo.append("]").color(ChatColor.YELLOW.asBungee());
+            appendTo.append("[").color(ChatColor.WHITE.asBungee()).append("" + sm.getStats(offlineMember).getKills()).color(ChatColor.GREEN.asBungee());
+            appendTo.append("]").color(ChatColor.WHITE.asBungee());
 
         }
 
@@ -1433,14 +1497,14 @@ public class Team {
         ComponentBuilder teamLine = new ComponentBuilder();
 
         teamLine.append(ChatColor.BLUE + getName());
-        teamLine.append(ChatColor.GRAY + " [" + onlineMembers + "/" + getSize() + "]" + ChatColor.DARK_AQUA + " - ");
-        teamLine.append(ChatColor.YELLOW + "HQ: " + ChatColor.WHITE + (HQ == null ? "None" : HQ.getBlockX() + ", " + HQ.getBlockZ()));
+        teamLine.append(ChatColor.GRAY + " [" + onlineMembers + "/" + getSize() + "]" + ChatColor.WHITE + " - ");
+        teamLine.append(ChatColor.WHITE + "HQ: " + ChatColor.GRAY + (HQ == null ? ChatColor.WHITE + "None" : ChatColor.GRAY.toString() + HQ.getBlockX() + ", " + HQ.getBlockZ()));
 
         if (HQ != null && player.hasPermission("basic.staff")) {
             teamLine.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tppos " + HQ.getBlockX() + " " + HQ.getBlockY() + " " + HQ.getBlockZ())).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aClick to warp to HQ").create()));
         }
 
-        teamLine.append("§3 - §e[Focus]").color(ChatColor.YELLOW.asBungee())
+        teamLine.append("§f - §e[Focus]").color(ChatColor.YELLOW.asBungee())
                 .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/f focus " + getName()))
                 .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§bClick to focus team").create()));
 
@@ -1451,7 +1515,7 @@ public class Team {
             player.sendMessage(ChatColor.YELLOW + "Allies: " + allies.toString());
         }
 
-        ComponentBuilder leader = new ComponentBuilder(ChatColor.YELLOW + "Leader: " + (owner == null || owner.hasMetadata("invisible") ? (deathbanMap.isDeathbanned(getOwner()) ? ChatColor.RED : ChatColor.GRAY) : ChatColor.GREEN) + UUIDUtils.name(getOwner()) + ChatColor.YELLOW + "[" + ChatColor.GREEN + sm.getStats(getOwner()).getKills() + ChatColor.YELLOW + "]");
+        ComponentBuilder leader = new ComponentBuilder(ChatColor.WHITE + "Leader: " + (owner == null || owner.hasMetadata("invisible") ? (deathbanMap.isDeathbanned(getOwner()) ? ChatColor.RED : ChatColor.GRAY) : ChatColor.GREEN) + UUIDUtils.name(getOwner()) + ChatColor.WHITE + "[" + ChatColor.GREEN + sm.getStats(getOwner()).getKills() + ChatColor.WHITE + "]");
 
 
         if (player.hasPermission("foxtrot.manage")) {
@@ -1474,7 +1538,7 @@ public class Team {
         }
 
 
-        ComponentBuilder balance = new ComponentBuilder(ChatColor.YELLOW + "Balance: " + ChatColor.BLUE + "$" + Math.round(getBalance()));
+        ComponentBuilder balance = new ComponentBuilder(ChatColor.WHITE + "Balance: " + ChatColor.GRAY + "$" + Math.round(getBalance()));
 
         if (player.hasPermission("foxtrot.manage")) {
             balance.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/manageteam balance " + getName()));
@@ -1483,7 +1547,7 @@ public class Team {
         player.spigot().sendMessage(balance.create());
 
 
-        ComponentBuilder dtrMessage = new ComponentBuilder(ChatColor.YELLOW + "Deaths until Raidable: " + getDTRColor() + DTR_FORMAT.format(getDTR()) + getDTRSuffix());
+        ComponentBuilder dtrMessage = new ComponentBuilder(ChatColor.WHITE + "Deaths until Raidable: " + getDTRColor() + DTR_FORMAT.format(getDTR()) + getDTRSuffix());
 
         if (player.hasPermission("foxtrot.manage")) {
             dtrMessage.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/manageteam dtr " + getName()));
@@ -1491,23 +1555,23 @@ public class Team {
 
         player.spigot().sendMessage(dtrMessage.create());
 
-        if (isMember(player.getUniqueId()) || player.hasPermission("foxtrot.manage")) {
-            if (Foxtrot.getInstance().getServerHandler().isForceInvitesEnabled()) {
-                player.sendMessage(ChatColor.YELLOW + "Force Invites: " + ChatColor.RED + getForceInvites());
-            }
-            player.sendMessage(ChatColor.YELLOW + "Points: " + ChatColor.RED + getPoints());
-            player.sendMessage(ChatColor.YELLOW + "KOTH Captures: " + ChatColor.RED + getKothCaptures());
-            player.sendMessage(ChatColor.YELLOW + "Lives: " + ChatColor.RED + getLives());
-            player.sendMessage(ChatColor.YELLOW + "Spawners: " + ChatColor.RED + getSpawnersInClaim());
+        if (HCF.getInstance().getServerHandler().isForceInvitesEnabled()) {
+            player.sendMessage(ChatColor.WHITE + "Force Invites: " + ChatColor.GRAY + getForceInvites());
+        }
+        player.sendMessage(ChatColor.WHITE + "Points: " + ChatColor.GRAY + getPoints());
+        player.sendMessage(ChatColor.WHITE + "KOTH Captures: " + ChatColor.GRAY + getKothCaptures());
+        if (player.hasPermission("foxtrot.manage")) {
+            player.sendMessage(ChatColor.WHITE + "Disqualified: " + ChatColor.GRAY + getDQ());
         }
 
+
         if (DTRHandler.isOnCooldown(this)) {
-            player.sendMessage(ChatColor.YELLOW + "Time Until Regen: " + ChatColor.BLUE + TimeUtils.formatIntoDetailedString(((int) (getDTRCooldown() - System.currentTimeMillis())) / 1000).trim());
+            player.sendMessage(ChatColor.WHITE + "Time Until Regen: " + ChatColor.GRAY + TimeUtils.formatIntoDetailedString(((int) (getDTRCooldown() - System.currentTimeMillis())) / 1000).trim());
         }
 
         // Only show this if they're a member.
         if (isMember(player.getUniqueId()) && announcement != null && !announcement.equals("null")) {
-            player.sendMessage(ChatColor.YELLOW + "Announcement: " + ChatColor.LIGHT_PURPLE + announcement);
+            player.sendMessage(ChatColor.WHITE + "Announcement: " + ChatColor.GRAY + announcement);
         }
 
         player.sendMessage(GRAY_LINE);

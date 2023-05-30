@@ -5,11 +5,11 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.util.JSON;
 import lombok.Getter;
 import lombok.Setter;
-import net.frozenorb.foxtrot.Foxtrot;
-import net.frozenorb.foxtrot.economy.FrozenEconomyHandler;
-import net.frozenorb.foxtrot.events.EventHandler;
-import net.frozenorb.foxtrot.events.koth.KOTH;
-import net.frozenorb.foxtrot.listener.BorderListener;
+import net.frozenorb.foxtrot.HCF;
+import net.frozenorb.foxtrot.economy.EconomyHandler;
+import net.frozenorb.foxtrot.gameplay.events.EventHandler;
+import net.frozenorb.foxtrot.gameplay.events.koth.KOTH;
+import net.frozenorb.foxtrot.server.listener.impl.BorderListener;
 import net.frozenorb.foxtrot.map.killstreaks.KillstreakHandler;
 import net.frozenorb.foxtrot.map.stats.StatsHandler;
 import net.frozenorb.foxtrot.server.Deathban;
@@ -67,9 +67,9 @@ public class MapHandler {
         reloadConfig();
 
         FrozenUUIDCache.init();
-        FrozenEconomyHandler.init();
+        EconomyHandler.init();
 
-        Iterator<Recipe> recipeIterator = Foxtrot.getInstance().getServer().recipeIterator();
+        Iterator<Recipe> recipeIterator = HCF.getInstance().getServer().recipeIterator();
 
         while (recipeIterator.hasNext()) {
             Recipe recipe = recipeIterator.next();
@@ -84,7 +84,7 @@ public class MapHandler {
                 recipeIterator.remove();
             }
 
-            if (Foxtrot.getInstance().getConfig().getBoolean("rodPrevention") && recipe.getResult().getType() == Material.FISHING_ROD) {
+            if (HCF.getInstance().getConfig().getBoolean("rodPrevention") && recipe.getResult().getType() == Material.FISHING_ROD) {
                 recipeIterator.remove();
             }
 
@@ -95,7 +95,7 @@ public class MapHandler {
 
         // add our glistering melon recipe
         if (craftingReducedMelon) {
-            Foxtrot.getInstance().getServer().addRecipe(new ShapelessRecipe(new ItemStack(Material.GLISTERING_MELON_SLICE)).addIngredient(Material.MELON).addIngredient(Material.GOLD_NUGGET));
+            HCF.getInstance().getServer().addRecipe(new ShapelessRecipe(new ItemStack(Material.GLISTERING_MELON_SLICE)).addIngredient(Material.MELON).addIngredient(Material.GOLD_NUGGET));
         }
 
         ShapedRecipe nametagRecipe = new ShapedRecipe(new ItemStack(Material.NAME_TAG));
@@ -123,24 +123,24 @@ public class MapHandler {
         horseArmorRecipe.setIngredient('B', Material.DIAMOND_BLOCK);
         horseArmorRecipe.setIngredient('L', Material.LEATHER);
 
-        Foxtrot.getInstance().getServer().addRecipe(nametagRecipe);
-        Foxtrot.getInstance().getServer().addRecipe(saddleRecipe);
-        Foxtrot.getInstance().getServer().addRecipe(horseArmorRecipe);
+        HCF.getInstance().getServer().addRecipe(nametagRecipe);
+        HCF.getInstance().getServer().addRecipe(saddleRecipe);
+        HCF.getInstance().getServer().addRecipe(horseArmorRecipe);
 
         statsHandler = new StatsHandler();
-        if (isKitMap() || Foxtrot.getInstance().getServerHandler().isVeltKitMap()) {
+        if (isKitMap() || HCF.getInstance().getServerHandler().isVeltKitMap()) {
             killstreakHandler = new KillstreakHandler();
 
             // start a KOTH after 5 minutes of uptime
-            Bukkit.getScheduler().runTaskLater(Foxtrot.getInstance(), () -> {
-                EventHandler kothHandler = Foxtrot.getInstance().getEventHandler();
+            Bukkit.getScheduler().runTaskLater(HCF.getInstance(), () -> {
+                EventHandler kothHandler = HCF.getInstance().getEventHandler();
                 List<KOTH> koths = new ArrayList<>(kothHandler.getEvents().stream().filter(e -> e instanceof KOTH).map(e -> (KOTH) e).collect(Collectors.toList()));
 
                 if (koths.isEmpty()) {
                     return;
                 }
 
-                KOTH selected = koths.get(Foxtrot.RANDOM.nextInt(koths.size()));
+                KOTH selected = koths.get(HCF.RANDOM.nextInt(koths.size()));
                 selected.activate();
             }, 5 * 60 * 20);
 
@@ -150,14 +150,14 @@ public class MapHandler {
 
     public void reloadConfig() {
         try {
-            mapInfo = new File(Foxtrot.getInstance().getDataFolder(), "mapInfo.json");
+            mapInfo = new File(HCF.getInstance().getDataFolder(), "mapInfo.json");
 
             if (!mapInfo.exists()) {
                 mapInfo.createNewFile();
 
                 BasicDBObject dbObject = getDefaults();
 
-                FileUtils.write(mapInfo, Foxtrot.GSON.toJson(new JsonParser().parse(dbObject.toString())));
+                FileUtils.write(mapInfo, HCF.GSON.toJson(new JsonParser().parse(dbObject.toString())));
             } else {
                 // basically check for any new keys in the defaults which aren't contained in the actual file
                 // if there are any, add them to the file.
@@ -167,7 +167,7 @@ public class MapHandler {
 
                 defaults.keySet().stream().filter(key -> !file.containsKey(key)).forEach(key -> file.put(key, defaults.get(key)));
 
-                FileUtils.write(mapInfo, Foxtrot.GSON.toJson(new JsonParser().parse(file.toString())));
+                FileUtils.write(mapInfo, HCF.GSON.toJson(new JsonParser().parse(file.toString())));
             }
 
             BasicDBObject dbObject = (BasicDBObject) JSON.parse(FileUtils.readFileToString(mapInfo));
@@ -181,7 +181,7 @@ public class MapHandler {
                 this.scoreboardTitle = ChatColor.translateAlternateColorCodes('&', dbObject.getString("scoreboardTitle"));
                 this.mapStartedString = dbObject.getString("mapStartedString");
                 ServerHandler.WARZONE_RADIUS = dbObject.getInt("warzone", 100);
-                BorderListener.BORDER_SIZE = dbObject.getInt("border", 250);
+                BorderListener.BORDER_SIZE = dbObject.getInt("border", 1000);
                 this.goppleCooldown = dbObject.getInt("goppleCooldown");
                 this.netherBuffer = dbObject.getInt("netherBuffer");
                 this.worldBuffer = dbObject.getInt("worldBuffer");
@@ -272,7 +272,7 @@ public class MapHandler {
             if (dbObject != null) {
                 dbObject.put("border", BorderListener.BORDER_SIZE); // update the border
 
-                FileUtils.write(mapInfo, Foxtrot.GSON.toJson(new JsonParser().parse(dbObject.toString()))); // save it exactly like it was except for the border that was changed.
+                FileUtils.write(mapInfo, HCF.GSON.toJson(new JsonParser().parse(dbObject.toString()))); // save it exactly like it was except for the border that was changed.
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -285,9 +285,9 @@ public class MapHandler {
             BasicDBObject dbObject = (BasicDBObject) JSON.parse(FileUtils.readFileToString(mapInfo));
 
             if (dbObject != null) {
-                dbObject.put("netherBuffer", Foxtrot.getInstance().getMapHandler().getNetherBuffer()); // update the nether buffer
+                dbObject.put("netherBuffer", HCF.getInstance().getMapHandler().getNetherBuffer()); // update the nether buffer
 
-                FileUtils.write(mapInfo, Foxtrot.GSON.toJson(new JsonParser().parse(dbObject.toString()))); // save it exactly like it was except for the nether that was changed.
+                FileUtils.write(mapInfo, HCF.GSON.toJson(new JsonParser().parse(dbObject.toString()))); // save it exactly like it was except for the nether that was changed.
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -300,9 +300,9 @@ public class MapHandler {
             BasicDBObject dbObject = (BasicDBObject) JSON.parse(FileUtils.readFileToString(mapInfo));
 
             if (dbObject != null) {
-                dbObject.put("worldBuffer", Foxtrot.getInstance().getMapHandler().getWorldBuffer()); // update the world buffer
+                dbObject.put("worldBuffer", HCF.getInstance().getMapHandler().getWorldBuffer()); // update the world buffer
 
-                FileUtils.write(mapInfo, Foxtrot.GSON.toJson(new JsonParser().parse(dbObject.toString()))); // save it exactly like it was except for the nether that was changed.
+                FileUtils.write(mapInfo, HCF.GSON.toJson(new JsonParser().parse(dbObject.toString()))); // save it exactly like it was except for the nether that was changed.
             }
         } catch (IOException e) {
             e.printStackTrace();

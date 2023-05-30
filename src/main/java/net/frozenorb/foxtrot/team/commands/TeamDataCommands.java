@@ -5,7 +5,7 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Description;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.team.Team;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -35,14 +35,14 @@ public class TeamDataCommands extends BaseCommand {
 
             out.writeUTF(sender.getName());
             out.writeUTF(new Date().toString());
-            out.writeInt(Foxtrot.getInstance().getTeamHandler().getTeams().size());
+            out.writeInt(HCF.getInstance().getTeamHandler().getTeams().size());
 
-            for (Team team : Foxtrot.getInstance().getTeamHandler().getTeams()) {
+            for (Team team : HCF.getInstance().getTeamHandler().getTeams()) {
                 out.writeUTF(team.getName());
                 out.writeUTF(team.saveString(false));
             }
 
-            sender.sendMessage(ChatColor.GOLD + "Saved " + Foxtrot.getInstance().getTeamHandler().getTeams().size() + " teams to " + ChatColor.GREEN + file.getAbsolutePath() + ChatColor.GOLD + ".");
+            sender.sendMessage(ChatColor.GOLD + "Saved " + HCF.getInstance().getTeamHandler().getTeams().size() + " teams to " + ChatColor.GREEN + file.getAbsolutePath() + ChatColor.GOLD + ".");
             out.close();
         } catch (Exception e) {
             e.printStackTrace();

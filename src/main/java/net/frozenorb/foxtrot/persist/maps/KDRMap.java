@@ -1,6 +1,6 @@
 package net.frozenorb.foxtrot.persist.maps;
 
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.persist.PersistMap;
 
 import java.util.UUID;
@@ -31,6 +31,6 @@ public class KDRMap extends PersistMap<Double> {
     }
 
     public void updateKDR(UUID update) {
-        setKDR(update, Math.max(((double) Foxtrot.getInstance().getKillsMap().getKills(update)) / Math.max(Foxtrot.getInstance().getDeathsMap().getDeaths(update), 1), 0));
+        setKDR(update, Math.max(((double) HCF.getInstance().getKillsMap().getKills(update)) / Math.max(HCF.getInstance().getDeathsMap().getDeaths(update), 1), 0));
     }
 }

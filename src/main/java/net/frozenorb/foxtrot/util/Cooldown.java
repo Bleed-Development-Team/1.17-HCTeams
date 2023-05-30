@@ -1,6 +1,6 @@
 package net.frozenorb.foxtrot.util;
 
-import net.frozenorb.foxtrot.scoreboard.ScoreFunction;
+import net.frozenorb.foxtrot.provider.scoreboard.ScoreFunction;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;

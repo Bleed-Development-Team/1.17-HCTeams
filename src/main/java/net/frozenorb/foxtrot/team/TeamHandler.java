@@ -5,7 +5,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.client.MongoCollection;
 import lombok.Getter;
 import lombok.Setter;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
+import net.frozenorb.foxtrot.team.commands.team.TeamCommands;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.bukkit.Bukkit;
@@ -29,7 +30,7 @@ public class TeamHandler {
         powerFactions = new HashSet<>();
         
         // Load teams from Redis.
-        Foxtrot.getInstance().runRedisCommand(redis -> {
+        HCF.getInstance().runRedisCommand(redis -> {
             for (String key : redis.keys("fox_teams.*")) {
                 String loadString = redis.get(key);
 
@@ -40,7 +41,7 @@ public class TeamHandler {
                     setupTeam(team);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Foxtrot.getInstance().getLogger().severe("Could not load team from raw string: " + loadString);
+                    HCF.getInstance().getLogger().severe("Could not load team from raw string: " + loadString);
                 }
             }
 
@@ -50,10 +51,10 @@ public class TeamHandler {
         
         Bukkit.getLogger().info("Creating indexes...");
 
-        MongoCollection<Document> playerCollection = Foxtrot.getInstance().getMongoPool().getDatabase(Foxtrot.MONGO_DB_NAME).getCollection("Players");
+        MongoCollection<Document> playerCollection = HCF.getInstance().getMongoPool().getDatabase(HCF.MONGO_DB_NAME).getCollection("Players");
         playerCollection.createIndex(new BasicDBObject("Team", 1));
 
-        MongoCollection<Document> teamCollection = Foxtrot.getInstance().getMongoPool().getDatabase(Foxtrot.MONGO_DB_NAME).getCollection("Teams");
+        MongoCollection<Document> teamCollection = HCF.getInstance().getMongoPool().getDatabase(HCF.MONGO_DB_NAME).getCollection("Teams");
         teamCollection.createIndex(new BasicDBObject("Owner", 1));
         teamCollection.createIndex(new BasicDBObject("CoLeaders", 1));
         teamCollection.createIndex(new BasicDBObject("Captains", 1));
@@ -104,9 +105,9 @@ public class TeamHandler {
         }
         
         if (update) {
-            Bukkit.getScheduler().runTaskAsynchronously(Foxtrot.getInstance(), () -> {
+            Bukkit.getScheduler().runTaskAsynchronously(HCF.getInstance(), () -> {
                 // update their team in mongo
-                DBCollection playersCollection = Foxtrot.getInstance().getMongoPool().getDB(Foxtrot.MONGO_DB_NAME).getCollection("Players");
+                DBCollection playersCollection = HCF.getInstance().getMongoPool().getDB(HCF.MONGO_DB_NAME).getCollection("Players");
                 BasicDBObject player = new BasicDBObject("_id", playerUUID.toString().replace("-", ""));
                 
                 if (team != null) {
@@ -117,6 +118,8 @@ public class TeamHandler {
             });
         }
     }
+
+
     
     public void setTeam(UUID playerUUID, Team team) {
         setTeam(playerUUID, team, true); // standard cases we do update mongo
@@ -147,11 +150,36 @@ public class TeamHandler {
     public void recachePlayerTeams() {
         playerTeamMap.clear();
         
-        for (Team team : Foxtrot.getInstance().getTeamHandler().getTeams()) {
+        for (Team team : HCF.getInstance().getTeamHandler().getTeams()) {
             for (UUID member : team.getMembers()) {
                 setTeam(member, team);
             }
         }
+    }
+
+    public List<Team> sortTeams(){
+
+        LinkedHashMap<Team, Integer> sortedTeamPlayerCount = TeamCommands.getSortedTeams();
+        List<Team> teams = new ArrayList<>();
+
+        int index = 0;
+
+        for (Map.Entry<Team, Integer> teamEntry : sortedTeamPlayerCount.entrySet()) {
+
+            if (teamEntry.getKey().getOwner() == null) {
+                continue;
+            }
+
+            index++;
+
+            if (3 <= index) {
+                break;
+            }
+
+            teams.add(teamEntry.getKey());
+        }
+
+        return teams;
     }
     
 }

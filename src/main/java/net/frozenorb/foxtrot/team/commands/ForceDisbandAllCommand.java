@@ -2,8 +2,9 @@ package net.frozenorb.foxtrot.team.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.team.Team;
+import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -21,13 +22,16 @@ public class ForceDisbandAllCommand extends BaseCommand {
     public static void forceDisbandAll(CommandSender sender) {
         confirmRunnable = () -> {
 
-            List<Team> teams = new ArrayList<>(Foxtrot.getInstance().getTeamHandler().getTeams());
+            List<Team> teams = new ArrayList<>(HCF.getInstance().getTeamHandler().getTeams());
 
             for (Team team : teams) {
+                if (team.hasDTRBitmask(DTRBitmask.KOTH) || team.hasDTRBitmask(DTRBitmask.CITADEL) | team.hasDTRBitmask(DTRBitmask.SAFE_ZONE) ||
+                team.hasDTRBitmask(DTRBitmask.ROAD) || team.hasDTRBitmask(DTRBitmask.CONQUEST)) continue;
+
                 team.disband();
             }
 
-            Foxtrot.getInstance().getServer().broadcastMessage(ChatColor.RED.toString() + ChatColor.BOLD + "All teams have been forcibly disbanded!");
+            HCF.getInstance().getServer().broadcastMessage(ChatColor.RED.toString() + ChatColor.BOLD + "All teams have been forcibly disbanded!");
         };
 
         sender.sendMessage(ChatColor.RED + "Are you sure you want to disband all factions? Type " + ChatColor.DARK_RED + "/forcedisbandall confirm" + ChatColor.RED + " to confirm or " + ChatColor.GREEN + "/forcedisbandall cancel" + ChatColor.RED +" to cancel.");

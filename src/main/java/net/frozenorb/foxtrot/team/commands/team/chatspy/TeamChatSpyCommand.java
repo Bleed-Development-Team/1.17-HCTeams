@@ -2,7 +2,7 @@ package net.frozenorb.foxtrot.team.commands.team.chatspy;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.team.Team;
 import org.bson.types.ObjectId;
 import org.bukkit.ChatColor;
@@ -18,22 +18,22 @@ public class TeamChatSpyCommand extends BaseCommand {
     @Subcommand("add")
     @CommandCompletion("@team")
     public static void teamChatSpyAdd(Player sender, @Name("team") Team team) {
-        if (Foxtrot.getInstance().getChatSpyMap().getChatSpy(sender.getUniqueId()).contains(team.getUniqueId())) {
+        if (HCF.getInstance().getChatSpyMap().getChatSpy(sender.getUniqueId()).contains(team.getUniqueId())) {
             sender.sendMessage(ChatColor.RED + "You are already spying on " + team.getName() + ".");
             return;
         }
 
-        List<ObjectId> teams = new ArrayList<>(Foxtrot.getInstance().getChatSpyMap().getChatSpy(sender.getUniqueId()));
+        List<ObjectId> teams = new ArrayList<>(HCF.getInstance().getChatSpyMap().getChatSpy(sender.getUniqueId()));
 
         teams.add(team.getUniqueId());
 
-        Foxtrot.getInstance().getChatSpyMap().setChatSpy(sender.getUniqueId(), teams);
+        HCF.getInstance().getChatSpyMap().setChatSpy(sender.getUniqueId(), teams);
         sender.sendMessage(ChatColor.GREEN + "You are now spying on the chat of " + ChatColor.YELLOW + team.getName() + ChatColor.GREEN + ".");
     }
     @Subcommand("clear")
     @Description("Clears your chat Spy list")
     public static void teamChatSpyClear(Player sender) {
-        Foxtrot.getInstance().getChatSpyMap().setChatSpy(sender.getUniqueId(), new ArrayList<ObjectId>());
+        HCF.getInstance().getChatSpyMap().setChatSpy(sender.getUniqueId(), new ArrayList<ObjectId>());
         sender.sendMessage(ChatColor.GREEN + "You are no longer spying on any teams.");
     }
 
@@ -41,16 +41,16 @@ public class TeamChatSpyCommand extends BaseCommand {
     @Description("Stops spying on a team")
     @CommandCompletion("@team")
     public static void teamChatSpyDel(Player sender, @Name("team") Team team) {
-        if (!Foxtrot.getInstance().getChatSpyMap().getChatSpy(sender.getUniqueId()).contains(team.getUniqueId())) {
+        if (!HCF.getInstance().getChatSpyMap().getChatSpy(sender.getUniqueId()).contains(team.getUniqueId())) {
             sender.sendMessage(ChatColor.RED + "You are not spying on " + team.getName() + ".");
             return;
         }
 
-        List<ObjectId> teams = new ArrayList<>(Foxtrot.getInstance().getChatSpyMap().getChatSpy(sender.getUniqueId()));
+        List<ObjectId> teams = new ArrayList<>(HCF.getInstance().getChatSpyMap().getChatSpy(sender.getUniqueId()));
 
         teams.remove(team.getUniqueId());
 
-        Foxtrot.getInstance().getChatSpyMap().setChatSpy(sender.getUniqueId(), teams);
+        HCF.getInstance().getChatSpyMap().setChatSpy(sender.getUniqueId(), teams);
         sender.sendMessage(ChatColor.GREEN + "You are no longer spying on the chat of " + ChatColor.YELLOW + team.getName() + ChatColor.GREEN + ".");
     }
     @Subcommand("list")
@@ -58,8 +58,8 @@ public class TeamChatSpyCommand extends BaseCommand {
     public static void teamChatSpyList(Player sender) {
         StringBuilder stringBuilder = new StringBuilder();
 
-        for (ObjectId team : Foxtrot.getInstance().getChatSpyMap().getChatSpy(sender.getUniqueId())) {
-            Team teamObj = Foxtrot.getInstance().getTeamHandler().getTeam(team);
+        for (ObjectId team : HCF.getInstance().getChatSpyMap().getChatSpy(sender.getUniqueId())) {
+            Team teamObj = HCF.getInstance().getTeamHandler().getTeam(team);
 
             if (teamObj != null) {
                 stringBuilder.append(ChatColor.YELLOW).append(teamObj.getName()).append(ChatColor.GOLD).append(", ");

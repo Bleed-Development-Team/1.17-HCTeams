@@ -3,10 +3,7 @@ package net.frozenorb.foxtrot.util;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import lombok.val;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -50,6 +47,15 @@ public final class ItemBuilder {
 
     public ItemBuilder amount(int amount) {
         this.item.setAmount(amount);
+        return this;
+    }
+
+    public ItemBuilder dye(DyeColor color){
+        LeatherArmorMeta armorMeta = (LeatherArmorMeta) item.getItemMeta();
+        armorMeta.setColor(color.getColor());
+
+        item.setItemMeta(armorMeta);
+
         return this;
     }
 
@@ -114,10 +120,10 @@ public final class ItemBuilder {
         ItemMeta meta = this.item.getItemMeta();
         if (meta == null)
             meta = Bukkit.getItemFactory().getItemMeta(this.item.getType());
-        List lore;
+        List<String> lore;
         if ((lore = meta.getLore()) == null)
             lore = Lists.newArrayList();
-        lore.addAll((Collection)Arrays.<String>stream(parts).map(part -> ChatColor.translateAlternateColorCodes('&', part)).collect(Collectors.toList()));
+        lore.addAll(Arrays.stream(parts).map(part -> ChatColor.translateAlternateColorCodes('&', part)).collect(Collectors.toList()));
         meta.setLore(lore);
         this.item.setItemMeta(meta);
         return this;

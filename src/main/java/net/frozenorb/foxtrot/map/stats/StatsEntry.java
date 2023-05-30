@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import net.frozenorb.foxtrot.map.stats.command.StatsTopCommand;
+import net.frozenorb.foxtrot.team.Team;
 
 import java.util.UUID;
 
@@ -67,17 +68,11 @@ public class StatsEntry {
     }
 
     public Number get(StatsTopCommand.StatsObjective objective) {
-        switch (objective) {
-            case KILLS:
-                return getKills();
-            case DEATHS:
-                return getDeaths();
-            case KD:
-                return getKD();
-            case HIGHEST_KILLSTREAK:
-                return getHighestKillstreak();
-            default:
-                return 0;
-        }
+        return switch (objective) {
+            case KILLS -> getKills();
+            case DEATHS -> getDeaths();
+            case HIGHEST_KILLSTREAK -> getHighestKillstreak();
+            default -> 0;
+        };
     }
 }

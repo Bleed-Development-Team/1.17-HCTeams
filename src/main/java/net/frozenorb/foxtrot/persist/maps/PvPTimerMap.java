@@ -1,6 +1,6 @@
 package net.frozenorb.foxtrot.persist.maps;
 
-import net.frozenorb.foxtrot.Foxtrot;
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.persist.PersistMap;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import org.bukkit.ChatColor;
@@ -17,7 +17,7 @@ public class PvPTimerMap extends PersistMap<Integer> {
         new BukkitRunnable() {
 
             public void run() {
-                for (Player player : Foxtrot.getInstance().getServer().getOnlinePlayers()) {
+                for (Player player : HCF.getInstance().getServer().getOnlinePlayers()) {
                     if (hasTimer(player.getUniqueId())) {
                         if (DTRBitmask.SAFE_ZONE.appliesAt(player.getLocation())) {
                             continue;
@@ -40,7 +40,7 @@ public class PvPTimerMap extends PersistMap<Integer> {
                  }
             }
 
-        }.runTaskTimerAsynchronously(Foxtrot.getInstance(), 20L, 20L);
+        }.runTaskTimerAsynchronously(HCF.getInstance(), 20L, 20L);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class PvPTimerMap extends PersistMap<Integer> {
 
     public void removeTimer(UUID update) {
         updateValueAsync(update, 0);
-        Foxtrot.getInstance().getStartingPvPTimerMap().set(update, false);
+        HCF.getInstance().getStartingPvPTimerMap().set(update, false);
     }
 
     public void createTimer(UUID update, int seconds) {
@@ -69,7 +69,7 @@ public class PvPTimerMap extends PersistMap<Integer> {
 
     public void createStartingTimer(UUID update, int seconds) {
         createTimer(update, seconds);
-        Foxtrot.getInstance().getStartingPvPTimerMap().set(update, true);
+        HCF.getInstance().getStartingPvPTimerMap().set(update, true);
     }
 
     public boolean hasTimer(UUID check) {
@@ -77,7 +77,7 @@ public class PvPTimerMap extends PersistMap<Integer> {
     }
 
     public int getSecondsRemaining(UUID check) {
-        if (Foxtrot.getInstance().getServerHandler().isPreEOTW() || Foxtrot.getInstance().getMapHandler().isKitMap() || Foxtrot.getInstance().getServerHandler().isVeltKitMap()) {
+        if (HCF.getInstance().getServerHandler().isPreEOTW() || HCF.getInstance().getMapHandler().isKitMap() || HCF.getInstance().getServerHandler().isVeltKitMap()) {
             return (0);
         }
 
