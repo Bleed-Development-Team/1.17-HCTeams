@@ -65,8 +65,12 @@ class TablistPacketV1_16_R3(val player2: Player) : TabPacket(player2) {
     }
 
     init {
-        this.loadFakes()
-        this.init()
+        try {
+            this.loadFakes()
+            this.init()
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
     }
 
     private fun sendHeaderFooter() {
