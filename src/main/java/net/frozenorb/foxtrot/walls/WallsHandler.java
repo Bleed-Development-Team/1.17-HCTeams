@@ -1,5 +1,8 @@
 package net.frozenorb.foxtrot.walls;
 
+import com.lunarclient.bukkitapi.LunarClientAPI;
+import com.lunarclient.bukkitapi.nethandler.client.LCPacketWorldBorderCreateNew;
+import com.lunarclient.bukkitapi.nethandler.client.LCPacketWorldBorderRemove;
 import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.commands.op.CustomTimerCreateCommand;
 import net.frozenorb.foxtrot.server.SpawnTagHandler;
@@ -8,6 +11,7 @@ import net.frozenorb.foxtrot.team.claims.Claim;
 import net.frozenorb.foxtrot.team.claims.Coordinate;
 import net.frozenorb.foxtrot.team.claims.LandBoard;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
+import net.frozenorb.foxtrot.util.Pair;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -22,6 +26,10 @@ public class WallsHandler extends Thread {
     public static final int REGION_DISTANCE_SQUARED = REGION_DISTANCE * REGION_DISTANCE;
 
     private static final Map<String, Map<Location, Long>> sentBlockChanges = new HashMap<>();
+    // The pair represents the 2 corners of the claim
+    private static final Map<String, Map<String, Long>> sentLunarWalls = new HashMap<>();
+
+    //private static final Map<String, Map<Pair<Pair<Double, Double>, Pair<Double, Double>>, Long>> sentLunarWalls = new HashMap<>();
 
     public WallsHandler() {
         super("Foxtrot - Walls Thread");
@@ -135,6 +143,36 @@ public class WallsHandler extends Thread {
     private void sendClaimToPlayer(Player player, Claim claim) {
         // This gets us all the coordinates on the outside of the claim.
         // Probably could be made better
+
+        //
+        // send claim to player
+        if (LunarClientAPI.getInstance().isRunningLunarClient(player.getUniqueId())) {
+            String id = UUID.randomUUID().toString();
+            LunarClientAPI.getInstance().sendPacket(player,
+                    new LCPacketWorldBorderCreateNew(
+                        id,
+                        player.getWorld().getUID().toString(),
+                            true,
+                            false,
+                            false,
+                            0xFFFFFF,
+                            claim.getX1() * 0.00,
+                            claim.getZ1() * 0.00,
+                            claim.getX2() * 0.00,
+                            claim.getZ2() * 0.00
+                    )
+            );
+
+            Pair<Pair<Double, Double>, Pair<Double, Double>> key = new Pair<>(
+                    new Pair<>(claim.getX1() * 0.00, claim.getZ1() * 0.00),
+                    new Pair<>(claim.getX2() * 0.00, claim.getZ2() * 0.00)
+            );
+
+            sentLunarWalls.get(player.getName()).put(id, System.currentTimeMillis() + 10000L);
+
+            return
+        }
+
         for (Coordinate coordinate : claim) {
             Location onPlayerY = new Location(player.getWorld(), coordinate.getX(), player.getLocation().getY(), coordinate.getZ());
 
@@ -155,6 +193,19 @@ public class WallsHandler extends Thread {
     }
 
     private static void clearPlayer(Player player) {
+
+        if (LunarClientAPI.getInstance().isRunningLunarClient(player.getUniqueId())) {
+            for (String key : sentLunarWalls.get(player.getName()).keySet()) {
+                LunarClientAPI.getInstance().sendPacket(
+                        player,
+                        new LCPacketWorldBorderRemove(key)
+                );
+            }
+
+            sentLunarWalls.remove(player.getName());
+            return
+        }
+
         if (sentBlockChanges.containsKey(player.getName())) {
             for (Location changedLoc : sentBlockChanges.get(player.getName()).keySet()) {
                 if (!changedLoc.getWorld().isChunkLoaded(changedLoc.getBlockX() >> 4, changedLoc.getBlockZ() >> 4)) {
