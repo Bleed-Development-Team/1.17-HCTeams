@@ -1,7 +1,7 @@
 HEADER: "&6&lHCF"
 FOOTER: "&fThere are &b%players% &fonline."
 
-TEAM-LIST-FORMAT: "%relation-color%%name% &7[%online%/%max%] %dtr-color%%dtr%%dtr-symbol%"
+TEAM-LIST-FORMAT: "%relation-color%%name% &7[%online%/%max%] %dtr-color%%dtr%"
 
 SKINS:
   LIGHT_GRAY:
@@ -27,7 +27,7 @@ SKINS:
 TEAM-INFO: # For tab
   HAS-TEAM:
     - "&2%team-name%"
-    - "&fDTR: %dtr-color%%dtr%%dtr-symbol%"
+    - "&fDTR: %dtr-color%%dtr%"
     - "&fOnline: %players%&7/&f%max%"
     - "&fBalance: &2$&a%balance%"
     - "&fPoints: %points%"

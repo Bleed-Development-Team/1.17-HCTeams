@@ -141,7 +141,6 @@ class HCFTab : TabAdapter {
                     .replace("%max%", targetTeam.members.size.toString())
                     .replace("%dtr-color%", targetTeam.dtrColor.toString())
                     .replace("%dtr%", targetTeam.formattedDTR)
-                    .replace("%dtr-symbol%", targetTeam.dtrSuffix)
 
                 text = text.replace("%team-$i%", listFormat)
                 ++i
