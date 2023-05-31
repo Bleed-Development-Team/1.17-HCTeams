@@ -96,6 +96,7 @@ public class AirDropHandler {
             this.data.save(this.file);
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("Issue");
         }
     }
 
