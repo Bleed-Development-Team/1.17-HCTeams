@@ -8,7 +8,7 @@ import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 
 
-abstract class TabPacket(val player: Player) {
+abstract class TabPacket(open val player: Player) {
     abstract fun update()
 
     fun getName(x: Int, y: Int): String {
