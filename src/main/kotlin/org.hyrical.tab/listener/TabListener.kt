@@ -20,12 +20,11 @@ class TabListener : Listener {
     fun onQuit(event: PlayerJoinEvent){
         val player = event.player
 
-        val tab = Tab(player)
-
         object : BukkitRunnable(){
             override fun run() {
+                val tab = Tab(player)
                 HCF.getInstance().tabManager.tablists[player.uniqueId] = tab
             }
-        }.runTaskLater(HCF.getInstance(), 10L)
+        }.runTaskLaterAsynchronously(HCF.getInstance(), 10L)
     }
 }
