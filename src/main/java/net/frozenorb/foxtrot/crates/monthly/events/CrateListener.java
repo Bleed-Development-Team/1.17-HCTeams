@@ -81,14 +81,14 @@ public class CrateListener implements Listener {
     public void playerInteract(final PlayerInteractEvent event) {
         final Player player = event.getPlayer();
         if ((event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && player.getItemInHand() != null) {
-            final ItemStack hand = player.getItemInHand();
+            final ItemStack hand = player.getInventory().getItemInMainHand();
             if (hand.hasItemMeta() && hand.getItemMeta().hasDisplayName()) {
                 for (final String key : HCF.getInstance().getConfig().getConfigurationSection("crates").getKeys(false)) {
                     if (hand.getItemMeta().getDisplayName().equals(CrateUtil.c(HCF.getInstance().getConfig().getString("crates." + key + ".crate.Name")))) {
-                        if (player.getItemInHand().getAmount() == 1) {
+                        if (player.getInventory().getItemInMainHand().getAmount() == 1) {
                             player.setItemInHand(null);
                         } else {
-                            player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
+                            player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
                         }
 
                         event.setCancelled(true);
