@@ -38,7 +38,7 @@ public class BuyMenu extends Menu {
         this.buttons[22] = new BuyButton("Bottle o' Enchanting", 5000, 16, Material.EXPERIENCE_BOTTLE).setClickAction(event -> buy(event, Material.EXPERIENCE_BOTTLE, 5000, 16));
         this.buttons[23] = new BuyButton("Ghast Tear", 1000, 16, Material.GHAST_TEAR).setClickAction(event -> buy(event, Material.GHAST_TEAR, 1000, 16));
         this.buttons[24] = new BuyButton("Cow Egg", 1000, 2, Material.COW_SPAWN_EGG).setClickAction(event -> buy(event, Material.COW_SPAWN_EGG, 1000, 2));
-        this.buttons[25] = new BuyButton("Cocoa Beans", 500, 16, Material.COCOA_BEANS).setClickAction(event -> buy(event, Material.COCOA_BEANS, 500, 16));
+        this.buttons[25] = new BuyButton("Glowstone Dust", 500, 16, Material.GLOWSTONE_DUST).setClickAction(event -> buy(event, Material.GLOWSTONE_DUST, 500, 16));
 
         this.buttons[29] = new BuyButton("Ink Sac", 1000, 16, Material.INK_SAC).setClickAction(event -> buy(event, Material.INK_SAC, 1000, 16));
         this.buttons[20] = new BuyButton("Fire Charge", 1000, 16, Material.FIRE_CHARGE).setClickAction(event -> buy(event, Material.FIRE_CHARGE, 1000, 16));

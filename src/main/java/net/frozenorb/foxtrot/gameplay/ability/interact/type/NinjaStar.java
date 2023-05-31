@@ -25,10 +25,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class NinjaStar extends InteractAbility {
@@ -187,6 +184,21 @@ public class NinjaStar extends InteractAbility {
         private UUID uuid;
         @Getter
         private Location location;
+
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        NinjaStar other = (NinjaStar) obj;
+        // Compare the relevant attributes of NinjaStar
+        return Objects.equals(this.getUncoloredName(), other.getUncoloredName()) &&
+                Objects.equals(this.getID(), other.getID());
 
     }
 }

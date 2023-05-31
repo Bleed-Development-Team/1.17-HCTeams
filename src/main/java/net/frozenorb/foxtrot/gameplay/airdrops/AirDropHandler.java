@@ -140,7 +140,7 @@ public class AirDropHandler {
             for (Player onlinePlayer : this.instance.getServer().getOnlinePlayers()) {
                 onlinePlayer.sendMessage("");
                 onlinePlayer.sendMessage(CC.translate("&f" + player.getName() + " &6has just won a " + item + " &6from a &b&lAirdrop&6."));
-                onlinePlayer.sendMessage(ChatColor.GRAY + "Purchase an Airdrop at " + ChatColor.WHITE + "&ffrozenhcf.tebex.io");
+                onlinePlayer.sendMessage(ChatColor.GRAY + "Purchase an Airdrop at " + ChatColor.WHITE + "frozenhcf.tebex.io");
                 onlinePlayer.sendMessage("");
             }
 

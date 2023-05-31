@@ -47,4 +47,8 @@ public class BlockShopButton extends Button {
         };
     }
 
+    @Override
+    public int getAmount() {
+        return amount;
+    }
 }

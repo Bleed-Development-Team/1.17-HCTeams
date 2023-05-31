@@ -33,7 +33,6 @@ public class DamageAbilityListener implements Listener {
             return;
         }
         if (!ability.victimCheck(damager, victim)){
-            event.setCancelled(true);
             return;
         }
 

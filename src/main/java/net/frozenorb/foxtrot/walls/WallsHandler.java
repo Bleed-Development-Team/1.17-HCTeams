@@ -170,7 +170,7 @@ public class WallsHandler extends Thread {
 
             sentLunarWalls.get(player.getName()).put(id, System.currentTimeMillis() + 10000L);
 
-            return
+            return;
         }
 
         for (Coordinate coordinate : claim) {
@@ -203,7 +203,7 @@ public class WallsHandler extends Thread {
             }
 
             sentLunarWalls.remove(player.getName());
-            return
+            return;
         }
 
         if (sentBlockChanges.containsKey(player.getName())) {

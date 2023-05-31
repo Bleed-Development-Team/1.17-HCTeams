@@ -14,9 +14,6 @@ public class ArmorDamageListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onItemDamage(PlayerItemDamageEvent e) {
 
-        if (30 < random.nextInt(100)) {
-            e.setCancelled(true);
-        }
-        
+        e.setCancelled(true);
     }
 }

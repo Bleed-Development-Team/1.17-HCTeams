@@ -58,12 +58,13 @@ import net.frozenorb.foxtrot.team.dtr.DTRHandler;
 import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.HourEvent;
 import net.frozenorb.foxtrot.util.RegenUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.GameRule;
-import org.bukkit.World;
+import org.bukkit.*;
+import org.bukkit.entity.Bat;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.Potion;
@@ -167,6 +168,7 @@ public class HCF extends JavaPlugin {
 	public static String world = "world";
 
 	private final boolean whitelisted = true;
+	private boolean test = false;
 
 	@Getter public CombatLoggerListener combatLoggerListener;
 	@Getter
@@ -267,9 +269,28 @@ public class HCF extends JavaPlugin {
 
 			Bukkit.getPluginManager().registerEvents(new EventAnalyser(this), this);
 			CustomEnchant.init();
+
+			NamespacedKey key = new NamespacedKey(this, "potionlol");
+
+			ShapedRecipe recipe = new ShapedRecipe(key, getClickableItemHandler().clickableItems.get(3).getItemStack());
+			recipe.shape(
+					"GLN",
+					"DAA",
+					"AAA");
+
+			recipe.setIngredient('G', Material.GLASS);
+			recipe.setIngredient('N', Material.NETHER_WART);
+			recipe.setIngredient('D', Material.GLOWSTONE_DUST);
+			recipe.setIngredient('L', Material.GLISTERING_MELON_SLICE);
+			recipe.setIngredient('A', Material.AIR);
+
+			Bukkit.getServer().addRecipe(recipe);
+
 		} catch (Exception ex){
 			ex.printStackTrace();
 			Bukkit.getServer().shutdown(); // so if the plugin doesnt load and someone joins, it doesnt let you even grief ppls bases, etc.
+
+			test = true;
 		}
 	}
 
@@ -293,7 +314,9 @@ public class HCF extends JavaPlugin {
 			}
 		}
 
-		airDropHandler.saveLootTable();
+		if (!test){
+			airDropHandler.saveLootTable();
+		}
 
 		if (EconomyHandler.isInitiated()) {
 			EconomyHandler.saveAll();
@@ -482,7 +505,7 @@ public class HCF extends JavaPlugin {
 		}.runTaskTimerAsynchronously(HCF.getInstance(), 20L, 20L);
 
 		Bukkit.getScheduler().runTaskTimer(this, () -> {
-			for (Entity entity : Bukkit.getWorld("world").getEntities().stream().filter(it -> !(it instanceof Player) && !(it instanceof Item) && !(it instanceof Potion)).toList()){
+			for (Entity entity : Bukkit.getWorld("world").getEntities().stream().filter(it -> it instanceof Bat).toList()){
 				entity.remove();
 			}
 		}, 0, 20L * 10);

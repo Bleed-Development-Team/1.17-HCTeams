@@ -3,6 +3,8 @@ package net.frozenorb.foxtrot.gameplay.airdrops.listener;
 import lombok.AllArgsConstructor;
 import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.gameplay.airdrops.command.AirDropCommand;
+import net.frozenorb.foxtrot.team.Team;
+import net.frozenorb.foxtrot.team.claims.LandBoard;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Dropper;
@@ -40,6 +42,10 @@ public class AirDropListener implements Listener {
             return;
         }
 
+        Team team = LandBoard.getInstance().getTeam(player.getLocation());
+
+        if (team != null){ if (!team.isMember(player.getUniqueId())) return; }
+
         event.setCancelled(true);
 
         final Block block = event.getBlockPlaced();
@@ -70,10 +76,12 @@ public class AirDropListener implements Listener {
                 } else {
                     player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
 
-                    block.setType(Material.DROPPER);
-                    block.getWorld().spawnParticle(Particle.EXPLOSION_HUGE, block.getLocation(), 1, 0, 0, 0, 0);
+                    Block block1 = getHighestAirBlock(HCF.getInstance().getServer().getWorld("world"), block.getX(), block.getZ());
 
-                    HCF.getInstance().getAirDropHandler().setContents(block, player, airdropAll);
+                    block1.setType(Material.DROPPER);
+                    block1.getWorld().spawnParticle(Particle.EXPLOSION_HUGE, block1.getLocation(), 1, 0, 0, 0, 0);
+
+                    HCF.getInstance().getAirDropHandler().setContents(block1, player, airdropAll);
 
                     player.sendMessage(ChatColor.GREEN + "The Airdrop has dropped!");
                     this.cancel();
@@ -89,5 +97,21 @@ public class AirDropListener implements Listener {
                 }
             }
         }.runTaskTimer(HCF.getInstance(), 0, 20);
+    }
+
+    public Block getHighestAirBlock(World world, int x, int z) {
+        int y = 0; // Start from the highest possible Y coordinate
+
+        while (y <= world.getMaxHeight()) {
+            Block block = world.getBlockAt(x, y, z);
+            if (block.getType() == Material.AIR) {
+                // Found an air block
+                return block;
+            }
+            y++;
+        }
+
+        // No air block found
+        return null;
     }
 }

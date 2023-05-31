@@ -36,4 +36,8 @@ public abstract class ClickableItem {
             itemStack.setAmount(itemStack.getAmount() - 1);
         }
     }
+
+    public void giveCooldown(Player player){
+        Cooldown.addCooldown(getCooldownID(), player, getCooldown());
+    }
 }

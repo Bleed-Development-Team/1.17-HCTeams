@@ -1,6 +1,8 @@
 package net.frozenorb.foxtrot.gameplay.ability.partnerpackages;
 
 import net.frozenorb.foxtrot.HCF;
+import net.frozenorb.foxtrot.gameplay.ability.Ability;
+import net.frozenorb.foxtrot.gameplay.ability.interact.type.NinjaStar;
 import net.frozenorb.foxtrot.util.ItemBuilder;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -39,8 +41,11 @@ public class PartnerPackageHandler implements Listener {
                 player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
             }
 
+            List<Ability> abilities = HCF.getInstance().getAbilityHandler().getAllAbilities();
+            abilities.remove(new NinjaStar());
+
             for (int i = 0; i < 2; i++){
-                ItemStack partnerItem = HCF.getInstance().getAbilityHandler().getAllAbilities().get(HCF.RANDOM.nextInt(HCF.getInstance().getAbilityHandler().getAllAbilities().size())).getItemStack();
+                ItemStack partnerItem = abilities.get(HCF.RANDOM.nextInt(abilities.size())).getItemStack();
 
                 player.getInventory().addItem(ItemBuilder.copyOf(partnerItem).amount(HCF.RANDOM.nextInt(3)).build());
             }

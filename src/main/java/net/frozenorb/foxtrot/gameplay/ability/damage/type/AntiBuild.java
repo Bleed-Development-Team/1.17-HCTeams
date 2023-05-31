@@ -1,6 +1,9 @@
 package net.frozenorb.foxtrot.gameplay.ability.damage.type;
 
+import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.gameplay.ability.damage.DamageAbility;
+import net.frozenorb.foxtrot.team.Team;
+import net.frozenorb.foxtrot.team.claims.LandBoard;
 import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.Cooldown;
 import net.frozenorb.foxtrot.util.ItemBuilder;
@@ -10,6 +13,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -83,6 +87,17 @@ public class AntiBuild extends DamageAbility {
 
         use(damager);
         sendMessage(damager, "&6" + victim.getName() + " &fwill not be able to place and break blocks for 10 seconds.");
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void asd(EntityDamageByEntityEvent event){
+        if (!(event.getEntity() instanceof Player victim) || !(event.getDamager() instanceof Player damager)) return;
+
+        if (Cooldown.isOnCooldown("bone-eff", victim)){
+            if (LandBoard.getInstance().getTeam(victim.getLocation()) == null) return;
+
+            event.setCancelled(false);
+        }
     }
 
 

@@ -26,6 +26,8 @@ public class AbilityHandler {
     @Getter private Map<String, InteractAbility> interactAbilities = new HashMap<>();
     @Getter private Map<String, DamageAbility> damageAbilities = new HashMap<>();
 
+    @Getter private Map<String, Ability> special = new HashMap<>();
+
     @Getter private ArrayList<Ability> allAbilities = new ArrayList<>();
 
     public AbilityHandler(){
@@ -37,9 +39,9 @@ public class AbilityHandler {
         interactAbilities.put("rocket", new Rocket());
         interactAbilities.put("ballofrage", new BallOfRage());
         interactAbilities.put("switcher", new Switcher());
-        interactAbilities.put("ninjastar", new NinjaStar());
         interactAbilities.put("timewarp", new TimeWarp());
         interactAbilities.put("timestone", new TimeStone());
+        interactAbilities.put("ninjastar", new NinjaStar());
 
         // Portable
 

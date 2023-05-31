@@ -12,7 +12,8 @@ import java.text.NumberFormat;
 public class GemsCommand extends BaseCommand {
 
     @Default
-    public void def(Player player){
+    public void def(Player player2, @Flags("other") @Optional Player target){
+        Player player = (target == null ? player2 : target);
         player.sendMessage(CC.translate("&fGems: &2" + NumberFormat.getInstance().format(HCF.getInstance().getGemsMap().getGems(player.getUniqueId()))));
     }
 

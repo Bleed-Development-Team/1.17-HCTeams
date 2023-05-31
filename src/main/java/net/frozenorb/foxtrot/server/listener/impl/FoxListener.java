@@ -344,7 +344,6 @@ public class FoxListener implements Listener {
 
 
                 if (event.getMaterial() == OAK_TRAPDOOR || event.getMaterial() == OAK_FENCE_GATE || event.getMaterial().name().contains("DOOR")) {
-                    HCF.getInstance().getServerHandler().disablePlayerAttacking(event.getPlayer(), 1);
                 }
 
                 return;

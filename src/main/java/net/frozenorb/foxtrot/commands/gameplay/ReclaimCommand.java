@@ -33,16 +33,13 @@ public class ReclaimCommand extends BaseCommand {
             return;
         }
 
-        //in this case, we have found their rank and now give their reclaim.
-        String rank = getDisplayName(player);
-
-        List<String> commands = HCF.getInstance().getConfig().getStringList("reclaim." + getPlayerGroup(player));
+        List<String> commands = HCF.getInstance().getConfig().getStringList("reclaim." + cap(getPlayerGroup(player)));
 
         for (String command : commands){
             Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command.replaceAll("%player%", player.getName()));
         }
 
-        Bukkit.broadcastMessage(CC.translate("&3" + player.getName() + " &fhas reclaimed their &b" + getPlayerGroup(player) + " &rrank."));
+        Bukkit.broadcastMessage(CC.translate("&3" + player.getName() + " &fhas reclaimed their &b" + group + " &rrank."));
         player.sendTitle(CC.translate("&a&lPerks Claimed"), CC.translate("&7You have reclaimed your perks."));
 
         // put them in the reclaim map.

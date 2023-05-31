@@ -525,32 +525,6 @@ public class ServerHandler {
         }.runTaskTimer(HCF.getInstance(), 20L, 20L);
     }
 
-    private Map<UUID, Long> playerDamageRestrictMap = Maps.newHashMap();
-
-    public void disablePlayerAttacking(final Player player, int seconds) {
-        if (seconds == 10) {
-            player.sendMessage(ChatColor.GRAY + "You cannot attack for " + seconds + " seconds.");
-        }
-
-        playerDamageRestrictMap.put(player.getUniqueId(), System.currentTimeMillis() + (seconds * 1000L));
-    }
-
-    private void registerPlayerDamageRestrictionListener() {
-    		HCF.getInstance().getServer().getPluginManager().registerEvents(new Listener() {
-    			@EventHandler(ignoreCancelled = true)
-    			public void onDamage(EntityDamageByEntityEvent event) {
-    				Long expiry = playerDamageRestrictMap.get(event.getDamager().getUniqueId());
-    				if (expiry != null && System.currentTimeMillis() < expiry) {
-    					//event.setCancelled(true);
-    				}
-    			}
-
-    			@EventHandler
-    			public void onQuit(PlayerQuitEvent event) {
-    				playerDamageRestrictMap.remove(event.getPlayer().getUniqueId());
-    			}
-    		}, HCF.getInstance());
-    }
 
     public boolean isSpawnBufferZone(Location loc) {
         if (loc.getWorld().getEnvironment() != Environment.NORMAL){

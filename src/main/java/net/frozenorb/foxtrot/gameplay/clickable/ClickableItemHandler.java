@@ -6,11 +6,15 @@ import net.frozenorb.foxtrot.gameplay.clickable.type.GemsPack;
 import net.frozenorb.foxtrot.gameplay.clickable.type.KOTHSummoner;
 import net.frozenorb.foxtrot.gameplay.clickable.type.RandomPartnerItem;
 import net.frozenorb.foxtrot.gameplay.clickable.type.RankPouch;
+import net.frozenorb.foxtrot.gameplay.clickable.type.potion.PotionMaker;
 import net.frozenorb.foxtrot.util.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.ShapelessRecipe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +27,7 @@ public class ClickableItemHandler {
         clickableItems.add(new GemsPack());
         clickableItems.add(new RandomPartnerItem());
         clickableItems.add(new KOTHSummoner());
+        clickableItems.add(new PotionMaker());
 
         clickableItems.add(new RankPouch(ItemBuilder.of(Material.BOOK).name("&b&lIce &fRank Pouch").addToLore("&7Right click to redeem the &b&lIce &7rank.").build(), "Ice"));
         clickableItems.add(new RankPouch(ItemBuilder.of(Material.BOOK).name("&9&lFrozen &fRank Pouch").addToLore("&7Right click to redeem the &9&lFrozen &7rank.").build(), "Frozen"));
@@ -32,6 +37,7 @@ public class ClickableItemHandler {
         clickableItems.add(new RankPouch(ItemBuilder.of(Material.BOOK).name("&9&lBlizzard &fRank Pouch").addToLore("&7Right click to redeem the &9&lBlizzard &7rank.").build(), "Blizzard"));
 
         Bukkit.getPluginManager().registerEvents(new ClickableListener(this), HCF.getInstance());
+        
     }
 
     public ClickableItem getClickableItem(ItemStack itemStack){
