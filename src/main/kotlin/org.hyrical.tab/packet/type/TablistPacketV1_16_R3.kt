@@ -9,6 +9,7 @@ import net.frozenorb.foxtrot.tab.extra.TabEntry
 import net.frozenorb.foxtrot.tab.extra.TabSkin
 import net.frozenorb.foxtrot.tab.packet.TabPacket
 import net.minecraft.server.v1_16_R3.*
+import org.bukkit.Bukkit
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer
 import org.bukkit.entity.Player
 import java.util.*
@@ -46,6 +47,7 @@ class TablistPacketV1_16_R3(val player2: Player) : TabPacket(player2) {
     }
 
     fun init(){
+        Bukkit.broadcastMessage(this.FAKE_PLAYERS!!.size().toString())
         for (i in 0..19) {
             for (f in 0..maxColumns) {
                 val player: EntityPlayer = this.FAKE_PLAYERS!!.get(f, i)
