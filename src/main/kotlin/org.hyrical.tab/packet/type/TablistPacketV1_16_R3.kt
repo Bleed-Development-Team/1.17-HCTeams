@@ -92,7 +92,7 @@ class TablistPacketV1_16_R3(override val player: Player) : TabPacket(player) {
         for (i in 0..19) {
             for (f in 0 until maxColumns) {
                 val entry: TabEntry = tablist.getEntries(f, i)
-                val player: EntityPlayer = this.FAKE_PLAYERS!!.get(f, i)
+                val player: EntityPlayer = this.FAKE_PLAYERS.get(f, i)
                 if (player.ping != entry.ping) {
                     player.ping = entry.ping
                     sendPacket(

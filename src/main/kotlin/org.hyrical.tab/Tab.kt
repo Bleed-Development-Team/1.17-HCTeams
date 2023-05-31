@@ -6,6 +6,7 @@ import net.frozenorb.foxtrot.HCF
 import org.bukkit.entity.Player
 import net.frozenorb.foxtrot.tab.extra.TabEntry
 import net.frozenorb.foxtrot.tab.packet.TabPacket
+import org.bukkit.Bukkit
 
 class Tab(val player: Player) {
     val entries: Table<Int, Int, TabEntry> = HashBasedTable.create()
@@ -14,6 +15,7 @@ class Tab(val player: Player) {
 
     fun update() {
         entries.clear()
+        Bukkit.broadcastMessage("Udpating tab for ${player.name}")
         tabPacket.update()
     }
 

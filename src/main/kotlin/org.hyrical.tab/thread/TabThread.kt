@@ -12,6 +12,10 @@ class TabThread : Thread() {
                     if (!HCF.getInstance().tabManager.skins.containsKey(player.uniqueId.toString())) continue
                     val tab = HCF.getInstance().tabManager.tablists[player.uniqueId]
 
+                    if (tab == null) {
+                        Bukkit.broadcastMessage("Tab for ${player.name} was null")
+                    }
+
                     tab?.update()
                 }
             } catch (ex: Exception){
