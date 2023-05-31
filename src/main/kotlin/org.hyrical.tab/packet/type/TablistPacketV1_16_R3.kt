@@ -6,6 +6,7 @@ import com.mojang.authlib.properties.Property
 import net.frozenorb.foxtrot.HCF
 import net.frozenorb.foxtrot.tab.Tab
 import net.frozenorb.foxtrot.tab.extra.TabEntry
+import net.frozenorb.foxtrot.tab.extra.TabSkin
 import net.frozenorb.foxtrot.tab.packet.TabPacket
 import net.minecraft.server.v1_16_R3.*
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer
@@ -17,7 +18,7 @@ class TablistPacketV1_16_R3(val player2: Player) : TabPacket(player2) {
     private var LOADED = false
     private var footer: String = ""
     private var header: String = ""
-    private val maxColumns = if (100 >= 47) 4 else 3
+    private val maxColumns = 4
     private val FAKE_PLAYERS: HashBasedTable<Int, Int, EntityPlayer>? = HashBasedTable.create()
 
     fun loadFakes() {
@@ -27,13 +28,13 @@ class TablistPacketV1_16_R3(val player2: Player) : TabPacket(player2) {
             val worldServer: WorldServer = minecraftServer.worlds.iterator().next()
             for (i in 0..19) {
                 for (f in 0..3) {
-                    val part = if (f === 0) "LEFT" else if (f === 1) "MIDDLE" else if (f === 2) "RIGHT" else "FAR_RIGHT"
-                    val line: String = HCF.getInstance().tabFile.getStringList(part).get(i).split(";").get(0)
+                    val part = if (f == 0) "LEFT" else if (f == 1) "MIDDLE" else if (f == 2) "RIGHT" else "FAR_RIGHT"
+                    val line: String = HCF.getInstance().tabFile.getStringList(part)[i].split(";")[0]
                     val profile = GameProfile(UUID.randomUUID(), getName(f, i))
                     val player = EntityPlayer(minecraftServer, worldServer, profile, PlayerInteractManager(worldServer))
-                    val skin= HCF.getInstance().tabManager.skins[line]
-                    profile.properties.put("textures", Property("textures", skin?.value, skin?.signature))
-                    FAKE_PLAYERS?.put(f, i, player)
+                    val skin: TabSkin = HCF.getInstance().tabManager.skins[line]!!
+                    profile.properties.put("textures", Property("textures", skin.value, skin.signature))
+                    this.FAKE_PLAYERS!!.put(f, i, player)
                 }
             }
         }
