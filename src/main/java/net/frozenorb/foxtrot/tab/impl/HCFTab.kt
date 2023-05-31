@@ -1,13 +1,19 @@
 package net.frozenorb.foxtrot.tab.impl
 
+import com.google.common.collect.Lists
 import net.frozenorb.foxtrot.HCF
-import org.bukkit.Bukkit
-import org.bukkit.entity.Player
+import net.frozenorb.foxtrot.economy.EconomyHandler
 import net.frozenorb.foxtrot.tab.Tab
 import net.frozenorb.foxtrot.tab.TabAdapter
 import net.frozenorb.foxtrot.team.Team
 import net.frozenorb.foxtrot.util.CC
+import net.frozenorb.foxtrot.util.DirectionUtils
+import org.bukkit.Bukkit
+import org.bukkit.entity.Player
+import java.text.NumberFormat
+import java.util.UUID
 import java.util.stream.Collectors
+import kotlin.math.round
 
 class HCFTab : TabAdapter {
     private var farRightTablist: MutableList<String> = mutableListOf()
@@ -38,7 +44,7 @@ class HCFTab : TabAdapter {
         }
 
         val teams = HCF.getInstance().teamHandler.teams.stream().filter { it.onlineMembers.isNotEmpty() && it.owner != null}
-            .sorted { t1, t2 -> t2.getOnlineMembers().size - t1.getOnlineMembers().size }
+            .sorted { t1, t2 -> t2.onlineMembers.size - t1.onlineMembers.size }
             .collect(Collectors.toList())
 
 
@@ -49,34 +55,67 @@ class HCFTab : TabAdapter {
             }
             if (team != null) {
                 val teamFormat: List<String> = HCF.getInstance().tabFile.getStringList("TEAM-INFO.HAS-TEAM")
-                val teamMembers: List<TeamUser> = team.getOnlineMembers()
-                teamMembers.sortedWith { x: TeamUser, y: TeamUser ->
-                    y.role.ordinal - x.role.ordinal
+                var owner: UUID? = null
+                val coleaders: MutableList<UUID> = Lists.newArrayList()
+                val captains: MutableList<UUID> = Lists.newArrayList()
+                val members: MutableList<UUID> = Lists.newArrayList()
+                for (member in team.onlineMembers) {
+                    if (team.isOwner(member.uniqueId)) {
+                        owner = member.uniqueId
+                    } else if (team.isCoLeader(member.uniqueId)) {
+                        coleaders.add(member.uniqueId)
+                    } else if (team.isCaptain(member.uniqueId)) {
+                        captains.add(member.uniqueId)
+                    } else {
+                        members.add(member.uniqueId)
+                    }
                 }
 
-                text = text.replace("%team-name%", team.getFormattedTeamName(player))
+                val teamIndices: MutableList<UUID> = mutableListOf()
+
+                team.owner?.let { owner ->
+                    teamIndices.add(owner)
+                }
+
+                teamIndices.addAll(team.coleaders)
+
+                teamIndices.addAll(team.captains)
+
+                teamIndices.addAll(team.members)
+
+
+                text = text.replace("%team-name%", team.getName(player))
 
                 for (i in teamFormat.indices) {
-                    val replacedText: String = teamFormat[i].replace("%dtr-color%", team.getDTRColor())
-                        .replace("%dtr%", team.getDTRFormat().format(team.dtr))
-                        .replace("%dtr-symbol%", team.getDTRSymbol())
-                        .replace("%players%", team.getOnlineMembers().size.toString())
+                    val replacedText: String = teamFormat[i].replace("%dtr-color%", team.dtrColor.toString())
+                        .replace("%dtr%", team.formattedDTR)
+                        .replace("%dtr-symbol%", team.dtrSuffix)
+                        .replace("%players%", team.onlineMembers.size.toString())
                         .replace("%max%", team.members.size.toString())
                         .replace("%balance%", NumberFormat.getInstance().format(team.balance))
-                        .replace("%points%", team.calculatePoints().toString())
-                        .replace("%home%", team.getFormattedHQ())
-                        .replace("%team-name%", team.getFormattedTeamName(player))
+                        .replace("%points%", team.points.toString())
+                        .replace("%home%", team.formattedHQ)
+                        .replace("%team-name%", team.getName(player))
 
                     text = text.replace("%teaminfo-$i%", replacedText)
                 }
 
-                for (i in teamMembers.indices) {
-                    val member: TeamUser = teamMembers[i]
-                    val player = Bukkit.getPlayer(member.uuid) ?: continue
-                    text = text.replace("%member-$i%", "&7${team.getStar(player)}&a${player.name}")
+                for (i in teamIndices.indices) {
+
+                    text = text.replace("%member-$i%", "&7${
+                        if (owner!! == player.uniqueId) {
+                            "***"
+                        } else if (coleaders.contains(player.uniqueId)) {
+                            "**"
+                        } else if (captains.contains(player.uniqueId)) {
+                            "*"
+                        } else {
+                            ""
+                        }
+                    }&a${player.name}")
                 }
             } else {
-                val noTeamFormat: List<String> = TabFile.getStringList("TEAM-INFO.NOT-SET")
+                val noTeamFormat: List<String> = HCF.getInstance().tabFile.getStringList("TEAM-INFO.NOT-SET")
 
                 text = text.replace("%team-name%", "")
                 for (i in noTeamFormat.indices) {
@@ -90,14 +129,14 @@ class HCFTab : TabAdapter {
             while (i < teams.size && i != 19) {
                 val targetTeam: Team = teams[i]
 
-                val listFormat = TabFile.getString("TEAM-LIST-FORMAT")!!
-                    .replace("%relation-color%", targetTeam.getRelationColor(player))
+                val listFormat = HCF.getInstance().tabFile.getString("TEAM-LIST-FORMAT")!!
+                    .replace("%relation-color%", "TODO Embry")//argetTeam.getRelationColor(player) TODO: Embry
                     .replace("%name%", targetTeam.name)
-                    .replace("%online%", targetTeam.getOnlineMembers().size.toString())
+                    .replace("%online%", targetTeam.onlineMembers.size.toString())
                     .replace("%max%", targetTeam.members.size.toString())
-                    .replace("%dtr-color%", targetTeam.getDTRColor())
-                    .replace("%dtr%", targetTeam.getDTRFormat().format(targetTeam.dtr))
-                    .replace("%dtr-symbol%", targetTeam.getDTRSymbol())
+                    .replace("%dtr-color%", targetTeam.dtrColor.toString())
+                    .replace("%dtr%", targetTeam.formattedDTR)
+                    .replace("%dtr-symbol%", targetTeam.dtrSuffix)
 
                 text = text.replace("%team-$i%", listFormat)
                 ++i
@@ -105,26 +144,28 @@ class HCFTab : TabAdapter {
             if (text.contains("%team-") || text.contains("%teaminfo-") || text.contains("%member-")) {
                 entry.text = ""
             } else {
-                entry.text = text.replace("%kills%", profile.kills.toString())
-                    .replace("%deaths%", profile.deaths.toString())
-                    .replace("%balance%", NumberFormat.getInstance().format(profile.balance))
-                    .replace("%current-killstreak%", profile.killstreak.toString())
-                    .replace("%highest-killstreak%", profile.highestKillstreak.toString())
+                val stats = HCF.getInstance().mapHandler.statsHandler.getStats(player.uniqueId);
+                val balance = EconomyHandler.getBalance(player.uniqueId);
+                entry.text = text.replace("%kills%", stats.kills.toString())
+                    .replace("%deaths%", stats.deaths.toString())
+                    .replace("%balance%", NumberFormat.getInstance().format(balance))
+                    .replace("%current-killstreak%", stats.killstreak.toString())
+                    .replace("%highest-killstreak%", stats.highestKillstreak.toString())
                     .replace("%claim%", "&aSpawn")
                     .replace("%x%", (round(player.location.x).toInt()).toString())
                     .replace("%z%", (round(player.location.z).toInt()).toString())
                     .replace("%facing%", DirectionUtils.getCardinalDirection(player)!!)
-                    .replace("%online%", PluginUtils.getOnlinePlayers().size.toString())
+                    .replace("%online%", Bukkit.getOnlinePlayers().size.toString())
                     .replace("%max%", Bukkit.getMaxPlayers().toString())
             }
-            entry.text = translate(entry.text)
+            entry.text = CC.translate(entry.text)
         }
 
         return tablist
     }
 
     override fun getFooter(player: Player): String {
-        return translate(TabFile.getString("FOOTER")!!).replace("%players%", Bukkit.getOnlinePlayers().size.toString())
+        return CC.translate(HCF.getInstance().tabFile.getString("FOOTER")!!).replace("%players%", Bukkit.getOnlinePlayers().size.toString())
 
     }
 

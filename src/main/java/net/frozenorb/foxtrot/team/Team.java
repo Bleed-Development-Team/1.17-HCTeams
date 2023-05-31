@@ -69,6 +69,7 @@ public class Team {
     @Getter private List<Claim> claims = new ArrayList<>();
     @Getter private List<Subclaim> subclaims = new ArrayList<>();
     @Getter private UUID owner = null;
+    // members list cotnains all the members including leader, captains ect
     @Getter private Set<UUID> members = new HashSet<>();
     @Getter private Set<UUID> captains = new HashSet<>();
     @Getter private Set<UUID> coleaders = new HashSet<>();
@@ -1364,6 +1365,14 @@ public class Team {
             if (isMember(player.getUniqueId())) {
                 player.sendMessage(CC.translate(message));
             }
+        }
+    }
+
+    public String getFormattedHQ(){
+        if (getHQ() != null){
+            return Math.round(this.getHQ().getBlockX()) + ", " + Math.round(this.getHQ().getBlockZ());
+        } else {
+            return "&fNone";
         }
     }
 
