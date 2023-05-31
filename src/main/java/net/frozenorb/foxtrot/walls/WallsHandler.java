@@ -109,23 +109,39 @@ public class WallsHandler extends Thread {
                     sentBlockChanges.put(player.getName(), new HashMap<>());
                 }
 
+                if (LunarClientAPI.getInstance().isRunningLunarClient(player.getUniqueId()) && !sentLunarWalls.containsKey(player.getName())) {
+                    sentLunarWalls.put(player.getName(), new HashMap<>());
+                }
+
                 Iterator<Map.Entry<Location, Long>> bordersIterator = sentBlockChanges.get(player.getName()).entrySet().iterator();
 
                 // Remove borders after they 'expire' -- This is used to get rid of block changes the player has walked away from,
                 // whose value in the map hasn't been updated recently.
-                while (bordersIterator.hasNext()) {
-                    Map.Entry<Location, Long> border = bordersIterator.next();
+                if (!LunarClientAPI.getInstance().isRunningLunarClient(player.getUniqueId())) {
+                    while (bordersIterator.hasNext()) {
+                        Map.Entry<Location, Long> border = bordersIterator.next();
 
-                    if (System.currentTimeMillis() >= border.getValue()) {
-                        Location loc = border.getKey();
+                        if (System.currentTimeMillis() >= border.getValue()) {
+                            Location loc = border.getKey();
 
-                        if (!loc.getWorld().isChunkLoaded(loc.getBlockX() >> 4, loc.getBlockZ() >> 4)) {
-                            continue;
+                            if (!loc.getWorld().isChunkLoaded(loc.getBlockX() >> 4, loc.getBlockZ() >> 4)) {
+                                continue;
+                            }
+
+                            Block block = loc.getBlock();
+                            player.sendBlockChange(loc, block.getBlockData());
+                            bordersIterator.remove();
                         }
-
-                        Block block = loc.getBlock();
-                        player.sendBlockChange(loc, block.getBlockData());
-                        bordersIterator.remove();
+                    }
+                } else {
+                    //
+                    for (Map.Entry<String, Long> key : sentLunarWalls.get(player.getName()).entrySet()) {
+                        if (key.getValue() < System.currentTimeMillis()) continue;
+                        
+                        LunarClientAPI.getInstance().sendPacket(
+                                player,
+                                new LCPacketWorldBorderRemove(key.getKey())
+                        );
                     }
                 }
                 if (!HCF.getInstance().getServerHandler().isEOTW()) {
