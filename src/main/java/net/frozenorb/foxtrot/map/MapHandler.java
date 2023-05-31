@@ -58,7 +58,7 @@ public class MapHandler {
     @Getter private float dtrIncrementMultiplier;
 
     // Kit-Map only stuff:
-    @Getter private StatsHandler statsHandler;
+    @Getter public StatsHandler statsHandler;
     @Getter private KillstreakHandler killstreakHandler;
 
     public MapHandler() {}

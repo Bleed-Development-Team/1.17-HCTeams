@@ -60,7 +60,6 @@ import net.frozenorb.foxtrot.util.RegenUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.World;
-import org.bukkit.entity.Bat;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -77,21 +76,24 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class HCF extends JavaPlugin {
 
 	public static String MONGO_DB_NAME = "HCTeams";
 
-	@Getter private static HCF instance;
+	public static HCF getInstance() {
+		return instance;
+	}
+
+	private static HCF instance;
 
 	@Getter private MongoClient mongoPool;
 
 	@Getter private ChatHandler chatHandler;
 	@Getter private PvPClassHandler pvpClassHandler;
-	@Getter private TeamHandler teamHandler;
+	@Getter public TeamHandler teamHandler;
 	@Getter private ServerHandler serverHandler;
-	@Getter private MapHandler mapHandler;
+	@Getter public MapHandler mapHandler;
 	@Getter private CitadelHandler citadelHandler;
 	@Getter private EventHandler eventHandler;
 	@Getter private ConquestHandler conquestHandler;
@@ -101,7 +103,7 @@ public class HCF extends JavaPlugin {
 	@Getter private CrateHandler crateHandler;
 	@Getter private EOTWHandler eotwHandler;
 	@Getter private LunarClientHandler lunarClientHandler;
-	@Getter private NametagManager nametagManager;
+	@Getter public NametagManager nametagManager;
 	@Getter private PartnerPackageHandler partnerPackageHandler;
 	@Getter private ClickableItemHandler clickableItemHandler;
 	@Getter private UpgradeHandler upgradeHandler;
@@ -109,9 +111,9 @@ public class HCF extends JavaPlugin {
 	@Getter private ArcherUpgradeHandler archerUpgradeHandler;
 	@Getter private AirDropHandler airDropHandler;
 	@Getter private AbilityHandler abilityHandler;
-	@Getter private TabManager tabManager;
+	@Getter public TabManager tabManager;
 
-	@Getter private TabFile tabFile;
+	@Getter public TabFile tabFile;
 
 	@Getter private PlaytimeMap playtimeMap;
 	@Getter private OppleMap oppleMap;

@@ -12,21 +12,21 @@ public class StatsEntry {
 
     @Getter(value = AccessLevel.PROTECTED) private boolean modified;
 
-    @Getter private UUID owner;
+    @Getter public UUID owner;
 
     @Getter
     @Setter
-    private int kills;
+    public int kills;
 
     @Getter
     @Setter
-    private int deaths;
+    public int deaths;
 
     @Getter
     @Setter
-    private int killstreak;
+    public int killstreak;
 
-    @Getter private int highestKillstreak;
+    @Getter public int highestKillstreak;
 
     public StatsEntry(UUID owner) {
         this.owner = owner;

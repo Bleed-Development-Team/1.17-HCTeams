@@ -23,7 +23,7 @@ import java.util.concurrent.Executors;
 @Getter
 public class NametagManager {
     private final NametagAdapter adapter;
-    private final Map<UUID, Nametag> nametags;
+    public final Map<UUID, Nametag> nametags;
     private final ExecutorService executor;
     
     private void updateLunarTags(Player from, Player to, String update) {

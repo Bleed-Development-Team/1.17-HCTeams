@@ -56,23 +56,23 @@ public class Team {
     public static final int MAX_FORCE_INVITES = 5;
 
     // Internal //
-    @Getter private boolean needsSave = false;
-    @Getter private boolean loading = false;
+    @Getter public boolean needsSave = false;
+    @Getter public boolean loading = false;
 
     // Persisted //
-    @Getter @Setter private ObjectId uniqueId;
-    @Getter private String name;
+    @Getter @Setter public ObjectId uniqueId;
+    @Getter public String name;
     @Getter private Location HQ;
-    @Getter private double balance;
-    @Getter private double DTR;
-    @Getter private long DTRCooldown;
-    @Getter private List<Claim> claims = new ArrayList<>();
-    @Getter private List<Subclaim> subclaims = new ArrayList<>();
-    @Getter private UUID owner = null;
+    @Getter public double balance;
+    @Getter public double DTR;
+    @Getter public long DTRCooldown;
+    @Getter public List<Claim> claims = new ArrayList<>();
+    @Getter public List<Subclaim> subclaims = new ArrayList<>();
+    @Getter public UUID owner = null;
     // members list cotnains all the members including leader, captains ect
-    @Getter private Set<UUID> members = new HashSet<>();
-    @Getter private Set<UUID> captains = new HashSet<>();
-    @Getter private Set<UUID> coleaders = new HashSet<>();
+    @Getter public Set<UUID> members = new HashSet<>();
+    @Getter public Set<UUID> captains = new HashSet<>();
+    @Getter public Set<UUID> coleaders = new HashSet<>();
     @Getter private Set<UUID> invitations = new HashSet<>();
     @Getter private Set<ObjectId> allies = new HashSet<>();
     @Getter private Set<ObjectId> requestedAllies = new HashSet<>();
@@ -80,7 +80,7 @@ public class Team {
     @Getter private int maxOnline = -1;
     @Getter private boolean powerFaction = false;
     @Getter private int lives = 0;
-    @Getter private int points = 0;
+    @Getter public int points = 0;
     @Getter private int kills = 0;
     @Getter private int kothCaptures = 0;
     @Getter private int diamondsMined = 0;
