@@ -102,6 +102,9 @@ class TablistPacketV1_16_R3(override val player: Player) : TabPacket(player) {
                         )
                     )
                 }
+
+                Bukkit.broadcastMessage(entry.text + " | ${calcSlot(f, i)}")
+
                 handleTeams(player.bukkitEntity, entry.text, calcSlot(f, i))
             }
         }
