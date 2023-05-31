@@ -77,18 +77,15 @@ class HCFTab : TabAdapter {
 
                 val teamIndices: MutableList<UUID> = mutableListOf()
 
-                /*
-                team.owner?.let { owner ->
-                    teamIndices.add(owner)
+                owner?.let {
+                    teamIndices.add(0, it)
                 }
-                
-                 */
 
-                teamIndices.addAll(team.coleaders)
+                teamIndices.addAll(coleaders)
 
-                teamIndices.addAll(team.captains)
+                teamIndices.addAll(captains)
 
-                teamIndices.addAll(team.members)
+                teamIndices.addAll(members)
 
 
                 text = text.replace("%team-name%", team.getName(player))
@@ -111,7 +108,7 @@ class HCFTab : TabAdapter {
                     val teamPlayer = Bukkit.getPlayer(teamIndices[i]) ?: continue
 
                     text = text.replace("%member-$i%", "&7${
-                        if (owner!! == teamPlayer.uniqueId) {
+                        if (owner == teamPlayer.uniqueId) {
                             "***"
                         } else if (coleaders.contains(teamPlayer.uniqueId)) {
                             "**"
