@@ -173,7 +173,7 @@ public class WallsHandler extends Thread {
                             true,
                             false,
                             false,
-                            0xFFFFFF,
+                            0xFF0000,
                             claim.getX1() * 1.00,
                             claim.getZ1() * 1.00,
                             claim.getX2() * 1.00,
