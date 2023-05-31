@@ -58,7 +58,6 @@ class TablistPacketV1_16_R3(override val player: Player) : TabPacket(player) {
     }
 
     private fun initTablist() {
-        Bukkit.broadcastMessage(FAKE_PLAYERS.size().toString())
         for (i in 0..19) {
             for (f in 0 until maxColumns) {
                 val player: EntityPlayer? = FAKE_PLAYERS.get(f, i)
@@ -103,9 +102,13 @@ class TablistPacketV1_16_R3(override val player: Player) : TabPacket(player) {
                     )
                 }
 
-                Bukkit.broadcastMessage(entry.text + " | ${calcSlot(f, i)}")
+                var text = entry.text
 
-                handleTeams(player.bukkitEntity, entry.text.split(";")[1], calcSlot(f, i))
+                if (text.contains(";")) {
+                    text = entry.text.split(";")[1]
+                }
+
+                handleTeams(player.bukkitEntity, text, calcSlot(f, i))
             }
         }
     }

@@ -15,7 +15,6 @@ class Tab(val player: Player) {
 
     fun update() {
         entries.clear()
-        Bukkit.broadcastMessage("Udpating tab for ${player.name}")
         tabPacket.update()
     }
 
