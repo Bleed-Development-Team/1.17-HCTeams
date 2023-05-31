@@ -181,7 +181,9 @@ public class WallsHandler extends Thread {
                     )
             );
 
-            sentLunarWalls.get(player.getName()).put(id, System.currentTimeMillis() + 10000L);
+            Bukkit.broadcastMessage("Sent lunar pcket for " + player.getName() + " " + claim.getX1() + " " + claim.getX2());
+
+            sentLunarWalls.get(player.getName()).put(id, System.currentTimeMillis() + 4000L);
 
             return;
         }
