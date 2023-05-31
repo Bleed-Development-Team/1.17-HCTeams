@@ -77,9 +77,12 @@ class HCFTab : TabAdapter {
 
                 val teamIndices: MutableList<UUID> = mutableListOf()
 
+                /*
                 team.owner?.let { owner ->
                     teamIndices.add(owner)
                 }
+                
+                 */
 
                 teamIndices.addAll(team.coleaders)
 
@@ -105,18 +108,19 @@ class HCFTab : TabAdapter {
                 }
 
                 for (i in teamIndices.indices) {
+                    val teamPlayer = Bukkit.getPlayer(teamIndices[i]) ?: continue
 
                     text = text.replace("%member-$i%", "&7${
-                        if (owner!! == player.uniqueId) {
+                        if (owner!! == teamPlayer.uniqueId) {
                             "***"
-                        } else if (coleaders.contains(player.uniqueId)) {
+                        } else if (coleaders.contains(teamPlayer.uniqueId)) {
                             "**"
-                        } else if (captains.contains(player.uniqueId)) {
+                        } else if (captains.contains(teamPlayer.uniqueId)) {
                             "*"
                         } else {
                             ""
                         }
-                    }&a${player.name}")
+                    }&a${teamPlayer.name}")
                 }
             } else {
                 val noTeamFormat: List<String> = HCF.getInstance().tabFile.getStringList("TEAM-INFO.NOT-SET")
