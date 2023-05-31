@@ -9,6 +9,7 @@ class TabThread : Thread() {
         while (true){
             try {
                 for (player in Bukkit.getOnlinePlayers()){
+                    Bukkit.broadcastMessage("entering loop for testing ${player.name}")
                     if (!HCF.getInstance().tabManager.skins.containsKey(player.uniqueId.toString())) continue
                     val tab = HCF.getInstance().tabManager.tablists[player.uniqueId]
 
