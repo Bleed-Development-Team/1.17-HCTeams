@@ -14,8 +14,6 @@ class TabListener : Listener {
     @EventHandler
     fun onQuit(event: PlayerQuitEvent){
         HCF.getInstance().tabManager.tablists.remove(event.player.uniqueId)
-
-        HCF.getInstance().tabManager.skins.remove(event.player.uniqueId.toString())
     }
 
     @EventHandler
