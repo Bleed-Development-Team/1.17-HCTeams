@@ -1,6 +1,7 @@
 package net.frozenorb.foxtrot.walls;
 
 import com.lunarclient.bukkitapi.LunarClientAPI;
+import com.lunarclient.bukkitapi.nethandler.LCPacket;
 import com.lunarclient.bukkitapi.nethandler.client.LCPacketWorldBorderCreateNew;
 import com.lunarclient.bukkitapi.nethandler.client.LCPacketWorldBorderRemove;
 import net.frozenorb.foxtrot.HCF;
@@ -12,6 +13,7 @@ import net.frozenorb.foxtrot.team.claims.Coordinate;
 import net.frozenorb.foxtrot.team.claims.LandBoard;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import net.frozenorb.foxtrot.util.Pair;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -137,8 +139,8 @@ public class WallsHandler extends Thread {
                     //
                     for (Map.Entry<String, Long> key : sentLunarWalls.get(player.getName()).entrySet()) {
                         if (key.getValue() < System.currentTimeMillis()) continue;
-                        
-                        LunarClientAPI.getInstance().sendPacket(
+
+                        sendLunarPacket(
                                 player,
                                 new LCPacketWorldBorderRemove(key.getKey())
                         );
@@ -164,7 +166,7 @@ public class WallsHandler extends Thread {
         // send claim to player
         if (LunarClientAPI.getInstance().isRunningLunarClient(player.getUniqueId())) {
             String id = UUID.randomUUID().toString();
-            LunarClientAPI.getInstance().sendPacket(player,
+            sendLunarPacket(player,
                     new LCPacketWorldBorderCreateNew(
                         id,
                         player.getWorld().getUID().toString(),
@@ -212,7 +214,7 @@ public class WallsHandler extends Thread {
 
         if (LunarClientAPI.getInstance().isRunningLunarClient(player.getUniqueId())) {
             for (String key : sentLunarWalls.get(player.getName()).keySet()) {
-                LunarClientAPI.getInstance().sendPacket(
+                sendLunarPacket(
                         player,
                         new LCPacketWorldBorderRemove(key)
                 );
@@ -234,6 +236,12 @@ public class WallsHandler extends Thread {
 
             sentBlockChanges.remove(player.getName());
         }
+    }
+
+    public static void sendLunarPacket(Player player, LCPacket packet) {
+        Bukkit.getScheduler().runTask(HCF.getInstance(), (runnable) -> {
+            LunarClientAPI.getInstance().sendPacket(player, packet);
+        })
     }
 
 }
