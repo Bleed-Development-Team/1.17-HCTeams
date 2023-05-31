@@ -115,11 +115,11 @@ public class WallsHandler extends Thread {
                     sentLunarWalls.put(player.getName(), new HashMap<>());
                 }
 
-                Iterator<Map.Entry<Location, Long>> bordersIterator = sentBlockChanges.get(player.getName()).entrySet().iterator();
-
                 // Remove borders after they 'expire' -- This is used to get rid of block changes the player has walked away from,
                 // whose value in the map hasn't been updated recently.
                 if (!LunarClientAPI.getInstance().isRunningLunarClient(player.getUniqueId())) {
+                    Iterator<Map.Entry<Location, Long>> bordersIterator = sentBlockChanges.get(player.getName()).entrySet().iterator();
+
                     while (bordersIterator.hasNext()) {
                         Map.Entry<Location, Long> border = bordersIterator.next();
 
@@ -174,16 +174,11 @@ public class WallsHandler extends Thread {
                             false,
                             false,
                             0xFFFFFF,
-                            claim.getX1() * 0.00,
-                            claim.getZ1() * 0.00,
-                            claim.getX2() * 0.00,
-                            claim.getZ2() * 0.00
+                            claim.getX1() * 1.00,
+                            claim.getZ1() * 1.00,
+                            claim.getX2() * 1.00,
+                            claim.getZ2() * 1.00
                     )
-            );
-
-            Pair<Pair<Double, Double>, Pair<Double, Double>> key = new Pair<>(
-                    new Pair<>(claim.getX1() * 0.00, claim.getZ1() * 0.00),
-                    new Pair<>(claim.getX2() * 0.00, claim.getZ2() * 0.00)
             );
 
             sentLunarWalls.get(player.getName()).put(id, System.currentTimeMillis() + 10000L);
