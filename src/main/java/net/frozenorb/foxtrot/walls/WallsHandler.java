@@ -57,6 +57,14 @@ public class WallsHandler extends Thread {
     }
 
     private void checkPlayer(Player player) {
+        if (!sentBlockChanges.containsKey(player.getName())) {
+            sentBlockChanges.put(player.getName(), new HashMap<>());
+        }
+
+        if (LunarClientAPI.getInstance().isRunningLunarClient(player.getUniqueId()) && !sentLunarWalls.containsKey(player.getName())) {
+            sentLunarWalls.put(player.getName(), new HashMap<>());
+        }
+
         try {
             List<Claim> claims = new LinkedList<>();
 
@@ -107,13 +115,6 @@ public class WallsHandler extends Thread {
             if (claims.size() == 0) {
                 clearPlayer(player);
             } else {
-                if (!sentBlockChanges.containsKey(player.getName())) {
-                    sentBlockChanges.put(player.getName(), new HashMap<>());
-                }
-
-                if (LunarClientAPI.getInstance().isRunningLunarClient(player.getUniqueId()) && !sentLunarWalls.containsKey(player.getName())) {
-                    sentLunarWalls.put(player.getName(), new HashMap<>());
-                }
 
                 // Remove borders after they 'expire' -- This is used to get rid of block changes the player has walked away from,
                 // whose value in the map hasn't been updated recently.
