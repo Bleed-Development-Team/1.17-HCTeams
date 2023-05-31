@@ -4,9 +4,11 @@ import net.frozenorb.foxtrot.gameplay.ability.damage.DamageAbility;
 import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.Cooldown;
 import net.frozenorb.foxtrot.util.ItemBuilder;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -83,6 +85,14 @@ public class AntiBuild extends DamageAbility {
         sendMessage(damager, "&6" + victim.getName() + " &fwill not be able to place and break blocks for 10 seconds.");
     }
 
+    @EventHandler
+    public void test(EntityDamageByEntityEvent event){
+        if (!(event.getDamager() instanceof Player) || !(event.getEntity() instanceof Player)) return;
+
+        Bukkit.broadcastMessage(event.getDamage() + "");
+        Bukkit.broadcastMessage(event.isCancelled() + "");
+        Bukkit.broadcastMessage(event.getEventName());
+    }
 
     @EventHandler
     public void place(BlockPlaceEvent event){
@@ -100,7 +110,6 @@ public class AntiBuild extends DamageAbility {
         Player player = event.getPlayer();
 
         if (Cooldown.isOnCooldown("bone-eff", player)){
-
             event.setCancelled(true);
             player.sendMessage(CC.translate("&cYou cannot break blocks for another &c&l" + Cooldown.getCooldownString(player, "bone-eff") + "&c."));
         }
@@ -113,7 +122,7 @@ public class AntiBuild extends DamageAbility {
         if (event.getAction().name().contains("RIGHT") && !event.getAction().name().contains("AIR")) {
             if (event.getClickedBlock().getType() == Material.OAK_FENCE_GATE || event.getClickedBlock().getType() == Material.SPRUCE_FENCE_GATE || event.getClickedBlock().getType() == Material.BIRCH_FENCE_GATE || event.getClickedBlock().getType() == Material.JUNGLE_FENCE_GATE || event.getClickedBlock().getType() == Material.DARK_OAK_FENCE_GATE || event.getClickedBlock().getType() == Material.ACACIA_FENCE_GATE || event.getClickedBlock().getType() == Material.OAK_DOOR) {
                 if (Cooldown.isOnCooldown("bone-eff", player)){
-                    event.setCancelled(true);
+                    event.setUseInteractedBlock(Event.Result.DENY);
 
                     player.sendMessage(CC.translate("&cYou cannot interact with blocks for another &c&l" + Cooldown.getCooldownString(player, "bone-eff") + "&c."));
                 }

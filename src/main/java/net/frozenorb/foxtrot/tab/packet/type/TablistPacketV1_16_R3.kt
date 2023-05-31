@@ -3,16 +3,15 @@ package net.frozenorb.foxtrot.tab.packet.type
 import com.google.common.collect.HashBasedTable
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
+import net.frozenorb.foxtrot.HCF
+import net.frozenorb.foxtrot.configuration.impl.TabFile
 import net.minecraft.server.v1_16_R3.*
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer
 import org.bukkit.entity.Player
-import org.hyrical.hcf.HCFPlugin
-import org.hyrical.hcf.config.impl.TabFile
 import net.frozenorb.foxtrot.tab.Tab
 import net.frozenorb.foxtrot.tab.extra.TabEntry
 import net.frozenorb.foxtrot.tab.extra.TabSkin
 import net.frozenorb.foxtrot.tab.packet.TabPacket
-import org.hyrical.hcf.version.VersionManager
 import java.util.*
 
 
@@ -20,7 +19,7 @@ class TablistPacketV1_16_R3(val player2: Player) : TabPacket(player2) {
     private var LOADED = false
     private var footer: String = ""
     private var header: String = ""
-    private val maxColumns = if (VersionManager.getProtocolVersion(player) >= 47) 4 else 3
+    private val maxColumns = if (100 >= 47) 4 else 3
     private val FAKE_PLAYERS: HashBasedTable<Int, Int, EntityPlayer>? = HashBasedTable.create()
 
     fun loadFakes() {
@@ -31,7 +30,7 @@ class TablistPacketV1_16_R3(val player2: Player) : TabPacket(player2) {
             for (i in 0..19) {
                 for (f in 0..3) {
                     val part = if (f == 0) "LEFT" else if (f == 1) "MIDDLE" else if (f == 2) "RIGHT" else "FAR_RIGHT"
-                    val line: String = TabFile.getStringList(part)[i].split(";")[0]
+                    val line: String = HCF.getInstance().tabFile.getStringList(part)[i].split(";")[0]
                     val name = this.getName(f, i)
                     val split = name.split(" ")
                     val profile = GameProfile(
@@ -40,9 +39,9 @@ class TablistPacketV1_16_R3(val player2: Player) : TabPacket(player2) {
                     )
                     val player = EntityPlayer(minecraftServer, worldServer, profile, PlayerInteractManager(worldServer))
                     val skin: TabSkin = if (name.contains("PLAYER-UUID")) {
-                        HCFPlugin.instance.tabHandler.skins[name.split(" ")[1]]
+                        HCF.getInstance().tabManager.skins[name.split(" ")[1]]
                     } else {
-                        HCFPlugin.instance.tabHandler.skins[name]
+                        HCF.getInstance().tabManager.skins[name]
                     }!!
                     profile.properties.put("textures", Property("textures", skin.value, skin.signature))
                     this.FAKE_PLAYERS!!.put(f, i, player)
@@ -71,16 +70,25 @@ class TablistPacketV1_16_R3(val player2: Player) : TabPacket(player2) {
     }
 
     private fun sendHeaderFooter() {
-        val header = HCFPlugin.instance.tabHandler.adapter.getHeader(player)
-        val footer = HCFPlugin.instance.tabHandler.adapter.getFooter(player)
+        val header = HCF.getInstance().tabManager.adapter.getHeader(player)
+        val footer = HCF.getInstance().tabManager.adapter.getFooter(player)
 
-        VersionManager.currentVersion.sendHeaderFooter(player, header, footer)
+        header.replace("[", "")
+        header.replace("]", "")
+        footer.replace("[", "")
+        footer.replace("]", "")
+        val packet = PacketPlayOutPlayerListHeaderFooter()
+
+        packet.header = IChatBaseComponent.ChatSerializer.a("{\"text\":\"$header\"}")
+        packet.footer = IChatBaseComponent.ChatSerializer.a("{\"text\":\"$footer\"}")
+
+        (player as CraftPlayer).handle.playerConnection.sendPacket(packet)
     }
 
 
     override fun update() {
         sendHeaderFooter()
-        val tablist: Tab = HCFPlugin.instance.tabHandler.adapter.getInfo(player)
+        val tablist: Tab = HCF.getInstance().tabManager.adapter.getInfo(player)
         for (i in 0..19) {
             for (f in 0 until maxColumns) {
                 val entry: TabEntry = tablist.getEntries(f, i)

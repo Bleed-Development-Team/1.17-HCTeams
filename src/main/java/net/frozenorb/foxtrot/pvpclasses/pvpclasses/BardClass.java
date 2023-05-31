@@ -144,7 +144,7 @@ public class BardClass extends PvPClass implements Listener {
                 return;
             }
 
-            giveBardEffect(player, BARD_PASSIVE_EFFECTS.get(player.getInventory().getItemInMainHand().getType()), true, false);
+            giveBardEffect(player, BARD_PASSIVE_EFFECTS.get(player.getInventory().getItemInMainHand().getType()), true, false, player.getInventory().getItemInMainHand());
         }
         if (BARD_PASSIVE_EFFECTS.containsKey(player.getInventory().getItemInOffHand().getType()) && !DTRBitmask.SAFE_ZONE.appliesAt(player.getLocation())){
             // CUSTOM
@@ -152,7 +152,7 @@ public class BardClass extends PvPClass implements Listener {
                 return;
             }
 
-            giveBardEffect(player, BARD_PASSIVE_EFFECTS.get(player.getInventory().getItemInOffHand().getType()), true, false);
+            giveBardEffect(player, BARD_PASSIVE_EFFECTS.get(player.getInventory().getItemInOffHand().getType()), true, false, player.getInventory().getItemInOffHand());
         }
         super.tick(player);
     }
@@ -173,7 +173,7 @@ public class BardClass extends PvPClass implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (!event.getAction().name().contains("RIGHT_") || !event.hasItem() || !BARD_CLICK_EFFECTS.containsKey(event.getItem().getType()) || !PvPClassHandler.hasKitOn(event.getPlayer(), this) || !energy.containsKey(event.getPlayer().getName())) {
+        if (!event.getAction().name().contains("RIGHT_") || !event.hasItem() || !BARD_CLICK_EFFECTS.containsKey(event.getPlayer().getItemInHand().getType()) || !PvPClassHandler.hasKitOn(event.getPlayer(), this) || !energy.containsKey(event.getPlayer().getName())) {
             return;
         }
 
@@ -237,6 +237,28 @@ public class BardClass extends PvPClass implements Listener {
                 smartAddPotion(player, bardEffect.getPotionEffect(), persistOldValues, this);
             } else {
                 Material material = source.getItemInHand().getType();
+                giveCustomBardEffect(player, material);
+            }
+        }
+    }
+
+    public void giveBardEffect(Player source, BardEffect bardEffect, boolean friendly, boolean persistOldValues, ItemStack itemStack) {
+        for (Player player : getNearbyPlayers(source, friendly)) {
+            if (DTRBitmask.SAFE_ZONE.appliesAt(player.getLocation())) {
+                continue;
+            }
+
+            // CUSTOM
+            // Bards can't get Strength.
+            // Yes, that does need to use .equals. PotionEffectType is NOT an enum.
+            if (PvPClassHandler.hasKitOn(player, this) && bardEffect.getPotionEffect() != null && bardEffect.getPotionEffect().getType().equals(PotionEffectType.INCREASE_DAMAGE)) {
+                continue;
+            }
+
+            if (bardEffect.getPotionEffect() != null) {
+                smartAddPotion(player, bardEffect.getPotionEffect(), persistOldValues, this);
+            } else {
+                Material material = itemStack.getType();
                 giveCustomBardEffect(player, material);
             }
         }

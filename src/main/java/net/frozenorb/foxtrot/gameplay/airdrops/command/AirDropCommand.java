@@ -17,6 +17,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
+
 @CommandAlias("airdrop|airdrops")
 @CommandPermission("op")
 public class AirDropCommand extends BaseCommand {
@@ -53,7 +55,8 @@ public class AirDropCommand extends BaseCommand {
             public void tick() {
                 int i = 0;
                 for (AirDropReward airDropReward : HCF.getInstance().getAirDropHandler().getCache()) {
-                    this.buttons[i++] = new Button(airDropReward.getItemStack());
+                    this.buttons[i++] = new Button(ItemBuilder.copyOf(airDropReward.getItemStack().clone())
+                            .setLore(List.of(new String[]{"", "&3| &fChance: &e" + airDropReward.getChance()})).build());
                 }
             }
         }.updateMenu();
@@ -73,6 +76,9 @@ public class AirDropCommand extends BaseCommand {
     @Subcommand("reload")
     public void reload(Player player){
         final AirDropHandler airDropHandler = HCF.getInstance().getAirDropHandler();
+
+        airDropHandler.saveLootTable();
+
         airDropHandler.getCache().clear();
         airDropHandler.loadLootTable();
 

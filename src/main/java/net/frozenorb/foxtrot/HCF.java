@@ -11,6 +11,7 @@ import io.github.thatkawaiisam.assemble.AssembleStyle;
 import lombok.Getter;
 import lombok.Setter;
 import net.frozenorb.foxtrot.chat.trivia.TriviaHandler;
+import net.frozenorb.foxtrot.configuration.impl.TabFile;
 import net.frozenorb.foxtrot.crates.monthly.MonthlyCrates;
 import net.frozenorb.foxtrot.gameplay.ability.partnerpackages.PartnerPackageHandler;
 import net.frozenorb.foxtrot.chat.ChatHandler;
@@ -36,6 +37,8 @@ import net.frozenorb.foxtrot.gameplay.lunar.LunarClientHandler;
 import net.frozenorb.foxtrot.gameplay.lunar.nametag.ClientNametagProvider;
 import net.frozenorb.foxtrot.map.MapHandler;
 import net.frozenorb.foxtrot.provider.nametags.NametagManager;
+import net.frozenorb.foxtrot.tab.TabManager;
+import net.frozenorb.foxtrot.tab.impl.HCFTab;
 import net.frozenorb.foxtrot.walls.WallsHandler;
 import net.frozenorb.foxtrot.persist.RedisSaveTask;
 import net.frozenorb.foxtrot.persist.maps.*;
@@ -106,6 +109,9 @@ public class HCF extends JavaPlugin {
 	@Getter private ArcherUpgradeHandler archerUpgradeHandler;
 	@Getter private AirDropHandler airDropHandler;
 	@Getter private AbilityHandler abilityHandler;
+	@Getter private TabManager tabManager;
+
+	@Getter private TabFile tabFile;
 
 	@Getter private PlaytimeMap playtimeMap;
 	@Getter private OppleMap oppleMap;
@@ -215,13 +221,15 @@ public class HCF extends JavaPlugin {
 			(new RedisSaveTask()).runTaskTimerAsynchronously(this, 1200L, 1200L);
 			(new WallsHandler()).start();
 
-
 			Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new ClientNametagProvider(), 0L, 40L);
 			//Bukkit.getScheduler().scheduleSyncRepeatingTask(this, Webhook.sendKothSchedule(), 0, 72000L);
 
 			setupHandlers();
 			setupPersistence();
 			setupTasks();
+
+			tabFile = new TabFile();
+			tabFile.loadConfig();
 
 			new CommandHandler(this);
 			new ListenerHandler(this);
@@ -289,6 +297,7 @@ public class HCF extends JavaPlugin {
 		RegenUtils.resetAll();
 
 		MonthlyCrates.getInstance().init();
+		airDropHandler.saveLootTable();
 	}
 
 	private void setupHandlers() {
@@ -296,6 +305,8 @@ public class HCF extends JavaPlugin {
 		mapHandler = new MapHandler();
 		mapHandler.load();
 		setupHourEvents();
+
+		tabManager = new TabManager(new HCFTab());
 
 		lunarClientHandler = new LunarClientHandler();
 

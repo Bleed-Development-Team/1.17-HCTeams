@@ -39,6 +39,7 @@ public class AbilityHandler {
         interactAbilities.put("switcher", new Switcher());
         interactAbilities.put("ninjastar", new NinjaStar());
         interactAbilities.put("timewarp", new TimeWarp());
+        interactAbilities.put("timestone", new TimeStone());
 
         // Portable
 
@@ -55,6 +56,7 @@ public class AbilityHandler {
         damageAbilities.put("antipearl", new AntiPearl());
         damageAbilities.put("freezer", new Freezer());
         damageAbilities.put("effectstealer", new EffectStealer());
+        damageAbilities.put("scrambler", new Scrambler());
 
         for (String key : damageAbilities.keySet()){
             Cooldown.createCooldown(key);

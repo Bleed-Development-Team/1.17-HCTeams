@@ -2,14 +2,14 @@ package net.frozenorb.foxtrot.tab
 
 import com.google.common.collect.HashBasedTable
 import com.google.common.collect.Table
+import net.frozenorb.foxtrot.HCF
 import org.bukkit.entity.Player
-import org.hyrical.hcf.HCFPlugin
 import net.frozenorb.foxtrot.tab.extra.TabEntry
 import net.frozenorb.foxtrot.tab.packet.TabPacket
 
 class Tab(val player: Player) {
     val entries: Table<Int, Int, TabEntry> = HashBasedTable.create()
-    val tabPacket: TabPacket = HCFPlugin.instance.tabHandler.createPacket(player)
+    val tabPacket: TabPacket = HCF.getInstance().tabManager.createPacket(player)
     val EMPTY_ENTRY: TabEntry = TabEntry("", -1)
 
     fun update() {

@@ -2,11 +2,14 @@ package net.frozenorb.foxtrot.gameplay.clickable.type;
 
 import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.gameplay.ability.Ability;
+import net.frozenorb.foxtrot.gameplay.ability.interact.type.NinjaStar;
 import net.frozenorb.foxtrot.gameplay.clickable.ClickableItem;
 import net.frozenorb.foxtrot.util.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 public class RandomPartnerItem extends ClickableItem {
     @Override
@@ -35,8 +38,11 @@ public class RandomPartnerItem extends ClickableItem {
     public void handle(PlayerInteractEvent event) {
         takeItem(event.getPlayer());
 
-        Ability ability = HCF.getInstance().getAbilityHandler().getAllAbilities().get(
-                HCF.RANDOM.nextInt(HCF.getInstance().getAbilityHandler().getAllAbilities().size())
+        List<Ability> abilities = HCF.getInstance().getAbilityHandler().getAllAbilities();
+        abilities.remove(new NinjaStar());
+
+        Ability ability = abilities.get(
+                HCF.RANDOM.nextInt(abilities.size())
         );
 
         event.getPlayer().getInventory().addItem(ability.getItemStack());

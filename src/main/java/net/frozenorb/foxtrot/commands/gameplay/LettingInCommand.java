@@ -24,6 +24,7 @@ public class LettingInCommand extends BaseCommand {
 
         if (Cooldown.isOnCooldown("lettingIn", player)){
             player.sendMessage(CC.translate("&cYou must wait another &l" + TimeUtils.formatIntoDetailedString(Cooldown.getCooldownForPlayerInt("lettingIn", player)) + " &cto use this command again!"));
+            return;
         }
 
         if (team == null){
@@ -48,12 +49,12 @@ public class LettingInCommand extends BaseCommand {
 
         Bukkit.broadcastMessage("");
         Bukkit.broadcastMessage(CC.translate("&b&l" + team.getName() +  " &fis letting in!"));
-        Bukkit.broadcastMessage(CC.translate("&b&l| &fHQ: &3" + team.getHQ().getBlockX() + ", " + team.getHQ().getBlockZ()));
-        Bukkit.broadcastMessage(CC.translate("&b&l| &fBase Height: &3" + baseHeight));
-        Bukkit.broadcastMessage(CC.translate("&b&l| &fOnline Members: &3" + team.getOnlineMembers().size()));
-        Bukkit.broadcastMessage(CC.translate("&b&l| &fDTR: " + team.getFormattedDTR()));
+        Bukkit.broadcastMessage(CC.translate("&b| &fHQ: &3" + team.getHQ().getBlockX() + ", " + team.getHQ().getBlockZ()));
+        Bukkit.broadcastMessage(CC.translate("&b| &fBase Height: &3" + baseHeight));
+        Bukkit.broadcastMessage(CC.translate("&b| &fOnline Members: &3" + team.getOnlineMembers().size()));
+        Bukkit.broadcastMessage(CC.translate("&b| &fDTR: " + team.getFormattedDTR()));
         if (DTRHandler.isOnCooldown(team)){
-            player.sendMessage(CC.translate("&b&l| &fRegen: &3" + TimeUtils.formatIntoDetailedString(((int) (team.getDTRCooldown() - System.currentTimeMillis()) / 1000))));
+            player.sendMessage(CC.translate("&b| &fRegen: &3" + TimeUtils.formatIntoDetailedString(((int) (team.getDTRCooldown() - System.currentTimeMillis()) / 1000))));
         }
         Bukkit.broadcastMessage("");
 

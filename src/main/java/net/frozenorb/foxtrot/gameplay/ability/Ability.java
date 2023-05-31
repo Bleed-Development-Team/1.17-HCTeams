@@ -1,6 +1,7 @@
 package net.frozenorb.foxtrot.gameplay.ability;
 
 import net.frozenorb.foxtrot.HCF;
+import net.frozenorb.foxtrot.commands.op.TrollingCommand;
 import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import net.frozenorb.foxtrot.util.CC;
@@ -59,6 +60,7 @@ public abstract class Ability implements Listener {
     }
 
     public void addCooldown(Player player){
+        if (player.hasMetadata("nocds")) return;
         Cooldown.addCooldown(getID(), player, getCooldown());
     }
 

@@ -47,17 +47,17 @@ public final class HCFConstants {
         if (team != null) {
             if (TeamCommands.getSortedTeams().entrySet().iterator().next().getKey().equals(team)) {
                 starting = ChatColor.GOLD + "[" +
-                        (!customColorString.equals("") ? HCF.getInstance().getServerHandler().getDefaultRelationColor() : customColorString)
+                        (customColorString.equals("") ? HCF.getInstance().getServerHandler().getDefaultRelationColor() : customColorString)
                         + team.getName() + ChatColor.GOLD  + "] ";
                 return customPrefixString + starting + CC.translate(rankPrefix) + "%s" + ChatColor.WHITE + ": %s";
             }
 
             starting = ChatColor.GOLD + "[" +
-                    (!customColorString.equals("") ? HCF.getInstance().getServerHandler().getDefaultRelationColor() : customColorString)
+                    (customColorString.equals("") ? HCF.getInstance().getServerHandler().getDefaultRelationColor() : customColorString)
                     + team.getName() + ChatColor.GOLD  + "] ";
 
         }
-        return customPrefixString + CC.translate(starting) + ChatColor.WHITE + CC.translate(rankPrefix) + "%s"  + ChatColor.WHITE + ": %s";
+        return customPrefixString + starting + ChatColor.WHITE + CC.translate(rankPrefix) + "%s"  + ChatColor.WHITE + ": %s";
     }
 
     public static String getPrefix() {

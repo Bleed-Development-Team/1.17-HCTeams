@@ -1,11 +1,11 @@
 package net.frozenorb.foxtrot.tab.packet
 
+import net.frozenorb.foxtrot.HCF
+import net.frozenorb.foxtrot.provider.nametags.Nametag
+import net.frozenorb.foxtrot.provider.nametags.extra.NameVisibility
 import org.apache.commons.lang3.StringUtils
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
-import org.hyrical.hcf.HCFPlugin
-import org.hyrical.hcf.provider.nametag.Nametag
-import org.hyrical.hcf.provider.nametag.extra.NameVisibility
 
 
 abstract class TabPacket(val player: Player) {
@@ -21,7 +21,7 @@ abstract class TabPacket(val player: Player) {
     }
 
     fun handleTeams(player: Player?, text: String, pos: Int) {
-        val tag: Nametag = HCFPlugin.instance.nametagHandler.nametags[this.player.uniqueId] ?: return
+        val tag: Nametag = HCF.getInstance().nametagManager.nametags[this.player.uniqueId] ?: return
         val name = "00000000000000" + if (pos >= 10) Integer.valueOf(pos) else "0$pos"
         if (text.length > 16) {
             var text1 = text.substring(0, 16)
@@ -32,11 +32,11 @@ abstract class TabPacket(val player: Player) {
             } else {
                 text2 = StringUtils.left(ChatColor.getLastColors(text1) + text2, 16)
             }
-            tag.nametagPacket.create(name, "", text1, text2, false, NameVisibility.ALWAYS)
+            tag.packet.create(name, "", text1, text2, false, NameVisibility.ALWAYS)
         } else {
-            tag.nametagPacket.create(name, "", text, "", false, NameVisibility.ALWAYS)
+            tag.packet.create(name, "", text, "", false, NameVisibility.ALWAYS)
         }
 
-        tag.nametagPacket.addToTeam(player, name)
+        tag.packet.addToTeam(player, name)
     }
 }

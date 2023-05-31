@@ -1,21 +1,13 @@
 package net.frozenorb.foxtrot.tab.impl
 
+import net.frozenorb.foxtrot.HCF
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import org.hyrical.hcf.HCFPlugin
-import org.hyrical.hcf.config.impl.TabFile
 import net.frozenorb.foxtrot.tab.Tab
 import net.frozenorb.foxtrot.tab.TabAdapter
-import org.hyrical.hcf.team.Team
-import org.hyrical.hcf.team.TeamManager
-import org.hyrical.hcf.team.user.TeamUser
-import org.hyrical.hcf.utils.DirectionUtils
-import org.hyrical.hcf.utils.getProfile
-import org.hyrical.hcf.utils.plugin.PluginUtils
-import org.hyrical.hcf.utils.translate
-import java.text.NumberFormat
+import net.frozenorb.foxtrot.team.Team
+import net.frozenorb.foxtrot.util.CC
 import java.util.stream.Collectors
-import kotlin.math.round
 
 class HCFTab : TabAdapter {
     private var farRightTablist: MutableList<String> = mutableListOf()
@@ -24,30 +16,28 @@ class HCFTab : TabAdapter {
     private var rightTablist: MutableList<String> = mutableListOf()
 
     init {
-        leftTablist = TabFile.getStringList("LEFT")
-        middleTablist = TabFile.getStringList("MIDDLE")
-        rightTablist = TabFile.getStringList("RIGHT")
-        farRightTablist = TabFile.getStringList("FAR_RIGHT")
+        leftTablist = HCF.getInstance().tabFile.getStringList("LEFT")
+        middleTablist = HCF.getInstance().tabFile.getStringList("MIDDLE")
+        rightTablist = HCF.getInstance().tabFile.getStringList("RIGHT")
+        farRightTablist = HCF.getInstance().tabFile.getStringList("FAR_RIGHT")
     }
 
     override fun getHeader(player: Player): String {
-        return translate(TabFile.getString("HEADER")!!)
+        return CC.translate(HCF.getInstance().tabFile.getString("HEADER")!!)
     }
 
     override fun getInfo(player: Player): Tab {
-        val tablist: Tab = HCFPlugin.instance.tabHandler.tablists[player.uniqueId]!!
-        val team = player.getProfile()!!.team
-
-        val profile = player.getProfile()!!
+        val tablist: Tab = HCF.getInstance().tabManager.tablists[player.uniqueId]!!
+        val team = HCF.getInstance().teamHandler.getTeam(player.uniqueId)
 
         for (i in 0..19) {
-            tablist.add(0, i, translate(leftTablist[i]))
-            tablist.add(1, i, translate(middleTablist[i]))
-            tablist.add(2, i, translate(rightTablist[i]))
-            tablist.add(3, i, translate(farRightTablist[i]))
+            tablist.add(0, i, CC.translate(leftTablist[i]))
+            tablist.add(1, i, CC.translate(middleTablist[i]))
+            tablist.add(2, i, CC.translate(rightTablist[i]))
+            tablist.add(3, i, CC.translate(farRightTablist[i]))
         }
 
-        val teams = TeamManager.getTeams().stream().filter { it.getOnlineMembers().isNotEmpty() && it.leader != null}
+        val teams = HCF.getInstance().teamHandler.teams.stream().filter { it.onlineMembers.isNotEmpty() && it.owner != null}
             .sorted { t1, t2 -> t2.getOnlineMembers().size - t1.getOnlineMembers().size }
             .collect(Collectors.toList())
 
@@ -58,7 +48,7 @@ class HCFTab : TabAdapter {
                 continue
             }
             if (team != null) {
-                val teamFormat: List<String> = TabFile.getStringList("TEAM-INFO.HAS-TEAM")
+                val teamFormat: List<String> = HCF.getInstance().tabFile.getStringList("TEAM-INFO.HAS-TEAM")
                 val teamMembers: List<TeamUser> = team.getOnlineMembers()
                 teamMembers.sortedWith { x: TeamUser, y: TeamUser ->
                     y.role.ordinal - x.role.ordinal

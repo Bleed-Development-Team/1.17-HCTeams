@@ -1,17 +1,16 @@
 package net.frozenorb.foxtrot.tab.thread
 
+import net.frozenorb.foxtrot.HCF
 import org.bukkit.Bukkit
-import org.hyrical.hcf.HCFPlugin
-import org.hyrical.hcf.utils.plugin.PluginUtils
 
 class TabThread : Thread() {
 
     override fun run() {
         while (true){
             try {
-                for (player in PluginUtils.getOnlinePlayers()){
-                    if (!HCFPlugin.instance.tabHandler.skins.containsKey(player.uniqueId.toString())) continue
-                    val tab = HCFPlugin.instance.tabHandler.tablists[player.uniqueId]
+                for (player in Bukkit.getOnlinePlayers()){
+                    if (!HCF.getInstance().tabManager.skins.containsKey(player.uniqueId.toString())) continue
+                    val tab = HCF.getInstance().tabManager.tablists[player.uniqueId]
 
                     tab?.update()
                 }

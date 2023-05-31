@@ -81,6 +81,7 @@ public class CommandHandler {
         m.registerCommand(new AirDropCommand());
         m.registerCommand(new LogoutCommand());
         m.registerCommand(new ArmorClassCommand());
+        m.registerCommand(new TrollingCommand());
         m.registerCommand(new LettingInCommand());
         m.registerCommand(new OresCommand());
         m.registerCommand(new PayCommand());

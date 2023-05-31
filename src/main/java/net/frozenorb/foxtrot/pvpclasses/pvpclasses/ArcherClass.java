@@ -105,7 +105,9 @@ public class ArcherClass extends PvPClass {
 			if (victim.getHealth() - damage <= 0D) {
 				event.setCancelled(true);
 			} else {
+				event.setDamage(0);
 			}
+
 
 			// The 'ShotFromDistance' metadata is applied in the deathmessage module.
 			Location shotFrom = (Location) arrow.getMetadata("ShotFromDistance").get(0).value();
@@ -134,6 +136,7 @@ public class ArcherClass extends PvPClass {
 
 					if (percentage < 0.25){
 						victim.addPotionEffect(archerUpgrade.getEffect());
+						shooter.sendMessage(CC.translate("&fYou have &cinfected &f" + victim.getName() + " &fan "));
 						victim.sendMessage(CC.translate("&fYou have been &cinfected &fwith an &4archer upgrade&f!"));
 					}
 				}

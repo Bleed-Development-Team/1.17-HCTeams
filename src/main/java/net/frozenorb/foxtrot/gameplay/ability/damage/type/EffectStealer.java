@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.*;
@@ -50,6 +51,12 @@ public class EffectStealer extends DamageAbility {
 
     @Override
     public void handle(EntityDamageByEntityEvent event, Player damager, Player victim) {
+        if (!isWearingSet(victim.getInventory())) {
+            damager.sendMessage(CC.translate("&cYou cannot steal a kit's effects."));
+            return;
+        }
+
+
         int hits;
 
         if (hitMap.containsKey(damager.getUniqueId()) && hitMap.get(damager.getUniqueId()).containsKey(victim.getUniqueId())) {
@@ -91,5 +98,20 @@ public class EffectStealer extends DamageAbility {
             }
             victim.sendMessage(CC.translate("&aYou have received all your effects back!"));
         }, 20 * 15L);
+    }
+
+    public boolean isWearingSet(PlayerInventory armor){
+        return wearingAllArmor(armor) &&
+                armor.getHelmet().getType() == Material.DIAMOND_HELMET &&
+                armor.getChestplate().getType() == Material.DIAMOND_CHESTPLATE &&
+                armor.getLeggings().getType() == Material.DIAMOND_LEGGINGS &&
+                armor.getBoots().getType() == Material.DIAMOND_BOOTS;
+    }
+
+    public boolean wearingAllArmor(PlayerInventory armor){
+        return (armor.getHelmet() != null &&
+                armor.getChestplate() != null &&
+                armor.getLeggings() != null &&
+                armor.getBoots() != null);
     }
 }

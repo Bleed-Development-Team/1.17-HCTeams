@@ -39,6 +39,7 @@ public class KOTHRewardKeyListener implements Listener {
         }
 
         event.setCancelled(true);
+        Bukkit.broadcastMessage("test");
 
         int open = 0;
 
@@ -115,7 +116,7 @@ public class KOTHRewardKeyListener implements Listener {
                 new BukkitRunnable() {
 
                     public void run() {
-                        HCF.getInstance().getServer().broadcastMessage(CC.translate("&3&l[KOTH] ") + ChatColor.BLUE + event.getPlayer().getName() + ChatColor.WHITE + " obtained " + builder.toString() + ChatColor.BLUE + "," + ChatColor.YELLOW + " from a " + ChatColor.BLUE.toString() + ChatColor.ITALIC + "KOTH key" + ChatColor.WHITE + ".");
+                        HCF.getInstance().getServer().broadcastMessage(CC.translate("&3&l[KOTH] ") + ChatColor.BLUE + event.getPlayer().getName() + ChatColor.WHITE + " obtained " + builder.toString() + ChatColor.GOLD + "," + ChatColor.WHITE + " from a " + ChatColor.BLUE.toString() + ChatColor.ITALIC + "KOTH key" + ChatColor.WHITE + ".");
                     }
 
                 }.runTaskAsynchronously(HCF.getInstance());

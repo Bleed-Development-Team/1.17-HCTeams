@@ -22,6 +22,7 @@ import net.frozenorb.foxtrot.team.track.TeamActionTracker;
 import net.frozenorb.foxtrot.team.track.TeamActionType;
 import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.InventoryUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -686,9 +687,12 @@ public class FoxListener implements Listener {
             HCF.getInstance().getServer().getPluginManager().callEvent(teamEnterClaimEvent);
             HCF.getInstance().getServer().getPluginManager().callEvent(teamLeaveClaimEvent);
 
+            /*
             if (teamEnterClaimEvent.isCancelled() || teamLeaveClaimEvent.isCancelled()) {
                 event.setCancelled(true);
             }
+
+             */
         }
     }
 
