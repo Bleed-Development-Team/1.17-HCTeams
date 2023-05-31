@@ -138,12 +138,15 @@ public class WallsHandler extends Thread {
                 } else {
                     //
                     for (Map.Entry<String, Long> key : sentLunarWalls.get(player.getName()).entrySet()) {
+                        /*
                         if (key.getValue() < System.currentTimeMillis()) continue;
 
                         sendLunarPacket(
                                 player,
                                 new LCPacketWorldBorderRemove(key.getKey())
                         );
+                        
+                         */
                     }
                 }
                 if (!HCF.getInstance().getServerHandler().isEOTW()) {
