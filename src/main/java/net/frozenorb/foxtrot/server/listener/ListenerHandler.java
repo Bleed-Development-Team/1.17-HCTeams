@@ -1,6 +1,7 @@
 package net.frozenorb.foxtrot.server.listener;
 
 import net.frozenorb.foxtrot.HCF;
+import net.frozenorb.foxtrot.commands.op.trolling.reach.ReachListener;
 import net.frozenorb.foxtrot.gameplay.ability.partnerpackages.PartnerPackageHandler;
 import net.frozenorb.foxtrot.gameplay.events.region.carepackage.CarePackageHandler;
 import net.frozenorb.foxtrot.server.listener.impl.*;
@@ -31,6 +32,7 @@ public class ListenerHandler {
         plugin.getServer().getPluginManager().registerEvents(new PortalTrapListener(), plugin);
         plugin.getServer().getPluginManager().registerEvents(new SignSubclaimListener(), plugin);
         plugin.getServer().getPluginManager().registerEvents(new SpawnerTrackerListener(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new ReachListener(), plugin);
         plugin.getServer().getPluginManager().registerEvents(new SpawnListener(), plugin);
         plugin.getServer().getPluginManager().registerEvents(new SpawnTagListener(), plugin);
         plugin.getServer().getPluginManager().registerEvents(new StaffUtilsListener(), plugin);

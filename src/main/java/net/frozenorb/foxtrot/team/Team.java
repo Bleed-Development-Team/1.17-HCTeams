@@ -305,6 +305,14 @@ public class Team {
         flagForSave();
     }
 
+    public String getFormattedHQ(){
+        if (getHQ() != null){
+            return Math.round(this.getHQ().getBlockX()) + ", " + Math.round(this.getHQ().getBlockZ());
+        } else {
+            return "&fNone";
+        }
+    }
+
     public void setPowerFaction( boolean bool ) {
         this.powerFaction = bool;
         if( bool ) {
@@ -1365,14 +1373,6 @@ public class Team {
             if (isMember(player.getUniqueId())) {
                 player.sendMessage(CC.translate(message));
             }
-        }
-    }
-
-    public String getFormattedHQ(){
-        if (getHQ() != null){
-            return Math.round(this.getHQ().getBlockX()) + ", " + Math.round(this.getHQ().getBlockZ());
-        } else {
-            return "&fNone";
         }
     }
 

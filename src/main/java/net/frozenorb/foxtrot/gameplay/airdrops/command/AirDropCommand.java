@@ -56,7 +56,13 @@ public class AirDropCommand extends BaseCommand {
                 int i = 0;
                 for (AirDropReward airDropReward : HCF.getInstance().getAirDropHandler().getCache()) {
                     this.buttons[i++] = new Button(ItemBuilder.copyOf(airDropReward.getItemStack().clone())
-                            .setLore(List.of(new String[]{"", "&3| &fChance: &e" + airDropReward.getChance()})).build());
+                            .setLore(List.of(new String[]{"", "&3| &fChance: &e" + airDropReward.getChance()})).build())
+                            .setClickAction(event -> {
+                                event.setCancelled(true);
+
+                                HCF.getInstance().getAirDropHandler().getCache().remove(airDropReward);
+                                updateMenu();
+                            });
                 }
             }
         }.updateMenu();

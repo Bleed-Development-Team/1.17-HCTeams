@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module version="4">
+  <component name="AutoImportedSourceRoots">
+    <option name="directories">
+      <list>
+        <option value="D:\Projects\1.17-HCTeams-Frozen-HYPE/src/main/java" />
+        <option value="D:\Projects\1.17-HCTeams-Frozen-HYPE/src/main/kotlin" />
+        <option value="D:\Projects\1.17-HCTeams-Frozen-HYPE/src/test/java" />
+        <option value="D:\Projects\1.17-HCTeams-Frozen-HYPE/src/test/kotlin" />
+      </list>
+    </option>
+  </component>
   <component name="FacetManager">
     <facet type="minecraft" name="Minecraft">
       <configuration>

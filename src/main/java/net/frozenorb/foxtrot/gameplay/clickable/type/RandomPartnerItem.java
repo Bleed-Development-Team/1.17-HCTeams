@@ -20,7 +20,7 @@ public class RandomPartnerItem extends ClickableItem {
     @Override
     public ItemStack getItemStack() {
         return ItemBuilder.of(Material.BOOK).name("&3&lRandom Partner Item")
-                .addToLore("", "&3| &fRight click to receive a ", "&3| randomized partner item.")
+                .addToLore("", "&3| &fRight click to receive a ", "&3| &frandomized partner item.")
                 .build();
     }
 

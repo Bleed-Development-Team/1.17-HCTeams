@@ -20,7 +20,7 @@ public class GemsPack extends ClickableItem {
     public ItemStack getItemStack() {
         return ItemBuilder.of(Material.BOOK)
                 .name("&3&lGems &fPack")
-                .addToLore("&7Right click to give yourself 10 gems!")
+                .addToLore("", "&3| &fRight click to give yourself 10 gems!")
                 .build();
     }
 

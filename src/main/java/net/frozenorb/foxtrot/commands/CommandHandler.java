@@ -9,6 +9,7 @@ import net.frozenorb.foxtrot.commands.op.*;
 import net.frozenorb.foxtrot.commands.op.eotw.commands.EOTWCommand;
 import net.frozenorb.foxtrot.commands.op.eotw.commands.PreEOTWCommand;
 import net.frozenorb.foxtrot.commands.op.gems.GemsCommand;
+import net.frozenorb.foxtrot.commands.op.trolling.TrollingCommand;
 import net.frozenorb.foxtrot.commands.staff.LastInvCommand;
 import net.frozenorb.foxtrot.commands.staff.ReviveCommand;
 import net.frozenorb.foxtrot.crates.commands.CrateCommand;
@@ -24,7 +25,6 @@ import net.frozenorb.foxtrot.gameplay.events.conquest.commands.conquest.Conquest
 import net.frozenorb.foxtrot.gameplay.events.conquest.commands.conquestadmin.ConquestAdminCommands;
 import net.frozenorb.foxtrot.gameplay.events.koth.commands.koth.KOTHCommand;
 import net.frozenorb.foxtrot.gameplay.events.koth.commands.kothschedule.KothScheduleCommands;
-import net.frozenorb.foxtrot.gameplay.events.koth.summoner.command.KOTHSummonerCommand;
 import net.frozenorb.foxtrot.gameplay.events.mad.commands.MadCommand;
 import net.frozenorb.foxtrot.gameplay.events.region.carepackage.CarePackageHandler;
 import net.frozenorb.foxtrot.gameplay.events.region.cavern.commands.CavernCommand;
@@ -115,7 +115,6 @@ public class CommandHandler {
         m.registerCommand(new ChestCommand());
         m.registerCommand(new ClearAllStatsCommand());
         m.registerCommand(new ClearLeaderboardsCommand());
-        m.registerCommand(new KOTHSummonerCommand());
         m.registerCommand(new KillstreaksCommand());
         m.registerCommand(new GemsCommand());
         m.registerCommand(new LeaderboardAddCommand());

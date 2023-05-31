@@ -3,6 +3,7 @@ package net.frozenorb.foxtrot.gameplay.clickable;
 import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.gameplay.clickable.listener.ClickableListener;
 import net.frozenorb.foxtrot.gameplay.clickable.type.GemsPack;
+import net.frozenorb.foxtrot.gameplay.clickable.type.KOTHSummoner;
 import net.frozenorb.foxtrot.gameplay.clickable.type.RandomPartnerItem;
 import net.frozenorb.foxtrot.gameplay.clickable.type.RankPouch;
 import net.frozenorb.foxtrot.util.ItemBuilder;
@@ -21,6 +22,7 @@ public class ClickableItemHandler {
     public ClickableItemHandler(){
         clickableItems.add(new GemsPack());
         clickableItems.add(new RandomPartnerItem());
+        clickableItems.add(new KOTHSummoner());
 
         clickableItems.add(new RankPouch(ItemBuilder.of(Material.BOOK).name("&b&lIce &fRank Pouch").addToLore("&7Right click to redeem the &b&lIce &7rank.").build(), "Ice"));
         clickableItems.add(new RankPouch(ItemBuilder.of(Material.BOOK).name("&9&lFrozen &fRank Pouch").addToLore("&7Right click to redeem the &9&lFrozen &7rank.").build(), "Frozen"));

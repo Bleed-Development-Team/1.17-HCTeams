@@ -39,6 +39,7 @@ import net.frozenorb.foxtrot.map.MapHandler;
 import net.frozenorb.foxtrot.provider.nametags.NametagManager;
 import net.frozenorb.foxtrot.tab.TabManager;
 import net.frozenorb.foxtrot.tab.impl.HCFTab;
+import net.frozenorb.foxtrot.util.TimeUtils;
 import net.frozenorb.foxtrot.walls.WallsHandler;
 import net.frozenorb.foxtrot.persist.RedisSaveTask;
 import net.frozenorb.foxtrot.persist.maps.*;
@@ -65,12 +66,15 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.Potion;
 import org.bukkit.scheduler.BukkitRunnable;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -92,7 +96,12 @@ public class HCF extends JavaPlugin {
 	@Getter private ChatHandler chatHandler;
 	@Getter private PvPClassHandler pvpClassHandler;
 	@Getter public TeamHandler teamHandler;
-	@Getter private ServerHandler serverHandler;
+
+	public ServerHandler getServerHandler() {
+		return serverHandler;
+	}
+
+	private ServerHandler serverHandler;
 	@Getter public MapHandler mapHandler;
 	@Getter private CitadelHandler citadelHandler;
 	@Getter private EventHandler eventHandler;
@@ -226,12 +235,12 @@ public class HCF extends JavaPlugin {
 			Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new ClientNametagProvider(), 0L, 40L);
 			//Bukkit.getScheduler().scheduleSyncRepeatingTask(this, Webhook.sendKothSchedule(), 0, 72000L);
 
+			tabFile = new TabFile();
+			tabFile.loadConfig();
+
 			setupHandlers();
 			setupPersistence();
 			setupTasks();
-
-			tabFile = new TabFile();
-			tabFile.loadConfig();
 
 			new CommandHandler(this);
 			new ListenerHandler(this);
@@ -284,6 +293,8 @@ public class HCF extends JavaPlugin {
 			}
 		}
 
+		airDropHandler.saveLootTable();
+
 		if (EconomyHandler.isInitiated()) {
 			EconomyHandler.saveAll();
 		}
@@ -299,7 +310,6 @@ public class HCF extends JavaPlugin {
 		RegenUtils.resetAll();
 
 		MonthlyCrates.getInstance().init();
-		airDropHandler.saveLootTable();
 	}
 
 	private void setupHandlers() {
@@ -308,13 +318,12 @@ public class HCF extends JavaPlugin {
 		mapHandler.load();
 		setupHourEvents();
 
-		tabManager = new TabManager(new HCFTab());
-
 		lunarClientHandler = new LunarClientHandler();
 
 		madHandler = new MadHandler();
 
 		nametagManager = new NametagManager();
+		tabManager = new TabManager(new HCFTab());
 
 		teamHandler = new TeamHandler();
 		LandBoard.getInstance().loadFromTeams();
@@ -439,50 +448,41 @@ public class HCF extends JavaPlugin {
 		executor.scheduleAtFixedRate(() -> Bukkit.getScheduler().runTask(this, () -> Bukkit.getPluginManager().callEvent(new HourEvent(Calendar.getInstance().get(Calendar.HOUR_OF_DAY)))), minToHour, 60L, TimeUnit.MINUTES);
 	}
 
-	private boolean hasClaimedLocked = false;
-	private boolean a = false;
-	private boolean b = false;
-	private boolean c = false;
+	private final List<Integer> sotwReminders = Arrays.asList(300, 600, 900, 1800, 3600, 7200);
 
 	private void setupTasks() {
 		// unlocks claims at 10 minutes left of SOTW timer
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				if (CustomTimerCreateCommand.isSOTWTimer()) {
-					long endsAt = CustomTimerCreateCommand.getCustomTimers().get("&a&lSOTW");
-					if (endsAt - System.currentTimeMillis() <= TimeUnit.MINUTES.toMillis(10L) && !hasClaimedLocked) {
-						for (Team team : HCF.getInstance().getTeamHandler().getTeams()) {
-							if (team.isClaimLocked()) {
-								team.setClaimLocked(false);
-							}
-						}
+				if (!CustomTimerCreateCommand.isSOTWTimer()) {
+					return;
+				}
 
-						Bukkit.broadcastMessage(CC.translate("&fAll claims have been &cunlocked &fdue to SOTW ending in 10 minutes!"));
-						Bukkit.getOnlinePlayers().forEach(player -> player.sendTitle(CC.translate("&6&lSOTW"), CC.translate("&6&l10 minutes remaining!")));
+				long endsAt = CustomTimerCreateCommand.getCustomTimers().get("&a&lSOTW");
+				long remaining = endsAt - System.currentTimeMillis();
 
-						hasClaimedLocked = true;
-					} else if (endsAt - System.currentTimeMillis() <= TimeUnit.MINUTES.toMillis(5L) && !a) {
-						Bukkit.getOnlinePlayers().forEach(player -> player.sendTitle(CC.translate("&6&lSOTW"), CC.translate("&6&l5 minutes remaining!")));
-						a = true;
-					} else if (endsAt - System.currentTimeMillis() <= TimeUnit.SECONDS.toMillis(1L) && !b){
-						Bukkit.getOnlinePlayers().forEach(player -> player.sendTitle(CC.translate("&6&lSOTW"), CC.translate("&6&lhas ended!")));
-						b = true;
-					} else if (endsAt - System.currentTimeMillis() <= TimeUnit.MINUTES.toMillis(30L) && !c){
-						Bukkit.getOnlinePlayers().forEach(player -> player.sendTitle(CC.translate("&6&lSOTW"), CC.translate("&6&l30 minutes remaining!")));
-						c = true;
+				int seconds = (int) (remaining/1000);
+
+				if (sotwReminders.contains(seconds)) {
+					for (Player onlinePlayer : getServer().getOnlinePlayers()) {
+						onlinePlayer.sendTitle(CC.translate("&a&lSOTW"), CC.translate("&f" + TimeUtils.formatIntoDetailedString(seconds) + " &7remaining!"));
 					}
-				} else {
-					hasClaimedLocked = false;
-					a = false;
-					b = false;
-					c = false;
+				}
+
+				if (remaining <= TimeUnit.MINUTES.toMillis(10L)) {
+					for (Team team : HCF.getInstance().getTeamHandler().getTeams()) {
+						if (team.isClaimLocked()) {
+							team.setClaimLocked(false);
+							team.sendMessage(CC.YELLOW + "Your faction's claims have been unlocked due to SOTW ending in 10 minutes!");
+						}
+					}
 				}
 			}
 		}.runTaskTimerAsynchronously(HCF.getInstance(), 20L, 20L);
 
 		Bukkit.getScheduler().runTaskTimer(this, () -> {
-			for (Entity entity : Bukkit.getWorld("world").getEntities().stream().filter(it -> !(it instanceof Player) && !(it instanceof Item)).toList()){
+			for (Entity entity : Bukkit.getWorld("world").getEntities().stream().filter(it -> !(it instanceof Player) && !(it instanceof Item) && !(it instanceof Potion)).toList()){
 				entity.remove();
 			}
 		}, 0, 20L * 10);

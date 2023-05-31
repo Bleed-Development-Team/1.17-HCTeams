@@ -6,14 +6,18 @@ import net.frozenorb.foxtrot.economy.EconomyHandler
 import net.frozenorb.foxtrot.tab.Tab
 import net.frozenorb.foxtrot.tab.TabAdapter
 import net.frozenorb.foxtrot.team.Team
+import net.frozenorb.foxtrot.team.claims.LandBoard
 import net.frozenorb.foxtrot.util.CC
 import net.frozenorb.foxtrot.util.DirectionUtils
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
+import org.bukkit.Location
 import org.bukkit.entity.Player
 import java.text.NumberFormat
-import java.util.UUID
+import java.util.*
 import java.util.stream.Collectors
 import kotlin.math.round
+
 
 class HCFTab : TabAdapter {
     private var farRightTablist: MutableList<String> = mutableListOf()
@@ -130,7 +134,7 @@ class HCFTab : TabAdapter {
                 val targetTeam: Team = teams[i]
 
                 val listFormat = HCF.getInstance().tabFile.getString("TEAM-LIST-FORMAT")!!
-                    .replace("%relation-color%", "TODO Embry")//argetTeam.getRelationColor(player) TODO: Embry
+                    .replace("%relation-color%", getRelationColor(targetTeam, player))//argetTeam.getRelationColor(player) TODO: Embry
                     .replace("%name%", targetTeam.name)
                     .replace("%online%", targetTeam.onlineMembers.size.toString())
                     .replace("%max%", targetTeam.members.size.toString())
@@ -144,14 +148,33 @@ class HCFTab : TabAdapter {
             if (text.contains("%team-") || text.contains("%teaminfo-") || text.contains("%member-")) {
                 entry.text = ""
             } else {
-                val stats = HCF.getInstance().mapHandler.statsHandler.getStats(player.uniqueId);
-                val balance = EconomyHandler.getBalance(player.uniqueId);
+                val stats = HCF.getInstance().mapHandler.statsHandler.getStats(player.uniqueId)
+                val balance = EconomyHandler.getBalance(player.uniqueId)
+
+                val location: String;
+
+                val loc: Location = player.location
+                val ownerTeam = LandBoard.getInstance().getTeam(loc)
+
+                if (ownerTeam != null) {
+                    location = ownerTeam.getName(player.player)
+                } else if (!HCF.getInstance().getServerHandler().isWarzone(loc)) {
+                    location = "&7The Wilderness"
+                } else if (LandBoard.getInstance().getTeam(loc) != null && LandBoard.getInstance()
+                        .getTeam(loc).name.equals("citadel", ignoreCase = true)
+                ) {
+                    location = "&5&lCitadel"
+                } else {
+                    location = "&4Warzone"
+                }
+
+
                 entry.text = text.replace("%kills%", stats.kills.toString())
                     .replace("%deaths%", stats.deaths.toString())
                     .replace("%balance%", NumberFormat.getInstance().format(balance))
                     .replace("%current-killstreak%", stats.killstreak.toString())
                     .replace("%highest-killstreak%", stats.highestKillstreak.toString())
-                    .replace("%claim%", "&aSpawn")
+                    .replace("%claim%", location)
                     .replace("%x%", (round(player.location.x).toInt()).toString())
                     .replace("%z%", (round(player.location.z).toInt()).toString())
                     .replace("%facing%", DirectionUtils.getCardinalDirection(player)!!)
@@ -180,5 +203,9 @@ class HCFTab : TabAdapter {
             val farRight: List<String> = this.farRightTablist[i].split(";")
             this.farRightTablist[i] = if (farRight.size == 1) "" else farRight[1]
         }
+    }
+
+    private fun getRelationColor(team: Team, player: Player): String {
+        return if (team.isMember(player.uniqueId)) "&a" else "&c"
     }
 }

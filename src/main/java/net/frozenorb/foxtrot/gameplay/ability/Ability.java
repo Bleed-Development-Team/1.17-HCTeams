@@ -1,7 +1,6 @@
 package net.frozenorb.foxtrot.gameplay.ability;
 
 import net.frozenorb.foxtrot.HCF;
-import net.frozenorb.foxtrot.commands.op.TrollingCommand;
 import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import net.frozenorb.foxtrot.util.CC;
@@ -10,7 +9,6 @@ import net.frozenorb.foxtrot.util.TimeUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 

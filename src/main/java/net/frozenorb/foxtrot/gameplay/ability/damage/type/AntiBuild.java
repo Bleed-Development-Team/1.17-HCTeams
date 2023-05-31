@@ -85,14 +85,6 @@ public class AntiBuild extends DamageAbility {
         sendMessage(damager, "&6" + victim.getName() + " &fwill not be able to place and break blocks for 10 seconds.");
     }
 
-    @EventHandler
-    public void test(EntityDamageByEntityEvent event){
-        if (!(event.getDamager() instanceof Player) || !(event.getEntity() instanceof Player)) return;
-
-        Bukkit.broadcastMessage(event.getDamage() + "");
-        Bukkit.broadcastMessage(event.isCancelled() + "");
-        Bukkit.broadcastMessage(event.getEventName());
-    }
 
     @EventHandler
     public void place(BlockPlaceEvent event){
