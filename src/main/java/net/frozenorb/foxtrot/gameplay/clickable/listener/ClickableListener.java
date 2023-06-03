@@ -3,6 +3,9 @@ package net.frozenorb.foxtrot.gameplay.clickable.listener;
 import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.gameplay.clickable.ClickableItem;
 import net.frozenorb.foxtrot.gameplay.clickable.ClickableItemHandler;
+import net.frozenorb.foxtrot.util.CC;
+import net.frozenorb.foxtrot.util.Cooldown;
+import net.frozenorb.foxtrot.util.TimeUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,7 +30,11 @@ public class ClickableListener implements Listener {
         ClickableItem clickableItem = clickableItemHandler.getClickableItem(player.getItemInHand());
 
         if (clickableItem == null) return;
-        if (clickableItem.isOnCooldown(player)) return;
+        if (clickableItem.isOnCooldown(player)){
+            player.sendMessage(CC.translate("&cYou are on cooldown for the " + clickableItem.getItemStack().getItemMeta().getDisplayName() + " &cfor another &l" + TimeUtils.formatIntoDetailedString(Cooldown.getCooldownForPlayerInt(clickableItem.getCooldownID(), player)) + "&c."));
+            event.setCancelled(true);
+            return;
+        }
 
         clickableItem.handle(event);
     }

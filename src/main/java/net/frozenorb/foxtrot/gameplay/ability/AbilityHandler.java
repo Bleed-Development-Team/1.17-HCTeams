@@ -32,7 +32,7 @@ public class AbilityHandler {
 
     public AbilityHandler(){
         // Interact
-        interactAbilities.put("guardian-angel", new GuardianAngel());
+        //interactAbilities.put("guardian-angel", new GuardianAngel());
         interactAbilities.put("powerstone", new Powerstone());
         interactAbilities.put("medkit", new Medkit());
         interactAbilities.put("combo", new Combo());
@@ -42,6 +42,8 @@ public class AbilityHandler {
         interactAbilities.put("timewarp", new TimeWarp());
         interactAbilities.put("timestone", new TimeStone());
         interactAbilities.put("ninjastar", new NinjaStar());
+        interactAbilities.put("secondchance", new SecondChance());
+        //interactAbilities.put("antitrapper", new AntiTrapper());
 
         // Portable
 

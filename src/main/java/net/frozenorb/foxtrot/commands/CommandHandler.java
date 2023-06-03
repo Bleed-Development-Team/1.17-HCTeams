@@ -77,6 +77,7 @@ public class CommandHandler {
         m.registerCommand(new HelpCommand());
         m.registerCommand(new KOTHRewardKeyCommand());
         m.registerCommand(new LastInvCommand());
+        m.registerCommand(new DevCommand());
         m.registerCommand(new LocationCommand());
         m.registerCommand(new AirDropCommand());
         m.registerCommand(new LogoutCommand());

@@ -7,6 +7,7 @@ import net.frozenorb.foxtrot.gameplay.clickable.ClickableItem;
 import net.frozenorb.foxtrot.gameplay.clickable.ClickableItemHandler;
 import net.frozenorb.foxtrot.gameplay.clickable.type.GemsPack;
 import net.frozenorb.foxtrot.util.ItemBuilder;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -20,13 +21,13 @@ public class ClickableItemCommand extends BaseCommand {
     }
 
     @Subcommand("give")
-    public void give(Player player, @Name("item") String name, @Optional Integer amount1){
+    public void give(CommandSender player, @Flags("other") @Name("player") Player target, @Flags("other") @Name("item") String name, @Optional Integer amount1){
         int amount = (amount1 == null ? 1 : amount1);
 
         ClickableItem item = HCF.getInstance().getClickableItemHandler().getClickableItem(name);
 
         if (item == null) return;
 
-        player.getInventory().addItem(ItemBuilder.copyOf(item.getItemStack().clone()).amount(amount).build());
+        target.getInventory().addItem(ItemBuilder.copyOf(item.getItemStack().clone()).amount(amount).build());
     }
 }

@@ -1,6 +1,5 @@
-package net.frozenorb.foxtrot.provider.scoreboard;
+package net.frozenorb.foxtrot.provider.scoreboard.adapter;
 
-import io.github.thatkawaiisam.assemble.AssembleAdapter;
 import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.commands.op.CustomTimerCreateCommand;
 import net.frozenorb.foxtrot.commands.op.eotw.commands.EOTWCommand;
@@ -8,12 +7,14 @@ import net.frozenorb.foxtrot.gameplay.events.Event;
 import net.frozenorb.foxtrot.gameplay.events.conquest.game.ConquestGame;
 import net.frozenorb.foxtrot.gameplay.events.koth.KOTH;
 import net.frozenorb.foxtrot.gameplay.events.mad.game.MadGame;
-import net.frozenorb.foxtrot.server.listener.impl.GoldenAppleListener;
+import net.frozenorb.foxtrot.provider.scoreboard.ScoreboardAdapter;
+import net.frozenorb.foxtrot.provider.scoreboard.utils.ScoreFunction;
 import net.frozenorb.foxtrot.pvpclasses.pvpclasses.ArcherClass;
 import net.frozenorb.foxtrot.pvpclasses.pvpclasses.BardClass;
-import net.frozenorb.foxtrot.server.pearl.EnderpearlCooldownHandler;
 import net.frozenorb.foxtrot.server.ServerHandler;
 import net.frozenorb.foxtrot.server.SpawnTagHandler;
+import net.frozenorb.foxtrot.server.listener.impl.GoldenAppleListener;
+import net.frozenorb.foxtrot.server.pearl.EnderpearlCooldownHandler;
 import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.commands.team.TeamCommands;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
@@ -23,16 +24,20 @@ import org.bson.types.ObjectId;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
 
-public class HCFScoreboardProvider implements AssembleAdapter {
+public class HCFScoreboardAdapter implements ScoreboardAdapter {
+
+
     @Override
     public String getTitle(Player player) {
-        return CC.translate("&b&lFrozen &7| &fHCF");
+        return "&b&lFrozen &7| &fHCF";
     }
 
     @Override
-    public List<String> getLines(Player player) {
+    public LinkedList<String> getLines(Player player) {
         LinkedList<String> scores = new LinkedList<>();
 
         String spawnTagScore = getSpawnTagScore(player);
@@ -68,13 +73,14 @@ public class HCFScoreboardProvider implements AssembleAdapter {
          */
 
         /*
-        if (LandBoard.getInstance().getTeam(player.getLocation()).getName() == "Spawn") {
+        if (DTRBitmask.SAFE_ZONE.appliesAt(player.getLocation())) {
             StatsEntry stats = HCF.getInstance().getMapHandler().getStatsHandler().getStats(player.getUniqueId());
 
             scores.add("&b&lKills&7: &f" + stats.getKills());
             scores.add("&b&lDeaths&7: &f" + stats.getDeaths());
             scores.add("&2&lGems&7: &f" + HCF.getInstance().getGemsMap().getGems(player.getUniqueId()));
         }
+        
          */
 
 
@@ -388,3 +394,4 @@ public class HCFScoreboardProvider implements AssembleAdapter {
         return (null);
     }
 }
+

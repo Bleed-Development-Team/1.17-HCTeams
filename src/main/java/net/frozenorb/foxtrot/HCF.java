@@ -6,8 +6,6 @@ import com.google.gson.GsonBuilder;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import io.github.nosequel.menu.MenuHandler;
-import io.github.thatkawaiisam.assemble.Assemble;
-import io.github.thatkawaiisam.assemble.AssembleStyle;
 import lombok.Getter;
 import lombok.Setter;
 import net.frozenorb.foxtrot.chat.trivia.TriviaHandler;
@@ -24,6 +22,7 @@ import net.frozenorb.foxtrot.economy.EconomyHandler;
 import net.frozenorb.foxtrot.gameplay.airdrops.AirDropHandler;
 import net.frozenorb.foxtrot.gameplay.archerupgrades.ArcherUpgradeHandler;
 import net.frozenorb.foxtrot.gameplay.clickable.ClickableItemHandler;
+import net.frozenorb.foxtrot.gameplay.clickable.type.potion.PotionMaker;
 import net.frozenorb.foxtrot.gameplay.events.EventHandler;
 import net.frozenorb.foxtrot.gameplay.events.citadel.CitadelHandler;
 import net.frozenorb.foxtrot.gameplay.events.conquest.ConquestHandler;
@@ -37,9 +36,11 @@ import net.frozenorb.foxtrot.gameplay.lunar.LunarClientHandler;
 import net.frozenorb.foxtrot.gameplay.lunar.nametag.ClientNametagProvider;
 import net.frozenorb.foxtrot.map.MapHandler;
 import net.frozenorb.foxtrot.provider.nametags.NametagManager;
+import net.frozenorb.foxtrot.provider.scoreboard.ScoreboardHandler;
+import net.frozenorb.foxtrot.provider.scoreboard.adapter.HCFScoreboardAdapter;
 import net.frozenorb.foxtrot.tab.TabManager;
 import net.frozenorb.foxtrot.tab.impl.HCFTab;
-import net.frozenorb.foxtrot.util.TimeUtils;
+import net.frozenorb.foxtrot.util.*;
 import net.frozenorb.foxtrot.walls.WallsHandler;
 import net.frozenorb.foxtrot.persist.RedisSaveTask;
 import net.frozenorb.foxtrot.persist.maps.*;
@@ -47,7 +48,6 @@ import net.frozenorb.foxtrot.persist.maps.statistics.*;
 import net.frozenorb.foxtrot.pvpclasses.PvPClassHandler;
 import net.frozenorb.foxtrot.team.upgrades.UpgradeHandler;
 import net.frozenorb.foxtrot.util.redis.RedisCommand;
-import net.frozenorb.foxtrot.provider.scoreboard.HCFScoreboardProvider;
 import net.frozenorb.foxtrot.server.listener.ListenerHandler;
 import net.frozenorb.foxtrot.server.listener.impl.*;
 import net.frozenorb.foxtrot.server.ServerHandler;
@@ -55,19 +55,16 @@ import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.team.TeamHandler;
 import net.frozenorb.foxtrot.team.claims.LandBoard;
 import net.frozenorb.foxtrot.team.dtr.DTRHandler;
-import net.frozenorb.foxtrot.util.CC;
-import net.frozenorb.foxtrot.util.HourEvent;
-import net.frozenorb.foxtrot.util.RegenUtils;
 import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Bat;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.Potion;
 import org.bukkit.scheduler.BukkitRunnable;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -122,6 +119,7 @@ public class HCF extends JavaPlugin {
 	@Getter private AirDropHandler airDropHandler;
 	@Getter private AbilityHandler abilityHandler;
 	@Getter public TabManager tabManager;
+	@Getter public ScoreboardHandler scoreboardHandler;
 
 	@Getter public TabFile tabFile;
 
@@ -191,17 +189,6 @@ public class HCF extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		try {
-			if (Bukkit.getServer().getName().contains(" ")) {
-				System.out.println("*********************************************");
-				System.out.println("               ATTENTION");
-				System.out.println("SET server-name VALUE IN server.properties TO");
-				System.out.println("A PROPER SERVER NAME. THIS WILL BE USED AS THE");
-				System.out.println("MONGO DATABASE NAME.");
-				System.out.println("*********************************************");
-				this.getServer().shutdown();
-				return;
-			}
-
 			instance = this;
 			saveDefaultConfig();
 
@@ -248,10 +235,13 @@ public class HCF extends JavaPlugin {
 			new ListenerHandler(this);
 			new MenuHandler(this);
 
+			/*
 			Assemble assemble = new Assemble(this, new HCFScoreboardProvider());
 
 			assemble.setTicks(2);
 			assemble.setAssembleStyle(AssembleStyle.KOHI);
+
+			 */
 
 			for (World world : Bukkit.getWorlds()) {
 				world.setThundering(false);
@@ -270,19 +260,23 @@ public class HCF extends JavaPlugin {
 			Bukkit.getPluginManager().registerEvents(new EventAnalyser(this), this);
 			CustomEnchant.init();
 
-			NamespacedKey key = new NamespacedKey(this, "potionlol");
+			NamespacedKey key = new NamespacedKey(this, "potion_key");
 
-			ShapedRecipe recipe = new ShapedRecipe(key, getClickableItemHandler().clickableItems.get(3).getItemStack());
-			recipe.shape(
-					"GLN",
-					"DAA",
-					"AAA");
+			ShapelessRecipe recipe = new ShapelessRecipe(key, ItemBuilder.of(Material.BREWING_STAND)
+					.name("&3&lPotion Maker")
+					.addToLore("", "&3| &fRight click to start a",
+							"&3| &f5 second cooldown which gives you",
+							"&3| &f3 health potions",
+							"",
+							"&fObtainable through &bcrafting&f.")
+					.enchant(Enchantment.DURABILITY, 1)
+					.flag(ItemFlag.HIDE_ENCHANTS)
+					.build());
 
-			recipe.setIngredient('G', Material.GLASS);
-			recipe.setIngredient('N', Material.NETHER_WART);
-			recipe.setIngredient('D', Material.GLOWSTONE_DUST);
-			recipe.setIngredient('L', Material.GLISTERING_MELON_SLICE);
-			recipe.setIngredient('A', Material.AIR);
+			recipe.addIngredient(Material.GLASS);
+			recipe.addIngredient(Material.NETHER_WART);
+			recipe.addIngredient(Material.GLOWSTONE_DUST);
+			recipe.addIngredient(Material.GLISTERING_MELON_SLICE);
 
 			Bukkit.getServer().addRecipe(recipe);
 
@@ -357,6 +351,7 @@ public class HCF extends JavaPlugin {
 		archerUpgradeHandler = new ArcherUpgradeHandler();
 		airDropHandler = new AirDropHandler(this);
 		abilityHandler = new AbilityHandler();
+		scoreboardHandler = new ScoreboardHandler(new HCFScoreboardAdapter());
 
 		chatHandler = new ChatHandler();
 		citadelHandler = new CitadelHandler();
@@ -489,7 +484,7 @@ public class HCF extends JavaPlugin {
 
 				if (sotwReminders.contains(seconds)) {
 					for (Player onlinePlayer : getServer().getOnlinePlayers()) {
-						onlinePlayer.sendTitle(CC.translate("&a&lSOTW"), CC.translate("&f" + TimeUtils.formatIntoDetailedString(seconds) + " &7remaining!"));
+						onlinePlayer.sendTitle(CC.translate("&a&lSOTW"), CC.translate("&f" + TimeUtils.formatIntoDetailedString(seconds) + " remaining!"));
 					}
 				}
 

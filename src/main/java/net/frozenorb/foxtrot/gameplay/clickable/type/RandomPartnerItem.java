@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RandomPartnerItem extends ClickableItem {
@@ -38,7 +39,7 @@ public class RandomPartnerItem extends ClickableItem {
     public void handle(PlayerInteractEvent event) {
         takeItem(event.getPlayer());
 
-        List<Ability> abilities = HCF.getInstance().getAbilityHandler().getAllAbilities();
+        List<Ability> abilities = new ArrayList<>(HCF.getInstance().getAbilityHandler().getAllAbilities());
         abilities.remove(new NinjaStar());
 
         Ability ability = abilities.get(

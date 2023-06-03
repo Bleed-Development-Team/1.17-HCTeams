@@ -15,7 +15,7 @@ public class Scrambler extends DamageAbility {
 
     @Override
     public String getID() {
-        return "Scrambler";
+        return "scrambler";
     }
 
     @Override

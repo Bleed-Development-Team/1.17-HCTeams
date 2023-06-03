@@ -3,6 +3,7 @@ package net.frozenorb.foxtrot.gameplay.ability.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Name;
 import co.aikar.commands.annotation.Subcommand;
 import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.gameplay.ability.Ability;

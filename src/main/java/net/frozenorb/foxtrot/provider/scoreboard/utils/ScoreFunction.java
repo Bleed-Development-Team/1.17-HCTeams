@@ -1,4 +1,4 @@
-package net.frozenorb.foxtrot.provider.scoreboard;
+package net.frozenorb.foxtrot.provider.scoreboard.utils;
 
 
 import net.frozenorb.foxtrot.util.TimeUtils;

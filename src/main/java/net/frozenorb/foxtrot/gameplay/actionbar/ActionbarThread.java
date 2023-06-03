@@ -4,7 +4,7 @@ import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.server.listener.impl.GoldenAppleListener;
 import net.frozenorb.foxtrot.pvpclasses.pvpclasses.ArcherClass;
 import net.frozenorb.foxtrot.pvpclasses.pvpclasses.BardClass;
-import net.frozenorb.foxtrot.provider.scoreboard.ScoreFunction;
+import net.frozenorb.foxtrot.provider.scoreboard.utils.ScoreFunction;
 import net.frozenorb.foxtrot.server.pearl.EnderpearlCooldownHandler;
 import net.frozenorb.foxtrot.server.ServerHandler;
 import net.frozenorb.foxtrot.server.SpawnTagHandler;

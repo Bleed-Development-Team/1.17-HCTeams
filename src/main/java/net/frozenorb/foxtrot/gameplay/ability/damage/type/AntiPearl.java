@@ -5,6 +5,7 @@ import net.frozenorb.foxtrot.gameplay.ability.damage.DamageAbility;
 import net.frozenorb.foxtrot.server.event.EnderpearlCooldownAppliedEvent;
 import net.frozenorb.foxtrot.server.pearl.EnderpearlCooldownHandler;
 import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
+import net.frozenorb.foxtrot.util.CC;
 import net.frozenorb.foxtrot.util.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -55,5 +56,6 @@ public class AntiPearl extends DamageAbility {
 
         use(damager);
         sendMessage(damager, getColor() + victim.getName() + " &fhas been put on pearl cooldown.");
+        victim.sendMessage(CC.translate("&cYou were put on enderpearl cooldown by " + damager.getName() + "!"));
     }
 }

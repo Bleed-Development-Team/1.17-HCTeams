@@ -41,13 +41,13 @@ public class PartnerPackageHandler implements Listener {
                 player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
             }
 
-            List<Ability> abilities = HCF.getInstance().getAbilityHandler().getAllAbilities();
+            List<Ability> abilities = new ArrayList<>(HCF.getInstance().getAbilityHandler().getAllAbilities());
             abilities.remove(new NinjaStar());
 
             for (int i = 0; i < 2; i++){
                 ItemStack partnerItem = abilities.get(HCF.RANDOM.nextInt(abilities.size())).getItemStack();
 
-                player.getInventory().addItem(ItemBuilder.copyOf(partnerItem).amount(HCF.RANDOM.nextInt(3)).build());
+                player.getInventory().addItem(ItemBuilder.copyOf(partnerItem).amount(3).build());
             }
 
             Firework firework = player.getWorld().spawn(player.getLocation(), Firework.class);

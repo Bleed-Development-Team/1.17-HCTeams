@@ -64,6 +64,11 @@ public class AntiBuild extends DamageAbility {
 
     @Override
     public void handle(EntityDamageByEntityEvent event, Player damager, Player victim) {
+        if (Cooldown.isOnCooldown("bone-eff", victim)){
+            damager.sendMessage(CC.translate("&cThat player is already under the bone effect."));
+            return;
+        }
+
         int hits;
 
         if (hitMap.containsKey(damager.getUniqueId()) && hitMap.get(damager.getUniqueId()).containsKey(victim.getUniqueId())) {
@@ -87,17 +92,7 @@ public class AntiBuild extends DamageAbility {
 
         use(damager);
         sendMessage(damager, "&6" + victim.getName() + " &fwill not be able to place and break blocks for 10 seconds.");
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void asd(EntityDamageByEntityEvent event){
-        if (!(event.getEntity() instanceof Player victim) || !(event.getDamager() instanceof Player damager)) return;
-
-        if (Cooldown.isOnCooldown("bone-eff", victim)){
-            if (LandBoard.getInstance().getTeam(victim.getLocation()) == null) return;
-
-            event.setCancelled(false);
-        }
+        victim.sendMessage(CC.translate("&c" + damager.getName() + " has used an Anti Build Stick on you! You will not be able to place and break blocks for 15 seconds."));
     }
 
 

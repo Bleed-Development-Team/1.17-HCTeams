@@ -21,7 +21,7 @@ public class TriviaHandler {
     public String currentAnswer = null;
 
     public TriviaHandler(){
-        questions.put("What is the name of the server?", "Frozen");
+        questions.put("What is the name of the server?", "Blizzard");
         questions.put("Who owns the server?", "Embry");
         questions.put("What version is this server on?", "1.16");
         questions.put("What's 829+219?", "1048");
@@ -37,6 +37,7 @@ public class TriviaHandler {
         questions.put("What is the 18th letter of the alphabet?", "R");
         questions.put("What is the 24th letter of the alphabet?", "W");
         questions.put("What's the final boss in Minecraft?", "Enderdragon");
+        questions.put("Who built all the KOTHs?", "Pumpkin");
 
         Bukkit.getScheduler().runTaskTimer(HCF.getInstance(), this::startTrivia, 20 * 20 * 60, 20 * 20 * 60); // 10 minutes
         Bukkit.getPluginManager().registerEvents(new TriviaListener(), HCF.getInstance());

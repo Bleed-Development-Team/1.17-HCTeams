@@ -75,7 +75,7 @@ public class FocusMode extends DamageAbility {
 
         sendMessage(damager, "&fYou are now dealing 20% more damage to &e" + victim.getName() + "&f.");
 
-        victim.sendMessage(CC.translate("&6" + victim.getName() + " &fhas used a focus mode against you and is now dealing &e20% &fmore damage!"));
+        victim.sendMessage(CC.translate("&6" + damager.getName() + " &fhas used a focus mode against you and is now dealing &e20% &fmore damage!"));
 
         Bukkit.getScheduler().runTaskLater(HCF.getInstance(), () -> {
             focusMode.remove(damager.getUniqueId());

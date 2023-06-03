@@ -1,4 +1,4 @@
-package net.frozenorb.foxtrot.commands.gameplay;
+package net.frozenorb.foxtrot.commands.op;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;

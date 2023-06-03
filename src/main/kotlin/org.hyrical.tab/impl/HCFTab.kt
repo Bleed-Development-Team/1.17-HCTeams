@@ -99,7 +99,7 @@ class HCFTab : TabAdapter {
                         .replace("%balance%", NumberFormat.getInstance().format(team.balance))
                         .replace("%points%", team.points.toString())
                         .replace("%home%", team.formattedHQ)
-                        .replace("%team-name%", team.getName(player))
+                        .replace("%team-name%", team.name)
 
                     text = text.replace("%teaminfo-$i%", replacedText)
                 }

@@ -45,7 +45,7 @@ public class MageClass extends PvPClass {
     public static final int BARD_RANGE = 20;
     public static final int EFFECT_COOLDOWN = 10 * 1000;
     public static final float MAX_ENERGY = 100;
-    public static final float ENERGY_REGEN_PER_SECOND = 1;
+    public static final float ENERGY_REGEN_PER_SECOND = 2;
 
     public MageClass() {
         super("Mage", 15, null);

@@ -12,9 +12,11 @@ import net.frozenorb.foxtrot.team.dtr.DTRBitmask;
 import net.minecraft.server.v1_16_R3.EntityHuman;
 import net.minecraft.server.v1_16_R3.MinecraftServer;
 import net.minecraft.server.v1_16_R3.EntityPlayer;
+import net.minecraft.server.v1_16_R3.PlayerInteractManager;
 import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_16_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -33,6 +35,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 public class CombatLoggerListener implements Listener {
@@ -141,8 +144,11 @@ public class CombatLoggerListener implements Listener {
 
             if (target == null) {
                 // Create an entity to load the player data
+
                 MinecraftServer server = ((CraftServer) HCF.getInstance().getServer()).getServer();
-                EntityPlayer entity = new EntityPlayer(server, server.E().getMinecraftWorld(), new GameProfile(metadata.playerUUID, metadata.playerName), Objects.requireNonNull(server.E().q_()).playerInteractManager);
+
+                PlayerInteractManager playerInteractManager = new PlayerInteractManager(server.E());
+                EntityPlayer entity = new EntityPlayer(server, server.E().getMinecraftWorld(), new GameProfile(metadata.playerUUID, metadata.playerName), playerInteractManager);
                 target = entity.getBukkitEntity();
 
                 if (target != null) {

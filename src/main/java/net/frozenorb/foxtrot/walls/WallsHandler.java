@@ -29,7 +29,6 @@ public class WallsHandler extends Thread {
 
     private static final Map<String, Map<Location, Long>> sentBlockChanges = new HashMap<>();
     // The pair represents the 2 corners of the claim
-    private static final Map<String, Map<String, Long>> sentLunarWalls = new HashMap<>();
 
     //private static final Map<String, Map<Pair<Pair<Double, Double>, Pair<Double, Double>>, Long>> sentLunarWalls = new HashMap<>();
 
@@ -111,42 +110,23 @@ public class WallsHandler extends Thread {
                     sentBlockChanges.put(player.getName(), new HashMap<>());
                 }
 
-                if (LunarClientAPI.getInstance().isRunningLunarClient(player.getUniqueId()) && !sentLunarWalls.containsKey(player.getName())) {
-                    sentLunarWalls.put(player.getName(), new HashMap<>());
-                }
-
                 // Remove borders after they 'expire' -- This is used to get rid of block changes the player has walked away from,
                 // whose value in the map hasn't been updated recently.
-                if (!LunarClientAPI.getInstance().isRunningLunarClient(player.getUniqueId())) {
-                    Iterator<Map.Entry<Location, Long>> bordersIterator = sentBlockChanges.get(player.getName()).entrySet().iterator();
+                Iterator<Map.Entry<Location, Long>> bordersIterator = sentBlockChanges.get(player.getName()).entrySet().iterator();
 
-                    while (bordersIterator.hasNext()) {
-                        Map.Entry<Location, Long> border = bordersIterator.next();
+                while (bordersIterator.hasNext()) {
+                    Map.Entry<Location, Long> border = bordersIterator.next();
 
-                        if (System.currentTimeMillis() >= border.getValue()) {
-                            Location loc = border.getKey();
+                    if (System.currentTimeMillis() >= border.getValue()) {
+                        Location loc = border.getKey();
 
-                            if (!loc.getWorld().isChunkLoaded(loc.getBlockX() >> 4, loc.getBlockZ() >> 4)) {
-                                continue;
-                            }
-
-                            Block block = loc.getBlock();
-                            player.sendBlockChange(loc, block.getBlockData());
-                            bordersIterator.remove();
+                        if (!loc.getWorld().isChunkLoaded(loc.getBlockX() >> 4, loc.getBlockZ() >> 4)) {
+                            continue;
                         }
-                    }
-                } else {
-                    //
-                    for (Map.Entry<String, Long> key : sentLunarWalls.get(player.getName()).entrySet()) {
-                        /*
-                        if (key.getValue() < System.currentTimeMillis()) continue;
 
-                        sendLunarPacket(
-                                player,
-                                new LCPacketWorldBorderRemove(key.getKey())
-                        );
-                        
-                         */
+                        Block block = loc.getBlock();
+                        player.sendBlockChange(loc, block.getBlockData());
+                        bordersIterator.remove();
                     }
                 }
                 if (!HCF.getInstance().getServerHandler().isEOTW()) {
@@ -164,32 +144,6 @@ public class WallsHandler extends Thread {
     private void sendClaimToPlayer(Player player, Claim claim) {
         // This gets us all the coordinates on the outside of the claim.
         // Probably could be made better
-
-        //
-        // send claim to player
-        if (LunarClientAPI.getInstance().isRunningLunarClient(player.getUniqueId())) {
-            String id = UUID.randomUUID().toString();
-            sendLunarPacket(player,
-                    new LCPacketWorldBorderCreateNew(
-                        id,
-                        player.getWorld().getUID().toString(),
-                            true,
-                            false,
-                            false,
-                            0xFF0000,
-                            claim.getX1() * 1.00,
-                            claim.getZ1() * 1.00,
-                            claim.getX2() * 1.00,
-                            claim.getZ2() * 1.00
-                    )
-            );
-
-            Bukkit.broadcastMessage("Sent lunar pcket for " + player.getName() + " " + claim.getX1() + " " + claim.getX2());
-
-            sentLunarWalls.get(player.getName()).put(id, System.currentTimeMillis() + 4000L);
-
-            return;
-        }
 
         for (Coordinate coordinate : claim) {
             Location onPlayerY = new Location(player.getWorld(), coordinate.getX(), player.getLocation().getY(), coordinate.getZ());
@@ -212,18 +166,6 @@ public class WallsHandler extends Thread {
 
     private static void clearPlayer(Player player) {
 
-        if (LunarClientAPI.getInstance().isRunningLunarClient(player.getUniqueId()) && sentLunarWalls.containsKey(player.getName())) {
-            for (String key : sentLunarWalls.get(player.getName()).keySet()) {
-                sendLunarPacket(
-                        player,
-                        new LCPacketWorldBorderRemove(key)
-                );
-            }
-
-            sentLunarWalls.remove(player.getName());
-            return;
-        }
-
         if (sentBlockChanges.containsKey(player.getName())) {
             for (Location changedLoc : sentBlockChanges.get(player.getName()).keySet()) {
                 if (!changedLoc.getWorld().isChunkLoaded(changedLoc.getBlockX() >> 4, changedLoc.getBlockZ() >> 4)) {
@@ -236,12 +178,6 @@ public class WallsHandler extends Thread {
 
             sentBlockChanges.remove(player.getName());
         }
-    }
-
-    public static void sendLunarPacket(Player player, LCPacket packet) {
-        Bukkit.getScheduler().runTask(HCF.getInstance(), (runnable) -> {
-            LunarClientAPI.getInstance().sendPacket(player, packet);
-        });
     }
 
 }

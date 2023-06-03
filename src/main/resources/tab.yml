@@ -1,4 +1,4 @@
-HEADER: "&6&lHCF"
+HEADER: "&b&lHCF"
 FOOTER: "&fThere are &b%players% &fonline."
 
 TEAM-LIST-FORMAT: "%relation-color%%name% &7[%online%/%max%] %dtr-color%%dtr%"

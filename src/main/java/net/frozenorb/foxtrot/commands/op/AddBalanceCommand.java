@@ -4,6 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.economy.EconomyHandler;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @CommandAlias("addbal|addbalance")
@@ -12,7 +13,7 @@ public class AddBalanceCommand extends BaseCommand {
 
 
     @Default
-    public void onSetBalCommand(Player sender, @Flags("other") @Name("target") Player target, @Name("amount") Float amount) {
+    public void onSetBalCommand(CommandSender sender, @Flags("other") @Name("target") Player target, @Name("amount") Float amount) {
         if (amount > 10000 && sender instanceof Player && !sender.isOp()) {
             sender.sendMessage("§cYou cannot set a balance this high. This action has been logged.");
             return;
@@ -36,8 +37,7 @@ public class AddBalanceCommand extends BaseCommand {
         }
 
         if (sender instanceof Player && (targetPlayer != null)) {
-            String targetDisplayName = sender.getDisplayName();
-            targetPlayer.sendMessage("§aYour balance has been set to §6$" + amount + "§a by §6" + targetDisplayName);
+            targetPlayer.sendMessage("§aYour balance has been set to §6$" + amount + "§a by §6" + sender.getName());
         } else if (targetPlayer != null) {
             targetPlayer.sendMessage("§aYour balance has been set to §6$" + amount + "§a by §4CONSOLE§a.");
         }

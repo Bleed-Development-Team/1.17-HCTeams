@@ -14,6 +14,7 @@ import net.frozenorb.foxtrot.util.ItemUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -24,7 +25,7 @@ import java.util.List;
 public class AirDropCommand extends BaseCommand {
 
     @Subcommand("give")
-    public void give(Player player, @Flags("other") @Name("player") Player target, @Flags("other") @Default Integer amount1){
+    public void give(CommandSender player, @Flags("other") @Name("player") Player target, @Flags("other") @Default Integer amount1){
         int amount = (amount1 == null ? 1 : amount1);
 
         target.getInventory().addItem(ItemBuilder.copyOf(HCF.getInstance().getAirDropHandler().getItemStack()).amount(amount).build());
@@ -33,7 +34,7 @@ public class AirDropCommand extends BaseCommand {
     }
 
     @Subcommand("giveall")
-    public void give(Player player, @Flags("other") @Default Integer amount1){
+    public void give(CommandSender player, @Flags("other") @Default Integer amount1){
         int amount = (amount1 == null ? 1 : amount1);
 
         for (Player target : Bukkit.getOnlinePlayers()){
@@ -80,7 +81,7 @@ public class AirDropCommand extends BaseCommand {
     }
 
     @Subcommand("reload")
-    public void reload(Player player){
+    public void reload(CommandSender player){
         final AirDropHandler airDropHandler = HCF.getInstance().getAirDropHandler();
 
         airDropHandler.saveLootTable();

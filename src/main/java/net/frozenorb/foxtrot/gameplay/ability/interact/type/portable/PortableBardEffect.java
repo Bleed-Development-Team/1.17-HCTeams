@@ -5,14 +5,24 @@ import net.frozenorb.foxtrot.gameplay.ability.interact.InteractAbility;
 import net.frozenorb.foxtrot.team.Team;
 import net.frozenorb.foxtrot.util.ItemBuilder;
 import net.frozenorb.foxtrot.util.TimeUtils;
+import net.minecraft.server.v1_16_R3.AxisAlignedBB;
+import net.minecraft.server.v1_16_R3.Block;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+
+
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.List;
 
 public class PortableBardEffect extends InteractAbility {
 
@@ -68,7 +78,7 @@ public class PortableBardEffect extends InteractAbility {
         final Team team = HCF.getInstance().getTeamHandler().getTeam(player.getUniqueId());
 
         if (team != null) {
-            player.getNearbyEntities(25,25,25).stream().filter(it -> it instanceof Player && team.getOnlineMembers().contains(it))
+            player.getNearbyEntities(25,25,25).stream().filter(it -> it instanceof Player && team.isMember(it.getUniqueId()))
                     .forEach(it -> ((Player) it).addPotionEffect(potionEffect));
         }
 

@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import net.frozenorb.foxtrot.HCF;
 import net.frozenorb.foxtrot.commands.op.CustomTimerCreateCommand;
 import net.frozenorb.foxtrot.economy.EconomyHandler;
+import net.frozenorb.foxtrot.gameplay.clickable.ClickableItem;
 import net.frozenorb.foxtrot.gameplay.events.Event;
 import net.frozenorb.foxtrot.gameplay.events.citadel.CitadelHandler;
 import net.frozenorb.foxtrot.server.region.RegionData;
@@ -190,6 +191,10 @@ public class FoxListener implements Listener {
             if (!HCF.getInstance().getMapHandler().isKitMap() && !HCF.getInstance().getServerHandler().isVeltKitMap()) {
                 event.getPlayer().getInventory().addItem(FIRST_SPAWN_BOOK);
                 event.getPlayer().getInventory().addItem(FIRST_SPAWN_FISHING_ROD);
+
+                ClickableItem item = HCF.getInstance().getClickableItemHandler().getClickableItem("moneypack");
+
+                event.getPlayer().getInventory().addItem(item.getItemStack());
             }
 
             if (CustomTimerCreateCommand.getCustomTimers().get("&a&lSOTW") == null) {
@@ -335,6 +340,13 @@ public class FoxListener implements Listener {
                         event.setCancelled(true);
                         event.getPlayer().sendMessage(YELLOW + "You cannot do this in " + team.getName(event.getPlayer()) + YELLOW + "'s territory.");
 
+                        return;
+                    }
+                }
+
+                if (DTRBitmask.CITADEL.appliesAt(event.getClickedBlock().getLocation()) && HCF.getInstance().getEventHandler().getEvent("Citadel").isActive()){
+                    if (event.getClickedBlock().getType() == CHEST){
+                        event.setCancelled(false);
                         return;
                     }
                 }

@@ -36,7 +36,7 @@ public class PayCommand extends BaseCommand {
             return;
         }
 
-        if (balance > 100000) {
+        if (balance > 1000000) {
             sender.sendMessage("§cYour balance is too high to send money. Please contact an admin to transfer money.");
             Bukkit.getLogger().severe("[ECONOMY] " + sender.getName() + " tried to send " + amount);
             return;
