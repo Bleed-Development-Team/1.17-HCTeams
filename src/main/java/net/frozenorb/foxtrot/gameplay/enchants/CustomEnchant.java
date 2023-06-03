@@ -1,6 +1,8 @@
 package net.frozenorb.foxtrot.gameplay.enchants;
 
 import net.frozenorb.foxtrot.HCF;
+import net.frozenorb.foxtrot.gameplay.enchants.events.PlayerArmorEquipEvent;
+import net.frozenorb.foxtrot.gameplay.enchants.events.PlayerArmorUnequipEvent;
 import net.frozenorb.foxtrot.gameplay.enchants.listeners.FireResistanceEnchant;
 import net.frozenorb.foxtrot.gameplay.enchants.listeners.InvisibilityEnchant;
 import net.frozenorb.foxtrot.gameplay.enchants.listeners.SpeedEnchant;
@@ -13,10 +15,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class CustomEnchant implements Listener {
 
     public static void init() {
-        HCF.getInstance().getServer().getPluginManager().registerEvents(new FireResistanceEnchant(), HCF.getInstance());
-        HCF.getInstance().getServer().getPluginManager().registerEvents(new SpeedEnchant(), HCF.getInstance());
-        HCF.getInstance().getServer().getPluginManager().registerEvents(new InvisibilityEnchant(), HCF.getInstance());
-
         Bukkit.getServer().getPluginManager().registerEvents(new CustomEnchant(), HCF.getInstance());
     }
 
@@ -28,6 +26,16 @@ public class CustomEnchant implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
+        refreshEnchants(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onArmorEquip(PlayerArmorEquipEvent event) {
+        refreshEnchants(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onArmorUnEquip(PlayerArmorUnequipEvent event) {
         refreshEnchants(event.getPlayer());
     }
 }

@@ -11,14 +11,10 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 public class FireResistanceEnchant implements Listener {
-    @EventHandler
-    public void onArmorEquip(PlayerArmorEquipEvent event) {
-        refreshFireResistance(event.getPlayer());
-    }
 
     public static void refreshFireResistance(Player player) {
         PotionEffect effect = player.getPotionEffect(PotionEffectType.FIRE_RESISTANCE);
-        
+
         if (effect != null) {
             if (effect.getAmplifier() == 1 || effect.getAmplifier() == 0) {
                 player.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
@@ -33,9 +29,5 @@ public class FireResistanceEnchant implements Listener {
             player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE, 0));
         }
 
-    }
-    @EventHandler
-    public void onArmorDequipd(PlayerArmorUnequipEvent event) {
-        refreshFireResistance(event.getPlayer());
     }
 }

@@ -13,20 +13,6 @@ import org.bukkit.potion.PotionEffectType;
 
 public class InvisibilityEnchant implements Listener {
 
-    @EventHandler
-    public void onArmorEquip(PlayerArmorEquipEvent event) {
-        refreshInvisibility(event.getPlayer());
-    }
-
-    @EventHandler
-    public void unEquip(PlayerArmorEquipEvent event) {
-        refreshInvisibility(event.getPlayer());
-    }
-
-    @EventHandler
-    public void join(PlayerJoinEvent event){
-        refreshInvisibility(event.getPlayer());
-    }
 
     public static void refreshInvisibility(Player player) {
         PotionEffect effect = player.getPotionEffect(PotionEffectType.INVISIBILITY);
@@ -44,10 +30,5 @@ public class InvisibilityEnchant implements Listener {
         if (helmet.getItemMeta().getLore().contains(CC.translate("&9Invisibility I"))) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0));
         }
-    }
-
-    @EventHandler
-    public void onArmorDequipd(PlayerArmorUnequipEvent event) {
-        refreshInvisibility(event.getPlayer());
     }
 }

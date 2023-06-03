@@ -12,16 +12,6 @@ import org.bukkit.potion.PotionEffectType;
 
 public class SpeedEnchant implements Listener {
 
-    @EventHandler
-    public void onArmorEquip(PlayerArmorEquipEvent event) {
-        refreshSpeed(event.getPlayer());
-    }
-
-    @EventHandler
-    public void unEquip(PlayerArmorUnequipEvent event) {
-        refreshSpeed(event.getPlayer());
-    }
-
     public static void refreshSpeed(Player player) {
         ItemStack boot = player.getInventory().getBoots();
         PotionEffect effect = player.getPotionEffect(PotionEffectType.SPEED);
@@ -35,9 +25,7 @@ public class SpeedEnchant implements Listener {
         if (boot == null) return;
         if (boot.getItemMeta().getLore() == null) return;
         if (boot.getItemMeta().getLore().contains(CC.translate("&4Speed II")))
-
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
 
     }
-
 }
