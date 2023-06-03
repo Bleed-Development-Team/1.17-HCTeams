@@ -21,7 +21,7 @@ public class TriviaHandler {
     public String currentAnswer = null;
 
     public TriviaHandler(){
-        questions.put("What is the name of the server?", "Blizzard");
+        questions.put("What is the name of the server?", "FrozenHCF");
         questions.put("Who owns the server?", "Embry");
         questions.put("What version is this server on?", "1.16");
         questions.put("What's 829+219?", "1048");

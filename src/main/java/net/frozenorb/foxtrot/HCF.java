@@ -34,6 +34,7 @@ import net.frozenorb.foxtrot.gameplay.enchants.CustomEnchant;
 import net.frozenorb.foxtrot.gameplay.enchants.events.EventAnalyser;
 import net.frozenorb.foxtrot.gameplay.lunar.LunarClientHandler;
 import net.frozenorb.foxtrot.gameplay.lunar.nametag.ClientNametagProvider;
+import net.frozenorb.foxtrot.gameplay.nms.HCFItemRegistry;
 import net.frozenorb.foxtrot.map.MapHandler;
 import net.frozenorb.foxtrot.provider.nametags.NametagManager;
 import net.frozenorb.foxtrot.provider.scoreboard.ScoreboardHandler;
@@ -190,6 +191,9 @@ public class HCF extends JavaPlugin {
 	public void onEnable() {
 		try {
 			instance = this;
+
+			HCFItemRegistry.register();
+
 			saveDefaultConfig();
 
 			try {
@@ -279,7 +283,6 @@ public class HCF extends JavaPlugin {
 			recipe.addIngredient(Material.GLISTERING_MELON_SLICE);
 
 			Bukkit.getServer().addRecipe(recipe);
-
 		} catch (Exception ex){
 			ex.printStackTrace();
 			Bukkit.getServer().shutdown(); // so if the plugin doesnt load and someone joins, it doesnt let you even grief ppls bases, etc.
